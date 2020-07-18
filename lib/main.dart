@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'contact.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,6 +11,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      initialRoute: '/',
+      routes: {
+        '/home': (context) => MyHomePage(title: 'FSTApp',),
+        '/': (context) => ContactScreen(),
+      },
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -20,13 +26,12 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.blue[900],
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'FST App'),
     );
   }
 }
