@@ -34,21 +34,20 @@ class _ContactScreenState extends State<ContactScreen> {
               TextField(
                 controller: searchController,
                 decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.search),
-                  contentPadding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
-                  hintText: 'Search',
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                    borderSide: BorderSide.none,
-                  )),
+                    suffixIcon: Icon(Icons.search),
+                    contentPadding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
+                    hintText: 'Search',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                      borderSide: BorderSide.none,
+                    )),
               ),
               ListView.builder(
-                itemBuilder: (BuildContext context, int index) { 
-
-                 },
-                
+                itemBuilder: (BuildContext context, int index) {
+                  return _addContact();
+                },
               )
             ],
           ),
@@ -57,5 +56,5 @@ class _ContactScreenState extends State<ContactScreen> {
 
   void _filterContacts() {}
 
-  Widget _addContact(){}
+  Widget _addContact() {}
 }
