@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'contact.dart';
+import 'package:fst_app_flutter/contact_screen/pages/contacts_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      initialRoute: '/',
+      initialRoute: '/contact',
       routes: {
         '/home': (context) => MyHomePage(title: 'FSTApp',),
-        '/': (context) => ContactScreen(),
+        '/contact': (context) => ContactPage(),
       },
       theme: ThemeData(
         // This is the theme of your application.
