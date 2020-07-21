@@ -1,0 +1,6 @@
+Screens are just as it sounds. Every screen of the app should have it’s own screen folder. 
+If its a simple screen, you might just need one file inside that folder.
+If it’s a more complex screen I also like to include a local_widgets folder to be used for bigger widgets to keep the code clean.
+Since each screen will have it’s own local widgets folder, if there is a widget that is used throughout the app,
+then I will place it in the “widgets” folder. I’m a strong believer of never rewriting code.
+So if you have multiple screens using the same code, I would recommend putting it into the “widgets” folder.
