@@ -57,14 +57,7 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: fonts/Montserrat/Montserrat-Regular.ttf
-        - asset: fonts/Montserrat/Montserrat-Black.ttf
-          style: black
-        - asset: fonts/Montserrat/Montserrat-BlackItalic.ttf
-          style: black-italic
         - asset: fonts/Montserrat/Montserrat-Bold.ttf
-          weight: 700
-        - asset: fonts/Montserrat/Montserrat-BoldItalic.ttf
-          style: bold-italic
           weight: 700
   #   - family: Trajan Pro
   #     fonts:
