@@ -1,0 +1,1 @@
+Any functionality that is used throughout the app is stored in this folder

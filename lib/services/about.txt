@@ -1,0 +1,1 @@
+This folder is for anything interfacing outside of the application. 

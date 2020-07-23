@@ -1,0 +1,3 @@
+Models are used for collections of data that are used across the app. 
+If you’ve worked with other languages you can think of them as global structs. 
+Some examples of what I’ve used is for users data, post information, etc.

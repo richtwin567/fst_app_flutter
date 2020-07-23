@@ -1,0 +1,1 @@
+Any custom widget throughout the app should be stored in this folder.
