@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/contact_screen/django_requests/handle_contacts.dart';
-import 'package:fst_app_flutter/contact_screen/pages/contact_detail_page.dart';
+import 'package:fst_app_flutter/screens/contact_screen/django_requests/handle_contacts.dart';
+import 'package:fst_app_flutter/screens/contact_screen/pages/contact_detail_page.dart';
 
 /// Makes a container that gives the child widget a card like background
 class ContactCard extends Container {

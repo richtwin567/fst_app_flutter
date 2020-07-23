@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/contact_screen/pages/contacts_page_general.dart';
+import 'package:fst_app_flutter/screens/contact_screen/pages/contacts_page_general.dart';
 
 class ContactDetailPage extends StatelessWidget {
   static const routeName = '/contactDetail';
