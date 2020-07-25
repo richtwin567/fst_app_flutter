@@ -1,104 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/django_requests/handle_contacts.dart';
+import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_detail_image.dart';
 import 'package:fst_app_flutter/screens/contact_screen/pages/contact_detail_page.dart';
-
-/// Makes a container that gives the child widget a card like background
-class ContactCard extends Container {
-  /// [child] required widget that should go inside the card
-  final Widget child;
-
-  /// [margin] the space around the contact card
-  ///
-  /// default if no margin is specified:
-  ///
-  /// * this.margin = const EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 5.0)
-  final EdgeInsetsGeometry margin;
-
-  /// [padding] the space inside the card between the child and the edge of the card
-  final EdgeInsetsGeometry padding;
-
-  /// [height] the height of the child
-  final double height;
-
-  /// Creates a Contact card
-  ///
-  /// [child] required widget that should go inside the card.
-  ///
-  /// [height] the height of the child
-  ///
-  /// [margin] the space around the contact card
-  ///
-  /// [padding] the space inside the card between the child and the edge
-  ///           of the card
-  ContactCard(
-      {Key key,
-      @required this.child,
-      this.height,
-      this.margin = const EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 5.0),
-      this.padding})
-      : super(
-            key: key,
-            child: child,
-            height: height,
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                  blurRadius: 2.0,
-                  color: Colors.grey[350],
-                  offset: Offset(1.0, 1.0))
-            ]));
-} // ContactCard defintion
-
-/// Makes a ListTile wrapped in a Container with the appropriate styling and
-/// allows navigation to new pages
-class ContactTile extends StatelessWidget {
-  ///[title]  the required title of the list tile
-  final String title;
-
-  ///[subtitle] for the list tile
-  final String subtitle;
-
-  ///[namedRoute] the page that the Navigator should push when the tile is tapped.
-  ///Must be a named route.
-  final String namedRoute;
-
-  ///[arguments] the data to be passed to the next page when the tile is tapped
-  final dynamic arguments;
-
-  ///Creates a contact tile
-  ///
-  ///[title]  the title of the list tile
-  ///
-  ///[subtitle] for the list tile
-  ///
-  ///[namedRoute] the page that the Navigator should push when the tile is tapped.
-  ///Must be a named route.
-  ///
-  ///[arguments] the data to be passed to the next page when the tile is tapped
-  ContactTile(
-      {Key key,
-      @required this.title,
-      @required this.subtitle,
-      @required this.namedRoute,
-      this.arguments})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ContactCard(
-        height: 90.0,
-        child: ListTile(
-          contentPadding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
-          onTap: () {
-            arguments != null
-                ? Navigator.pushNamed(context, namedRoute, arguments: arguments)
-                : Navigator.pushNamed(context, namedRoute);
-          },
-          title: Text(title),
-          subtitle: Text(subtitle),
-          trailing: Icon(Icons.chevron_right),
-        ));
-  }
-} // ContactTile definition
+import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_widgets.dart';
 
 class ContactPage extends StatefulWidget {
   static const routeName = '/contact';
@@ -111,6 +15,7 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   var _currentValue = '';
+
   static final List<String> _categories = [
     'Emergency',
     'Chemistry Department',
@@ -132,18 +37,6 @@ class _ContactPageState extends State<ContactPage> {
 
   List<dynamic> _contacts = [];
 
-  _ContactPageState() {
-    _updateContactsList('');
-  }
-
-  _updateContactsList(value) async {
-    GetContacts.searchDjangoContacts(value).then((data) {
-      setState(() {
-        _contacts.addAll(data);
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,11 +55,9 @@ class _ContactPageState extends State<ContactPage> {
                     onChanged: (value) {
                       _currentValue = value;
                       _contacts.clear();
-                      if (value.isNotEmpty) {
-                        _updateContactsList(value);
-                      } else {
-                        _updateContactsList('');
-                      }
+                      setState(() {
+                        
+                      });
                     },
                     decoration: InputDecoration(
                         suffixIcon: Icon(Icons.search),
@@ -180,20 +71,39 @@ class _ContactPageState extends State<ContactPage> {
                           borderSide: BorderSide.none,
                         )),
                   ),
-                  Flexible(
-                      flex: 3,
-                      child: Text(
-                        _contacts.length.toString() + ' contacts',
-                        textAlign: TextAlign.left,
-                      )),
                   Spacer(
                     flex: 2,
                   ),
                   Expanded(
                       flex: 30,
-                      child: _currentValue == ''
-                          ? _defaultView
-                          : buildContactListView(_contacts))
+                      child: FutureBuilder(
+                        future: GetContacts.searchDjangoContacts(_currentValue),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.none) {
+                            return Center(
+                                child: Text(
+                                    'Cannot load contacts. Check your internet connection.'));
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.hasData) {
+                              _contacts = snapshot.data.toSet().toList();
+                              return  _currentValue == ''
+                                  ? _defaultView
+                                  : buildContactListView(_contacts);
+                            } else if (!snapshot.hasData &&
+                                !snapshot.hasError) {
+                              return Center(child: Text('No matches found'));
+                            } else {
+                              return Center(child: Text('An error occured'));
+                            }
+                          }
+                          return Container();
+                        },
+                      ))
                 ])));
   }
 } // _ContactPageState

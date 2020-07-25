@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/screens/contact_screen/pages/contacts_page_general.dart';
+import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_widgets.dart';
+import 'package:fst_app_flutter/utils/open_url.dart';
+import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_detail_image.dart';
 
 class ContactDetailPage extends StatelessWidget {
   static const routeName = '/contactDetail';
@@ -9,7 +11,12 @@ class ContactDetailPage extends StatelessWidget {
     final dynamic contactDetails = ModalRoute.of(context).settings.arguments;
     final ContactCard contactMethods = _contactDetailList(contactDetails);
     final ContactCard contactInfo = _aboutContactList(contactDetails);
-
+    final mq = MediaQuery.of(context);
+    print(mq.size.height / 2);
+    print(mq.size.width / 2);
+    print(mq.size.aspectRatio);
+    print(mq.devicePixelRatio);
+    print(mq);
 
     return Scaffold(
         body: CustomScrollView(
@@ -23,22 +30,22 @@ class ContactDetailPage extends StatelessWidget {
             floating: false,
             pinned: true,
             snap: false,
-            expandedHeight: 200.0,
+            expandedHeight: mq.size.height/3.5 ,
             flexibleSpace: FlexibleSpaceBar(
-                /* background: SvgPicture.asset(
-                  'assets/images/person-white-48dp.svg',
-                  fit: BoxFit.contain,
-                  color: Colors.blue[800],
-                  alignment: Alignment.center,
-                ), */
+                background: CustomPaint(
+                    painter: ContactDetailSvg(
+                        offsetX: mq.size.width / mq.devicePixelRatio,
+                        offsetY: (mq.size.height/mq.devicePixelRatio)/3.5,
+                        scale: (mq.devicePixelRatio/ mq.size.aspectRatio),
+                        color: Colors.blue[800])),
                 title: Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text(
-                contactDetails['name'],
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ))),
+                  padding: EdgeInsets.only(right: 70.0),
+                  child: Text(
+                    contactDetails['name'],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ))),
         SliverFillRemaining(
             child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -61,7 +68,9 @@ class ContactDetailPage extends StatelessWidget {
       Icon icon =
           i == 0 ? Icon(Icons.phone) : Icon(Icons.phone, color: Colors.white);
       return ListTile(
-          leading: icon, title: Text(data['phone_contact_set'][i]['phone']));
+          leading: icon,
+          onTap: () => openUrl('tel:' + data['phone_contact_set'][i]['phone']),
+          title: Text(data['phone_contact_set'][i]['phone']));
     });
 
     List<dynamic> iconifiedList = [
@@ -71,6 +80,7 @@ class ContactDetailPage extends StatelessWidget {
           ? ListTile(
               leading: Icon(Icons.email),
               title: Text(data['email']),
+              onTap: () => openUrl('mailto:' + data['email']),
             )
           : null,
       data['fax'] != '' ? Divider() : null,
@@ -104,6 +114,7 @@ class ContactDetailPage extends StatelessWidget {
         data['website'] != '' ? Divider() : null,
         data['website'] != ''
             ? ListTile(
+                onTap: () => openUrl(data['website']),
                 title: Text('Website'),
                 subtitle: Text(data['website']),
                 trailing: Icon(Icons.chevron_right),
