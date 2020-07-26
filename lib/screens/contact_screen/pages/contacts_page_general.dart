@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/django_requests/handle_contacts.dart';
-import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_detail_image.dart';
 import 'package:fst_app_flutter/screens/contact_screen/pages/contact_detail_page.dart';
 import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_widgets.dart';
 
@@ -14,31 +13,88 @@ class ContactPage extends StatefulWidget {
 } // ContactPage definition
 
 class _ContactPageState extends State<ContactPage> {
-  var _currentValue = '';
+  var _currentValue = 'search=';
+  var _extraParam = '';
 
-  static final List<String> _categories = [
-    'Emergency',
-    'Chemistry Department',
-    'Computing Department',
-    'Geography and Geology Department',
-    'Life Sciences Department',
-    'Mathematics Department',
-    'Physics Department',
-    'Other Contacts'
+  Chip _filterChips;
+  final List<dynamic> _categories = [
+    {'title': 'Emergency', 'queryParam': 'type', 'value': 'EMERGENCY'},
+    {
+      'title': 'Chemistry Department',
+      'queryParam': 'department',
+      'value': 'CHEM'
+    },
+    {
+      'title': 'Computing Department',
+      'queryParam': 'department',
+      'value': 'COMP'
+    },
+    {
+      'title': 'Geography and Geology Department',
+      'queryParam': 'department',
+      'value': 'GEO'
+    },
+    {
+      'title': 'Life Sciences Department',
+      'queryParam': 'department',
+      'value': 'LIFE'
+    },
+    {
+      'title': 'Mathematics Department',
+      'queryParam': 'department',
+      'value': 'MATH'
+    },
+    {
+      'title': 'Physics Department',
+      'queryParam': 'department',
+      'value': 'PHYS'
+    },
+    {
+      'title': 'Faculty Wide Contacts',
+      'queryParam': 'department',
+      'value': 'OTHER'
+    },
+    {'title': 'Other Contacts', 'queryParam': 'type', 'value': 'OTHER'},
   ];
-
-  final ListView _defaultView = ListView(
-      children: List<Widget>.generate(_categories.length, (index) {
-    return ContactTile(
-        title: _categories[index],
-        subtitle: 'See related contacts',
-        namedRoute: null);
-  }));
 
   List<dynamic> _contacts = [];
 
   @override
+  void initState() {
+    GetContacts.searchDjangoContacts('$_currentValue$_extraParam')
+        .then((data) => _contacts = data.toSet().toList());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final ListView _defaultView = ListView(
+        children: List<Widget>.generate(_categories.length, (index) {
+      return ContactTile(
+        title: _categories[index]['title'],
+        subtitle: 'See related contacts',
+        namedRoute: null,
+        tapFunc: () {
+          setState(() {
+            var queryParam = _categories[index]['queryParam'];
+            var value = _categories[index]['value'];
+            _extraParam = '&$queryParam=$value';
+            _filterChips = Chip(
+              deleteIcon:
+                  Icon(Icons.cancel, color: Theme.of(context).primaryColor),
+              label: Text(_categories[index]['title']),
+              onDeleted: () {
+                setState(() {
+                  _extraParam = '';
+                  _filterChips = null;
+                });
+              },
+            );
+          });
+        },
+      );
+    }));
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Contacts'),
@@ -53,11 +109,9 @@ class _ContactPageState extends State<ContactPage> {
                 children: <Widget>[
                   TextField(
                     onChanged: (value) {
-                      _currentValue = value;
+                      _currentValue = 'search=$value';
                       _contacts.clear();
-                      setState(() {
-                        
-                      });
+                      setState(() {});
                     },
                     decoration: InputDecoration(
                         suffixIcon: Icon(Icons.search),
@@ -71,13 +125,19 @@ class _ContactPageState extends State<ContactPage> {
                           borderSide: BorderSide.none,
                         )),
                   ),
+                  Flexible(
+                      child: ListTile(
+                        title: _filterChips,
+                      ),
+                      flex: 2),
                   Spacer(
-                    flex: 2,
+                    flex: 1,
                   ),
                   Expanded(
                       flex: 30,
                       child: FutureBuilder(
-                        future: GetContacts.searchDjangoContacts(_currentValue),
+                        future: GetContacts.searchDjangoContacts(
+                            '$_currentValue$_extraParam'),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -91,11 +151,10 @@ class _ContactPageState extends State<ContactPage> {
                               ConnectionState.done) {
                             if (snapshot.hasData) {
                               _contacts = snapshot.data.toSet().toList();
-                              return  _currentValue == ''
+                              return _currentValue == 'search=' && _extraParam ==''
                                   ? _defaultView
                                   : buildContactListView(_contacts);
-                            } else if (!snapshot.hasData &&
-                                !snapshot.hasError) {
+                            } else if (!snapshot.hasData) {
                               return Center(child: Text('No matches found'));
                             } else {
                               return Center(child: Text('An error occured'));
@@ -117,9 +176,7 @@ Widget buildContactListView(List<dynamic> contacts) {
       semanticChildCount: contacts.length,
       itemBuilder: (BuildContext context, int index) {
         return ContactTile(
-            title: contacts[index]['id'].toString() +
-                ' ' +
-                contacts[index]['name'],
+            title: contacts[index]['name'],
             subtitle: contacts[index]['description'],
             namedRoute: ContactDetailPage.routeName,
             arguments: contacts[index]);

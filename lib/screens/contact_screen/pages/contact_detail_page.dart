@@ -8,15 +8,10 @@ class ContactDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dynamic contactDetails = ModalRoute.of(context).settings.arguments;
-    final ContactCard contactMethods = _contactDetailList(contactDetails);
-    final ContactCard contactInfo = _aboutContactList(contactDetails);
     final mq = MediaQuery.of(context);
-    print(mq.size.height / 2);
-    print(mq.size.width / 2);
-    print(mq.size.aspectRatio);
-    print(mq.devicePixelRatio);
-    print(mq);
+    final dynamic contactDetails = ModalRoute.of(context).settings.arguments;
+    final ContactCard contactMethods = _contactDetailList(contactDetails, mq, context);
+    final ContactCard contactInfo = _aboutContactList(contactDetails, mq);
 
     return Scaffold(
         body: CustomScrollView(
@@ -24,22 +19,34 @@ class ContactDetailPage extends StatelessWidget {
         SliverAppBar(
             //TODO: investigate: are these actions feasible?
             actions: <Widget>[
-              IconButton(icon: Icon(Icons.share), onPressed: null),
-              IconButton(icon: Icon(Icons.save), onPressed: null)
+              IconButton(
+                  icon: Icon(Icons.share,
+                      color: Theme.of(context).iconTheme.color),
+                  onPressed: null),
+              IconButton(
+                  icon: Icon(Icons.save,
+                      color: Theme.of(context).iconTheme.color),
+                  onPressed: null)
             ],
             floating: false,
             pinned: true,
             snap: false,
-            expandedHeight: mq.size.height/3.5 ,
+            expandedHeight: mq.size.height / 2.5,
             flexibleSpace: FlexibleSpaceBar(
                 background: CustomPaint(
                     painter: ContactDetailSvg(
-                        offsetX: mq.size.width / mq.devicePixelRatio,
-                        offsetY: (mq.size.height/mq.devicePixelRatio)/3.5,
-                        scale: (mq.devicePixelRatio/ mq.size.aspectRatio),
+                        offsetX: mq.size.width /
+                            (mq.devicePixelRatio / mq.size.aspectRatio) *
+                            1.5,
+                        offsetY: (mq.size.height /
+                                (mq.devicePixelRatio / mq.size.aspectRatio) *
+                                1.5) /
+                            2.5,
+                        scale:
+                            (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
                         color: Colors.blue[800])),
                 title: Padding(
-                  padding: EdgeInsets.only(right: 70.0),
+                  padding: EdgeInsets.only(right: mq.size.width / 4),
                   child: Text(
                     contactDetails['name'],
                     maxLines: 1,
@@ -62,15 +69,23 @@ class ContactDetailPage extends StatelessWidget {
     ));
   }
 
-  ContactCard _contactDetailList(final dynamic data) {
+  ContactCard _contactDetailList(final dynamic data, final MediaQueryData mq, BuildContext context) {
     List<dynamic> phoneNums =
         List<dynamic>.generate(data['phone_contact_set'].length, (i) {
-      Icon icon =
-          i == 0 ? Icon(Icons.phone) : Icon(Icons.phone, color: Colors.white);
-      return ListTile(
+      var icon;
+      if (data['phone_contact_set'][i]['platforms'] == 'WHATSAPP') {
+        icon = Image.asset('assets/images/contact/WhatsApp_flat.png',width: IconTheme.of(context).size,);
+        return ListTile(
           leading: icon,
           onTap: () => openUrl('tel:' + data['phone_contact_set'][i]['phone']),
           title: Text(data['phone_contact_set'][i]['phone']));
+      } else {
+        icon = Icon(Icons.phone);
+        return ListTile(
+          leading: icon,
+          onTap: () => openUrl('tel:' + data['phone_contact_set'][i]['phone']),
+          title: Text(data['phone_contact_set'][i]['phone']));
+      }   
     });
 
     List<dynamic> iconifiedList = [
@@ -100,13 +115,13 @@ class ContactDetailPage extends StatelessWidget {
     }
 
     return ContactCard(
-        margin: EdgeInsets.symmetric(horizontal: 10.0),
+        margin: EdgeInsets.symmetric(horizontal: mq.size.width / 18),
         child: Column(
           children: <Widget>[...iconifiedList],
         ));
   }
 
-  ContactCard _aboutContactList(final dynamic data) {
+  ContactCard _aboutContactList(final dynamic data, final MediaQueryData mq) {
     List<dynamic> iconifiedList;
     if (data['website'] != '' || data['description'] != '') {
       iconifiedList = [
@@ -133,7 +148,8 @@ class ContactDetailPage extends StatelessWidget {
       iconifiedList.removeWhere((element) => element == null);
 
       return ContactCard(
-          margin: EdgeInsets.fromLTRB(10.0, 25.0, 10.0, 25.0),
+          margin: EdgeInsets.fromLTRB(mq.size.width / 18, mq.size.height / 22,
+              mq.size.width / 18, mq.size.height / 22),
           child: Column(
             children: <Widget>[...iconifiedList],
           ));

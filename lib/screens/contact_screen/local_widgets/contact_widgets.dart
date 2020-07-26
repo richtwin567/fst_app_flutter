@@ -37,37 +37,51 @@ class ContactTile extends StatelessWidget {
   /// The subtitle for this ContactTile.
   final String subtitle;
 
-  /// The route to the page that the Navigator should push when this tile is tapped.
+  /// The route to the page that the Navigator should push when this tile is
+  /// tapped instead of calling a [tapFunc].
   /// Must be a named route.
   final String namedRoute;
 
-  /// The data to be passed to the next page when this tile is tapped
+  /// The data to be passed to the next page when this tile is tapped.
   final dynamic arguments;
+
+  /// The function to call when this tile is tapped instead of navigating to a
+  /// [namedRoute].
+  final GestureTapCallback tapFunc;
 
   /// Creates a contact tile.
   ///
   /// A contact tile has a [title] and [subtitle].
-  /// When tapped, this tile will navigate to the page defined by the [namedRoute]
+  /// If a [namedRoute] is provided, when tapped, this tile will navigate to
+  /// the page defined by the [namedRoute]
   /// and pass its [arguments], if given, to that page.
   /// The [arguments] would be the information for this contact.
+  /// If a [tapFunc] is provided, the tile will execute that function when tapped.
+  /// **Either one [tapFunc] or one [namedRoute] must be passed, not both.**
   ContactTile(
       {Key key,
       @required this.title,
       @required this.subtitle,
-      @required this.namedRoute,
+      this.namedRoute,
+      this.tapFunc,
       this.arguments})
-      : super(key: key);
+      : assert((namedRoute == null && tapFunc != null) ||
+            (namedRoute != null && tapFunc == null)),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ContactCard(
         child: ListTile(
       contentPadding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
-      onTap: () {
-        arguments != null
-            ? Navigator.pushNamed(context, namedRoute, arguments: arguments)
-            : Navigator.pushNamed(context, namedRoute);
-      },
+      onTap: namedRoute != null
+          ? () {
+              arguments != null
+                  ? Navigator.pushNamed(context, namedRoute,
+                      arguments: arguments)
+                  : Navigator.pushNamed(context, namedRoute);
+            }
+          : tapFunc,
       title: Text(title),
       subtitle: Text(subtitle),
       trailing: Icon(Icons.chevron_right),
