@@ -4,7 +4,7 @@ import 'dart:convert';
 class GetContacts {
   static Future<String> getContactsDjangoApi(dynamic query) async {
     String queryString = query.toString();
-    //needs a url before :8000 that is allowed hosts in settings.py
+    //needs a url before :8000 that is in allowed hosts in settings.py
     String contactUrl = ':8000/contact/?$queryString';
 
     http.Response response = await http.get(Uri.encodeFull(contactUrl));
