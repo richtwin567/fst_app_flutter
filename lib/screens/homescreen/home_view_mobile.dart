@@ -49,7 +49,11 @@ class HomeMobileLandscape extends BaseModelWidget<HomeViewModel> {
         },
       ),
       body: Row(
-        children: <Widget>[AppDrawer()],
+        children: <Widget>[AppDrawer(),Expanded(
+            child: Center(
+              child: Text(model.title),
+            ),
+          ),],
       ),
     );
   }

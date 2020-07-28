@@ -8,9 +8,13 @@ class HomeTablet extends BaseModelWidget<HomeViewModel> {
   Widget build(BuildContext context, HomeViewModel model) {
     var children = [
       Expanded(
-        child: Container(),
+        child: Container(child:Expanded(
+            child: Center(
+              child: Text(model.title),
+            ),
+          ),),
       ),
-      AppDrawer()
+      AppDrawer(),
     ];
     var orientation = MediaQuery.of(context).orientation;
     return Scaffold(
