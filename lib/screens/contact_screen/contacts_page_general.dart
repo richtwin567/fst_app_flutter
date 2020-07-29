@@ -13,10 +13,20 @@ class ContactPage extends StatefulWidget {
 } // ContactPage definition
 
 class _ContactPageState extends State<ContactPage> {
-  var _currentValue = 'search=';
+  /// This [String] will be modified to include the search value entered by the user.
+  /// Otherwise, it will be passed to the `getResultsJSON` like this.
+  var _baseParam = 'contact/?search=';
+
+  /// Extra parameters to attach to the [_baseParam] such as department or type.
   var _extraParam = '';
 
-  Chip _filterChips;
+  /// A chip that will allow users to toggle department/type filters
+  Chip _filterChip;
+
+  /// The default categories to filter by and their corresponding
+  /// query parameter and value.
+  ///
+  /// Used to construct the [defaultListView]
   final List<dynamic> _categories = [
     {'title': 'Emergency', 'queryParam': 'type', 'value': 'EMERGENCY'},
     {
@@ -57,13 +67,31 @@ class _ContactPageState extends State<ContactPage> {
     {'title': 'Other Contacts', 'queryParam': 'type', 'value': 'OTHER'},
   ];
 
+  /// a list to store all contacts that were a returned from the query
   List<dynamic> _contacts = [];
 
+  /// Used to switch the state of the appBar to a search field in the `revaelSearchField`
+  /// function.
+  Icon _searchIcon = Icon(Icons.search);
+
+  /// Used to switch the state of the appBar to a search field in the `revaelSearchField`
+  /// function.
+  Widget _appBarTitle = Text('Contacts');
+
+  /// Controls what happens when th user switches between tabs.
+  TabController _tabController;
+
+  /// Load all contacts when page is loaded initially
   @override
   void initState() {
-    HandleHerokuRequests.getResultsJSON('$_currentValue$_extraParam')
+    HandleHerokuRequests.getResultsJSON('$_baseParam$_extraParam')
         .then((data) => _contacts = data.toSet().toList());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -79,22 +107,23 @@ class _ContactPageState extends State<ContactPage> {
             var queryParam = _categories[index]['queryParam'];
             var value = _categories[index]['value'];
             _extraParam = '&$queryParam=$value';
-            _filterChips = Chip(
+            _filterChip = Chip(
               deleteIcon:
                   Icon(Icons.cancel, color: Theme.of(context).primaryColor),
               label: Text(_categories[index]['title']),
               onDeleted: () {
                 setState(() {
                   _extraParam = '';
-                  _filterChips = null;
+                  _filterChip = null;
                 });
               },
             );
           });
         },
-      );
+        );
     }));
 
+    // width and height calculations made using the [MediaQueryData]
     var mq = MediaQuery.of(context);
     var conPadW = mq.size.width * 0.07;
     var conPadH = mq.size.height * 0.03;
@@ -127,55 +156,35 @@ class _ContactPageState extends State<ContactPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Flexible(
-                              flex: flexTField,
-                              child: TextField(
-                                onChanged: (value) {
-                                  _currentValue = 'search=$value';
-                                  _contacts.clear();
-                                  setState(() {});
-                                },
-                                decoration: InputDecoration(
-                                    suffixIcon: Icon(Icons.search),
-                                    contentPadding: EdgeInsets.fromLTRB(
-                                        30.0, 15.0, 30.0, 15.0),
-                                    hintText: 'Search',
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(40.0)),
-                                      borderSide: BorderSide.none,
-                                    )),
-                              )),
-                          Flexible(
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: _filterChips,
-                              ),
-                              flex: flexChip),
-                          Expanded(
-                              flex: flexList,
-                              child: FutureBuilder(
-                                future: HandleHerokuRequests.getResultsJSON(
-                                    '$_currentValue$_extraParam'),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.none) {
-                                    return Center(
-                                        child: Text(
-                                            'Cannot load contacts. Check your internet connection.'));
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    if (snapshot.hasData) {
-                                      _contacts =
-                                          snapshot.data.toSet().toList();
-                                      if (_contacts.length > 0) {
-                                        return _currentValue == 'search=' &&
-                                                _extraParam == ''
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: _filterChip,
+                                  ),
+                                  flex: flexChip),
+                              Expanded(
+                                  flex: flexList,
+                                  child: FutureBuilder(
+                                    future: HandleHerokuRequests.getResultsJSON(
+                                        '$_baseParam$_extraParam'),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.connectionState ==
+                                          ConnectionState.none) {
+                                        return Center(
+                                            child: Text(
+                                                'Cannot load contacts. Check your internet connection.'));
+                                      } else if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        if (snapshot.hasData) {
+                                          _contacts =
+                                              snapshot.data.toSet().toList();
+                                          if (_contacts.length > 0) {
+                                            return _baseParam ==
+                                                        'contact/?search=' &&
+                                                    _extraParam == ''
                                             ? _defaultView
                                             : buildContactListView(_contacts);
                                       } else {
@@ -197,12 +206,41 @@ class _ContactPageState extends State<ContactPage> {
                         ]),
                   ),
                 ))
-            : Container());
+                : Container(),
+                    );
+  }
+
+  void _revealSearchField() {
+    setState(() {
+      if (_searchIcon.icon == Icons.search) {
+        _searchIcon = Icon(Icons.close);
+        _appBarTitle = TextField(
+          onChanged: (value) {
+            _baseParam = 'contact/?search=$value';
+            _contacts.clear();
+            setState(() {});
+          },
+          decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              contentPadding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
+              hintText: 'Search',
+              filled: true,
+              fillColor: Colors.grey[200],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                borderSide: BorderSide.none,
+              )),
+        );
+      } else {
+        _searchIcon = Icon(Icons.search);
+        _appBarTitle = Text('Contacts');
+      }
+    });
   }
 } // _ContactPageState
 
-/// Builds a contact list view for the specified contacts
-/// [contacts] the list of contacts
+/// Builds a [ListView] of [ContactTile] for each member
+/// in the list of [contacts].
 Widget buildContactListView(List<dynamic> contacts) {
   return ListView.builder(
       shrinkWrap: true,

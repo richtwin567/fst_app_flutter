@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contacts_page_general.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
+
 import 'package:fst_app_flutter/screens/homescreen/home_view.dart';
 
 void main() => runApp(
@@ -27,10 +28,9 @@ class FSTApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.blue[900],
         accentColor: Color.fromRGBO(243, 191, 18, 1.0),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.white, opacity: 1.0),     
+        backgroundColor: Colors.white,   
         fontFamily: 'Montserrat',
-        appBarTheme: AppBarTheme(textTheme: TextTheme(headline6: TextStyle(fontSize: 20.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold))),
+        appBarTheme: AppBarTheme(iconTheme: IconThemeData(color: Colors.white,opacity: 1.0), textTheme: TextTheme(headline6: TextStyle(fontSize: 20.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold))),
         visualDensity: VisualDensity.adaptivePlatformDensity,
     ));
   }
