@@ -71,20 +71,27 @@ class ContactTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var mq = MediaQuery.of(context);
+    var paddingV = mq.size.height * 0.02;
+    var paddingH = mq.size.width * 0.04;
+    var tileH = mq.size.height * 0.15;
     return ContactCard(
-        child: ListTile(
-      contentPadding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
-      onTap: namedRoute != null
-          ? () {
-              arguments != null
-                  ? Navigator.pushNamed(context, namedRoute,
-                      arguments: arguments)
-                  : Navigator.pushNamed(context, namedRoute);
-            }
-          : tapFunc,
-      title: Text(title),
-      subtitle: Text(subtitle),
-      trailing: Icon(Icons.chevron_right),
-    ));
+        child: Container(
+            height: tileH,
+            child: ListTile(
+              contentPadding:
+                  EdgeInsets.fromLTRB(paddingH, paddingV, paddingH, paddingV),
+              onTap: namedRoute != null
+                  ? () {
+                      arguments != null
+                          ? Navigator.pushNamed(context, namedRoute,
+                              arguments: arguments)
+                          : Navigator.pushNamed(context, namedRoute);
+                    }
+                  : tapFunc,
+              title: Text(title,maxLines: 2,overflow: TextOverflow.ellipsis,),
+              subtitle: Text(subtitle,maxLines: 1,overflow: TextOverflow.ellipsis),
+              trailing: Icon(Icons.chevron_right,color: Theme.of(context).accentColor),
+            )));
   }
 } // ContactTile definition

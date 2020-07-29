@@ -95,75 +95,108 @@ class _ContactPageState extends State<ContactPage> {
       );
     }));
 
+    var mq = MediaQuery.of(context);
+    var conPadW = mq.size.width * 0.07;
+    var conPadH = mq.size.height * 0.03;
+    var flexTField = (mq.size.height * 0.08).round();
+    var flexChip = (mq.size.height * 0.05).round();
+    var flexList = (mq.size.height * 0.7).round();
+    var flexSpace = (mq.size.height * 0.1).round();
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Contacts'),
         ),
-        body: Container(
-            padding: EdgeInsets.all(30.0),
-            child: Column(
-                mainAxisSize: MainAxisSize.max,
-                verticalDirection: VerticalDirection.down,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  TextField(
-                    onChanged: (value) {
-                      _currentValue = 'search=$value';
-                      _contacts.clear();
-                      setState(() {});
-                    },
-                    decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.search),
-                        contentPadding:
-                            EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
-                        hintText: 'Search',
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                          borderSide: BorderSide.none,
-                        )),
-                  ),
-                  Flexible(
-                      child: ListTile(
-                        title: _filterChips,
-                      ),
-                      flex: 2),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Expanded(
-                      flex: 30,
-                      child: FutureBuilder(
-                        future: GetContacts.searchDjangoContacts(
-                            '$_currentValue$_extraParam'),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.none) {
-                            return Center(
-                                child: Text(
-                                    'Cannot load contacts. Check your internet connection.'));
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasData) {
-                              _contacts = snapshot.data.toSet().toList();
-                              return _currentValue == 'search=' && _extraParam ==''
-                                  ? _defaultView
-                                  : buildContactListView(_contacts);
-                            } else if (!snapshot.hasData) {
-                              return Center(child: Text('No matches found'));
-                            } else {
-                              return Center(child: Text('An error occured'));
-                            }
-                          }
-                          return Container();
-                        },
-                      ))
-                ])));
+        body: mq.orientation == Orientation.portrait? Container(
+            height: mq.size.height,
+            width: mq.size.width,
+            padding: EdgeInsets.fromLTRB(conPadW, conPadH, conPadW, conPadH),
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: mq.size.height,
+                    minWidth: mq.size.width,
+                    maxHeight: mq.size.height,
+                    maxWidth: mq.size.width ),
+                child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    verticalDirection: VerticalDirection.down,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Flexible(
+                          flex: flexTField,
+                          child: TextField(
+                            onChanged: (value) {
+                              _currentValue = 'search=$value';
+                              _contacts.clear();
+                              setState(() {});
+                            },
+                            decoration: InputDecoration(
+                                suffixIcon: Icon(Icons.search),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
+                                hintText: 'Search',
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(40.0)),
+                                  borderSide: BorderSide.none,
+                                )),
+                          )),
+                      Flexible(
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: _filterChips,
+                          ),
+                          flex: flexChip),
+                      Expanded(
+                          flex: flexList,
+                          child: FutureBuilder(
+                            future: GetContacts.searchDjangoContacts(
+                                '$_currentValue$_extraParam'),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.none) {
+                                return Center(
+                                    child: Text(
+                                        'Cannot load contacts. Check your internet connection.'));
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasData) {
+                                  _contacts = snapshot.data.toSet().toList();
+                                  if (_contacts.length > 0) {
+                                    return _currentValue == 'search=' &&
+                                            _extraParam == ''
+                                        ? _defaultView
+                                        : buildContactListView(_contacts);
+                                  } else {
+                                    return Center(
+                                        child: Text('No matches found'));
+                                  }
+                                } else if (!snapshot.hasData ||
+                                    snapshot.hasError) {
+                                  return Center(
+                                      child: Text('An error occured'));
+                                } else {
+                                  return Center(
+                                      child: Text('No matches found'));
+                                }
+                              }
+                              return Container();
+                            },
+                          ))
+                    ]),
+              ),
+            )):
+            Container()
+            
+            );
   }
 } // _ContactPageState
 

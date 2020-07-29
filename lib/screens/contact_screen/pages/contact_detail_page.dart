@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_widgets.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
@@ -10,7 +12,8 @@ class ContactDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     final dynamic contactDetails = ModalRoute.of(context).settings.arguments;
-    final ContactCard contactMethods = _contactDetailList(contactDetails, mq, context);
+    final ContactCard contactMethods =
+        _contactDetailList(contactDetails, mq, context);
     final ContactCard contactInfo = _aboutContactList(contactDetails, mq);
 
     return Scaffold(
@@ -35,13 +38,8 @@ class ContactDetailPage extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
                 background: CustomPaint(
                     painter: ContactDetailSvg(
-                        offsetX: mq.size.width /
-                            (mq.devicePixelRatio / mq.size.aspectRatio) *
-                            1.5,
-                        offsetY: (mq.size.height /
-                                (mq.devicePixelRatio / mq.size.aspectRatio) *
-                                1.5) /
-                            2.5,
+                        start: Point(
+                            mq.size.width / 2, (mq.size.height / 2.5) / 2),
                         scale:
                             (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
                         color: Colors.blue[800])),
@@ -53,39 +51,37 @@ class ContactDetailPage extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ))),
-        SliverFillRemaining(
-            child: Column(
-                mainAxisSize: MainAxisSize.max,
-                verticalDirection: VerticalDirection.down,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-              Expanded(
-                  flex: 1,
-                  child: ListView(
-                      children: <Widget>[contactMethods, contactInfo])),
-            ]))
+        SliverList(
+          delegate:
+              SliverChildListDelegate.fixed([contactMethods, contactInfo]),
+        )
       ],
     ));
   }
 
-  ContactCard _contactDetailList(final dynamic data, final MediaQueryData mq, BuildContext context) {
+  ContactCard _contactDetailList(
+      final dynamic data, final MediaQueryData mq, BuildContext context) {
     List<dynamic> phoneNums =
         List<dynamic>.generate(data['phone_contact_set'].length, (i) {
       var icon;
       if (data['phone_contact_set'][i]['platforms'] == 'WHATSAPP') {
-        icon = Image.asset('assets/images/contact/WhatsApp_flat.png',width: IconTheme.of(context).size,);
+        icon = Image.asset(
+          'assets/images/contact/WhatsApp_flat.png',
+          width: IconTheme.of(context).size,
+        );
         return ListTile(
-          leading: icon,
-          onTap: () => openUrl('tel:' + data['phone_contact_set'][i]['phone']),
-          title: Text(data['phone_contact_set'][i]['phone']));
+            leading: icon,
+            onTap: () =>
+                openUrl('tel:' + data['phone_contact_set'][i]['phone']),
+            title: Text(data['phone_contact_set'][i]['phone']));
       } else {
         icon = Icon(Icons.phone);
         return ListTile(
-          leading: icon,
-          onTap: () => openUrl('tel:' + data['phone_contact_set'][i]['phone']),
-          title: Text(data['phone_contact_set'][i]['phone']));
-      }   
+            leading: icon,
+            onTap: () =>
+                openUrl('tel:' + data['phone_contact_set'][i]['phone']),
+            title: Text(data['phone_contact_set'][i]['phone']));
+      }
     });
 
     List<dynamic> iconifiedList = [
@@ -115,7 +111,8 @@ class ContactDetailPage extends StatelessWidget {
     }
 
     return ContactCard(
-        margin: EdgeInsets.symmetric(horizontal: mq.size.width / 18),
+        margin: EdgeInsets.fromLTRB(
+            mq.size.width / 18, mq.size.height / 22, mq.size.width / 18, 0.0),
         child: Column(
           children: <Widget>[...iconifiedList],
         ));
@@ -125,7 +122,7 @@ class ContactDetailPage extends StatelessWidget {
     List<dynamic> iconifiedList;
     if (data['website'] != '' || data['description'] != '') {
       iconifiedList = [
-        ListTile(title: Text('About')),
+        ListTile(title: Text("About ${data['name']}")),
         data['website'] != '' ? Divider() : null,
         data['website'] != ''
             ? ListTile(
@@ -138,7 +135,7 @@ class ContactDetailPage extends StatelessWidget {
         data['description'] != '' ? Divider() : null,
         data['description'] != ''
             ? ListTile(
-                title: Text('Description'),
+                title: Text('Additional Info'),
                 subtitle: Text(data['description']),
                 isThreeLine: true,
               )

@@ -103,7 +103,6 @@ class CurvePoints<T extends num> extends Point<T> {
       : super(x1, y1);
 }
 
-
 class ContactDetailSvg extends CustomPainter {
   List<Point<double>> path1 = [
     MovePoint(0.0, 0.0),
@@ -129,23 +128,19 @@ class ContactDetailSvg extends CustomPainter {
     CurvePoints(0.0, -2.66, -5.33, -4.0, -8.0, -4.0)
   ];
 
-  double scale;
-  double offsetX;
-  double offsetY;
-  Color color;
+  final double scale;
+  final Color color;
+  final Point start;
 
   ContactDetailSvg(
-      {@required this.color,
-      this.scale = 1.0,
-      this.offsetX = 0.0,
-      this.offsetY = 0.0})
+      {@required this.color, this.scale = 1.0, @required this.start})
       : super();
 
-  drawPathFromPoints(Canvas canvas, Paint paint, List<Point> points) {
+  drawPathFromPoints(Canvas canvas, Paint paint, List<Point> points, Point start) {
     Path path = Path();
     points.forEach((p) {
       if (p is MovePoint) {
-        p = MovePoint(offsetX + (p.x * scale), offsetY + (p.y * scale));
+        p = MovePoint(start.x, start.y);
         path.moveTo(p.x, p.y);
       } else if (p is VerticalPoint) {
         p = VerticalPoint(p.y * scale, (p.x * scale));
@@ -165,6 +160,7 @@ class ContactDetailSvg extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    
     Paint path1Paint = Paint();
     path1Paint..color = Color.fromRGBO(0, 0, 0, 0);
 
@@ -178,9 +174,10 @@ class ContactDetailSvg extends CustomPainter {
       ..color = color
       ..style = PaintingStyle.fill;
 
-    drawPathFromPoints(canvas, path1Paint, path1);
-    canvas.drawCircle(Offset((12.0*scale)+offsetX, (8.0*scale)+offsetY), 4.0*scale, path2Paint);
-    drawPathFromPoints(canvas, path3Paint, path3);
+    drawPathFromPoints(canvas, path1Paint, path1, start);
+    canvas.drawCircle(Offset(start.x, start.y), 4.0 * scale, path2Paint);
+    Point start2 = Point(start.x, start.y + (6 * scale));
+    drawPathFromPoints(canvas, path3Paint, path3, start2);
   }
 
   @override
