@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_widgets.dart';
+import 'package:fst_app_flutter/widgets/contact_card.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
-import 'package:fst_app_flutter/screens/contact_screen/local_widgets/contact_detail_image.dart';
+import 'package:fst_app_flutter/widgets/contact_detail_image.dart';
 
 class ContactDetailPage extends StatelessWidget {
   static const routeName = '/contactDetail';

@@ -1,8 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/screens/contact_screen/pages/contacts_page_general.dart';
-import 'package:fst_app_flutter/screens/contact_screen/pages/contact_detail_page.dart';
-
+import 'package:fst_app_flutter/screens/contact_screen/contacts_page_general.dart';
+import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
 import 'package:fst_app_flutter/screens/homescreen/home_view.dart';
 
 void main() => runApp(
