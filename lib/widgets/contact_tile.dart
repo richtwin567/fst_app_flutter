@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'contact_card.dart';
-
-/// A [ListTile] wrapped in a [ContactCard] that
+/// A [ListTile] that
 /// allows navigation to the [ContactDetailPage] for this [ContactTile] when tapped.
 class ContactTile extends StatelessWidget {
   /// The title of this ContactTile.
@@ -49,23 +47,29 @@ class ContactTile extends StatelessWidget {
     var paddingV = mq.size.height * 0.02;
     var paddingH = mq.size.width * 0.04;
     var tileH = mq.size.height * 0.15;
-    return ContactCard(
-        child: Container(
-            height: tileH,
-            child: ListTile(
-              contentPadding:
-                  EdgeInsets.fromLTRB(paddingH, paddingV, paddingH, paddingV),
-              onTap: namedRoute != null
-                  ? () {
-                      arguments != null
-                          ? Navigator.pushNamed(context, namedRoute,
-                              arguments: arguments)
-                          : Navigator.pushNamed(context, namedRoute);
-                    }
-                  : tapFunc,
-              title: Text(title,maxLines: 2,overflow: TextOverflow.ellipsis,),
-              subtitle: Text(subtitle,maxLines: 1,overflow: TextOverflow.ellipsis),
-              trailing: Icon(Icons.chevron_right,color: Theme.of(context).accentColor),
-            )));
+    return Container(
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.blue,style: BorderStyle.solid))),
+        height: tileH,
+        child: ListTile(
+          contentPadding:
+              EdgeInsets.fromLTRB(paddingH, paddingV, paddingH, paddingV),
+          onTap: namedRoute != null
+              ? () {
+                  arguments != null
+                      ? Navigator.pushNamed(context, namedRoute,
+                          arguments: arguments)
+                      : Navigator.pushNamed(context, namedRoute);
+                }
+              : tapFunc,
+          title: Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle:
+              Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+          trailing:
+              Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
+        ));
   }
 } // ContactTile definition

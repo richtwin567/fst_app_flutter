@@ -28,6 +28,7 @@ class _ContactPageState extends State<ContactPage> {
   ///
   /// Used to construct the [_defaultView]
   final List<dynamic> _categories = [
+    {'title':'All','queryParam':'', 'value':''},
     {'title': 'Emergency', 'queryParam': 'type', 'value': 'EMERGENCY'},
     {
       'title': 'Chemistry Department',
@@ -87,6 +88,8 @@ class _ContactPageState extends State<ContactPage> {
   /// The value that is currently selected from the filter list
   String initialValue = '';
 
+  ScrollController sc = ScrollController(keepScrollOffset: true);
+
   /// Load all contacts when page is loaded initially
   @override
   void initState() {
@@ -97,6 +100,7 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   void dispose() {
+    sc.dispose();
     super.dispose();
   }
 
@@ -208,17 +212,20 @@ class _ContactPageState extends State<ContactPage> {
   /// Builds a [ListView] of [ContactTile] for each member
   /// in the list of [contacts].
   Widget _buildContactListView(List<dynamic> contacts) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: contacts.length,
-        semanticChildCount: contacts.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ContactTile(
-              title: contacts[index]['name'],
-              subtitle: contacts[index]['description'],
-              namedRoute: ContactDetailPage.routeName,
-              arguments: contacts[index]);
-        });
+    return Scrollbar(
+      controller: sc,
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: contacts.length,
+          semanticChildCount: contacts.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ContactTile(
+                title: contacts[index]['name'],
+                subtitle: contacts[index]['description'],
+                namedRoute: ContactDetailPage.routeName,
+                arguments: contacts[index]);
+          }),
+    );
   } // buildContactCard
 
   /// Displays a [CircularProgressIndicator] while the list of contacts loads.
@@ -238,9 +245,7 @@ class _ContactPageState extends State<ContactPage> {
           if (snapshot.hasData) {
             _contacts = snapshot.data.toSet().toList();
             if (_contacts.length > 0) {
-              return _baseParam == 'contact/?search=' && _extraParam == ''
-                  ? _defaultView
-                  : _buildContactListView(_contacts);
+              return _buildContactListView(_contacts);
             } else {
               return Center(child: Text('No matches found'));
             }
@@ -256,38 +261,36 @@ class _ContactPageState extends State<ContactPage> {
   } // _contactFutureBuilder
 
   Widget _buildChipCarousel() {
+    var totalWidth = MediaQuery.of(context).size.width -
+        ((MediaQuery.of(context).size.width * 0.07) * 2);
+    var hMargin = totalWidth * 0.05;
+    var height = 140.0;
+
+    var chipColor = Colors.grey[200];
+
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemBuilder: (BuildContext context, int index) {
         return SizedBox(
-          height: 140.0,
-          width: MediaQuery.of(context).size.width -
-              ((MediaQuery.of(context).size.width * 0.07) * 2),
+          height: height,
+          width: totalWidth,
           child: PageView.builder(
+            onPageChanged: (i) {
+              setState(() {
+                _extraParam =
+                    '&${_categories[i]['queryParam']}=${_categories[i]['value']}';
+              });
+            },
             controller: PageController(
                 initialPage: 0, keepPage: true, viewportFraction: 0.7),
             itemCount: _categories.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: ((MediaQuery.of(context).size.width -
-                            ((MediaQuery.of(context).size.width * 0.07) * 2)) *
-                        0.05)),
+                constraints: BoxConstraints(maxHeight: height,minHeight: height),
+                margin: EdgeInsets.symmetric(horizontal: hMargin),
                 decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: chipColor,
                     borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                constraints: BoxConstraints(
-                    maxHeight: 140.0,
-                    maxWidth: (MediaQuery.of(context).size.width -
-                            ((MediaQuery.of(context).size.width * 0.07) * 2)) *
-                        0.5,
-                    minHeight: 140.0,
-                    minWidth: (MediaQuery.of(context).size.width -
-                            ((MediaQuery.of(context).size.width * 0.07) * 2)) *
-                        0.5),
-                width: (MediaQuery.of(context).size.width -
-                        ((MediaQuery.of(context).size.width * 0.07) * 2)) *
-                    0.5,
                 child: ChoiceChip(
                     label: Text(
                       _categories[index]['title'],
@@ -304,10 +307,7 @@ class _ContactPageState extends State<ContactPage> {
 
   List<PopupMenuEntry<dynamic>> _filterChooserBuilder(context) {
     List<PopupMenuEntry<dynamic>> popup = [];
-    popup.add(PopupMenuItem(
-      value: '',
-      child: Text('No Filter'),
-    ));
+    
     //popup.add(PopupMenuDivider());
     _categories.forEach((e) {
       popup.add(PopupMenuItem(
