@@ -21,7 +21,7 @@ class ContactDetailPage extends StatelessWidget {
       slivers: <Widget>[
         SliverAppBar(
             //TODO: investigate: are these actions feasible?
-            actions: <Widget>[
+            /* actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.share,
                       color: Theme.of(context).iconTheme.color),
@@ -30,7 +30,7 @@ class ContactDetailPage extends StatelessWidget {
                   icon: Icon(Icons.save,
                       color: Theme.of(context).iconTheme.color),
                   onPressed: null)
-            ],
+            ], */
             floating: false,
             pinned: true,
             snap: false,

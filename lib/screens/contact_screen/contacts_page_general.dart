@@ -14,7 +14,7 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   /// This [String] will be modified to include the search value entered by the user.
-  /// Otherwise, it will be passed to the `getResultsJSON` like this.
+  /// Otherwise, it will be passed to the [HandleHerokuRequests.getResultsJSON] like this.
   var _baseParam = 'contact/?search=';
 
   /// Extra parameters to attach to the [_baseParam] such as department or type.
@@ -26,7 +26,7 @@ class _ContactPageState extends State<ContactPage> {
   /// The default categories to filter by and their corresponding
   /// query parameter and value.
   ///
-  /// Used to construct the [defaultListView]
+  /// Used to construct the [_defaultView]
   final List<dynamic> _categories = [
     {'title': 'Emergency', 'queryParam': 'type', 'value': 'EMERGENCY'},
     {
@@ -67,19 +67,25 @@ class _ContactPageState extends State<ContactPage> {
     {'title': 'Other Contacts', 'queryParam': 'type', 'value': 'OTHER'},
   ];
 
+  ListView _defaultView;
+
   /// a list to store all contacts that were a returned from the query
   List<dynamic> _contacts = [];
 
-  /// Used to switch the state of the appBar to a search field in the `revaelSearchField`
+  /// Used to switch the state of the appBar to a search field in the [_revealSearchField]
   /// function.
   Icon _searchIcon = Icon(Icons.search);
 
-  /// Used to switch the state of the appBar to a search field in the `revaelSearchField`
+  /// Used to switch between filters from [_categories] in the [_filterChooserBuilder]
+  /// function
+  Icon _filterIcon = Icon(Icons.filter_list);
+
+  /// Used to switch the state of the appBar to a search field in the [_revealSearchField]
   /// function.
   Widget _appBarTitle = Text('Contacts');
 
-  /// Controls what happens when th user switches between tabs.
-  TabController _tabController;
+  /// The value that is currently selected from the filter list
+  String initialValue = '';
 
   /// Load all contacts when page is loaded initially
   @override
@@ -96,7 +102,7 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ListView _defaultView = ListView(
+    _defaultView = ListView(
         children: List<Widget>.generate(_categories.length, (index) {
       return ContactTile(
         title: _categories[index]['title'],
@@ -120,9 +126,8 @@ class _ContactPageState extends State<ContactPage> {
             );
           });
         },
-        );
+      );
     }));
-
     // width and height calculations made using the [MediaQueryData]
     var mq = MediaQuery.of(context);
     var conPadW = mq.size.width * 0.07;
@@ -133,83 +138,45 @@ class _ContactPageState extends State<ContactPage> {
     var flexSpace = (mq.size.height * 0.1).round();
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Contacts'),
-        ),
-        body: mq.orientation == Orientation.portrait
-            ? Container(
-                height: mq.size.height,
-                width: mq.size.width,
-                padding:
-                    EdgeInsets.fromLTRB(conPadW, conPadH, conPadW, conPadH),
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        minHeight: mq.size.height,
-                        minWidth: mq.size.width,
-                        maxHeight: mq.size.height,
-                        maxWidth: mq.size.width),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        verticalDirection: VerticalDirection.down,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Flexible(
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: _filterChip,
-                                  ),
-                                  flex: flexChip),
-                              Expanded(
-                                  flex: flexList,
-                                  child: FutureBuilder(
-                                    future: HandleHerokuRequests.getResultsJSON(
-                                        '$_baseParam$_extraParam'),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      } else if (snapshot.connectionState ==
-                                          ConnectionState.none) {
-                                        return Center(
-                                            child: Text(
-                                                'Cannot load contacts. Check your internet connection.'));
-                                      } else if (snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                        if (snapshot.hasData) {
-                                          _contacts =
-                                              snapshot.data.toSet().toList();
-                                          if (_contacts.length > 0) {
-                                            return _baseParam ==
-                                                        'contact/?search=' &&
-                                                    _extraParam == ''
-                                            ? _defaultView
-                                            : buildContactListView(_contacts);
-                                      } else {
-                                        return Center(
-                                            child: Text('No matches found'));
-                                      }
-                                    } else if (!snapshot.hasData ||
-                                        snapshot.hasError) {
-                                      return Center(
-                                          child: Text('An error occured'));
-                                    } else {
-                                      return Center(
-                                          child: Text('No matches found'));
-                                    }
-                                  }
-                                  return Container();
-                                },
-                              ))
-                        ]),
-                  ),
-                ))
-                : Container(),
-                    );
-  }
+      appBar: AppBar(
+        title: _appBarTitle,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(icon: _searchIcon, onPressed: _revealSearchField),
+          _filterPopupMenu()
+        ],
+      ),
+      body: mq.orientation == Orientation.portrait
+          ? Container(
+              height: mq.size.height,
+              width: mq.size.width,
+              padding: EdgeInsets.fromLTRB(conPadW, conPadH, conPadW, conPadH),
+              child: SingleChildScrollView(
+                child: Container(
+                  height: mq.size.height,
+                  width: mq.size.width,
+                  child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      verticalDirection: VerticalDirection.down,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Flexible(flex: 20, child: _buildChipCarousel()),
+                        Flexible(
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: _filterChip,
+                            ),
+                            flex: flexChip),
+                        Expanded(flex: flexList, child: _contactFutureBuilder())
+                      ]),
+                ),
+              ))
+          : Container(),
+    );
+  } // build
 
+  /// Toggles the [AppBar] between the page title and the search [TextField]
   void _revealSearchField() {
     setState(() {
       if (_searchIcon.icon == Icons.search) {
@@ -236,21 +203,134 @@ class _ContactPageState extends State<ContactPage> {
         _appBarTitle = Text('Contacts');
       }
     });
+  } // revealSearchField
+
+  /// Builds a [ListView] of [ContactTile] for each member
+  /// in the list of [contacts].
+  Widget _buildContactListView(List<dynamic> contacts) {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: contacts.length,
+        semanticChildCount: contacts.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ContactTile(
+              title: contacts[index]['name'],
+              subtitle: contacts[index]['description'],
+              namedRoute: ContactDetailPage.routeName,
+              arguments: contacts[index]);
+        });
+  } // buildContactCard
+
+  /// Displays a [CircularProgressIndicator] while the list of contacts loads.
+  /// Also displays message indicating that no matches were found if
+  /// no matches were found and a message if an error occured.
+  Widget _contactFutureBuilder() {
+    return FutureBuilder(
+      future: HandleHerokuRequests.getResultsJSON('$_baseParam$_extraParam'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.connectionState == ConnectionState.none) {
+          return Center(
+              child: Text(
+                  'Cannot load contacts. Check your internet connection.'));
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            _contacts = snapshot.data.toSet().toList();
+            if (_contacts.length > 0) {
+              return _baseParam == 'contact/?search=' && _extraParam == ''
+                  ? _defaultView
+                  : _buildContactListView(_contacts);
+            } else {
+              return Center(child: Text('No matches found'));
+            }
+          } else if (!snapshot.hasData || snapshot.hasError) {
+            return Center(child: Text('An error occured'));
+          } else {
+            return Center(child: Text('No matches found'));
+          }
+        }
+        return Container();
+      },
+    );
+  } // _contactFutureBuilder
+
+  Widget _buildChipCarousel() {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          height: 140.0,
+          width: MediaQuery.of(context).size.width -
+              ((MediaQuery.of(context).size.width * 0.07) * 2),
+          child: PageView.builder(
+            controller: PageController(
+                initialPage: 0, keepPage: true, viewportFraction: 0.7),
+            itemCount: _categories.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: ((MediaQuery.of(context).size.width -
+                            ((MediaQuery.of(context).size.width * 0.07) * 2)) *
+                        0.05)),
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                constraints: BoxConstraints(
+                    maxHeight: 140.0,
+                    maxWidth: (MediaQuery.of(context).size.width -
+                            ((MediaQuery.of(context).size.width * 0.07) * 2)) *
+                        0.5,
+                    minHeight: 140.0,
+                    minWidth: (MediaQuery.of(context).size.width -
+                            ((MediaQuery.of(context).size.width * 0.07) * 2)) *
+                        0.5),
+                width: (MediaQuery.of(context).size.width -
+                        ((MediaQuery.of(context).size.width * 0.07) * 2)) *
+                    0.5,
+                child: ChoiceChip(
+                    label: Text(
+                      _categories[index]['title'],
+                      textWidthBasis: TextWidthBasis.parent,
+                    ),
+                    selected: false),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  List<PopupMenuEntry<dynamic>> _filterChooserBuilder(context) {
+    List<PopupMenuEntry<dynamic>> popup = [];
+    popup.add(PopupMenuItem(
+      value: '',
+      child: Text('No Filter'),
+    ));
+    //popup.add(PopupMenuDivider());
+    _categories.forEach((e) {
+      popup.add(PopupMenuItem(
+        child: Text(e['title']),
+        value: '&${e['queryParam']}=${e['value']}',
+      ));
+      //popup.add(PopupMenuDivider());
+    });
+    return popup;
+  }
+
+  Widget _filterPopupMenu() {
+    return PopupMenuButton(
+      initialValue: this.initialValue,
+      onSelected: (value) {
+        setState(() {
+          _extraParam = value;
+          this.initialValue = value;
+          _baseParam = 'contact/?search=';
+        });
+      },
+      icon: _filterIcon,
+      itemBuilder: (context) => _filterChooserBuilder(context),
+    );
   }
 } // _ContactPageState
-
-/// Builds a [ListView] of [ContactTile] for each member
-/// in the list of [contacts].
-Widget buildContactListView(List<dynamic> contacts) {
-  return ListView.builder(
-      shrinkWrap: true,
-      itemCount: contacts.length,
-      semanticChildCount: contacts.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ContactTile(
-            title: contacts[index]['name'],
-            subtitle: contacts[index]['description'],
-            namedRoute: ContactDetailPage.routeName,
-            arguments: contacts[index]);
-      });
-} // buildContactCard
