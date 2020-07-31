@@ -66,7 +66,7 @@ class ContactDetailPage extends StatelessWidget {
       var icon;
       if (data['phone_contact_set'][i]['platforms'] == 'WHATSAPP') {
         icon = Image.asset(
-          'assets/images/contact/WhatsApp_flat.png',
+          'images/contact/WhatsApp_flat.png',
           width: IconTheme.of(context).size,
         );
         return ListTile(

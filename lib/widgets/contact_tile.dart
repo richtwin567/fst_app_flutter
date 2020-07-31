@@ -44,15 +44,16 @@ class ContactTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var mq = MediaQuery.of(context);
-    var paddingV = mq.size.height * 0.02;
-    var paddingH = mq.size.width * 0.04;
     var tileH = mq.size.height * 0.15;
+
     return Container(
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.blue,style: BorderStyle.solid))),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                    BorderSide(color: Theme.of(context).accentColor, style: BorderStyle.solid))),
         height: tileH,
+        alignment: Alignment.center,
         child: ListTile(
-          contentPadding:
-              EdgeInsets.fromLTRB(paddingH, paddingV, paddingH, paddingV),
           onTap: namedRoute != null
               ? () {
                   arguments != null
@@ -69,7 +70,7 @@ class ContactTile extends StatelessWidget {
           subtitle:
               Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
           trailing:
-              Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
+              Icon(Icons.chevron_right, color: Theme.of(context).primaryColor),
         ));
   }
 } // ContactTile definition

@@ -6,9 +6,7 @@ import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart'
 import 'package:fst_app_flutter/screens/homescreen/home_view.dart';
 
 void main() => runApp(
-      DevicePreview(
-        child: FSTApp(),
-      ),
+      FSTApp()
     );
 
 class FSTApp extends StatelessWidget {
@@ -26,10 +24,11 @@ class FSTApp extends StatelessWidget {
             ContactDetailPage(),
       },
       theme: ThemeData(
-        primaryColor: Colors.blue[900],
-        accentColor: Color.fromRGBO(243, 191, 18, 1.0),
+        primaryColor: Color.fromRGBO(0, 62, 138, 1.0),
+        accentColor: Colors.blue[800],
         backgroundColor: Colors.white,   
         fontFamily: 'Montserrat',
+        //textTheme: TextTheme(bodyText1: TextStyle(color: Colors.green),subtitle1: TextStyle(color: Colors.green,fontFamily: 'Montserrat',height: 1.0),caption: TextStyle(color: Colors.red)),
         appBarTheme: AppBarTheme(iconTheme: IconThemeData(color: Colors.white,opacity: 1.0), textTheme: TextTheme(headline6: TextStyle(fontSize: 20.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold))),
         visualDensity: VisualDensity.adaptivePlatformDensity,
     ));

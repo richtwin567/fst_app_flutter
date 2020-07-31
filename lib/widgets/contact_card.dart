@@ -24,6 +24,5 @@ class ContactCard extends Card {
             shape: Border(),
             key: key,
             child: child,
-            elevation: 2,
             margin: margin);
 } // ContactCard defintion
