@@ -14,7 +14,7 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   /// This [String] will be modified to include the search value entered by the user.
-  /// Otherwise, it will be passed to the [HandleHerokuRequests.getResultsJSON] like this.
+  /// Otherwise, it will be passed to the [getResultsJSON] like this.
   var _baseParam = 'contact/?search=';
 
   /// Extra parameters to attach to the [_baseParam] such as department or type.
@@ -23,7 +23,7 @@ class _ContactPageState extends State<ContactPage> {
   /// The default categories to filter by and their corresponding
   /// query parameter and value.
   ///
-  /// Used to construct the [_filterChooserBuilder]
+  /// Used to construct the [_filterDropDown]
   final List<dynamic> _categories = [
     {'title': 'All', 'queryParam': '', 'value': ''},
     {'title': 'Emergency', 'queryParam': 'type', 'value': 'EMERGENCY'},
@@ -68,13 +68,15 @@ class _ContactPageState extends State<ContactPage> {
   /// a list to store all contacts that were a returned from the query
   List<dynamic> _contacts = [];
 
-  var dropdownValue = 'All';
+  /// Currently selected dropdown item value. Allows for differential 
+  /// of text in the dropdown list for the item that is selected.
+  var _dropdownValue = 'All';
 
   /// Used to switch the state of the appBar to a search field in the [_revealSearchField]
   /// function.
   Icon _searchIcon = Icon(Icons.search);
 
-  /// Used to switch between filters from [_categories] in the [_filterChooserBuilder]
+  /// Used to switch between filters from [_categories] in the [_filterDropDown]
   /// function
   Icon _filterIcon = Icon(Icons.filter_list, color: Colors.white);
 
@@ -82,32 +84,35 @@ class _ContactPageState extends State<ContactPage> {
   /// function.
   Widget _appBarTitle = Text('Contacts');
 
-  /// The value that is currently selected from the filter list
-  String _initialValue = '';
-
   /// Returns the list to the position it was at before navigatimg to another route
-  ScrollController sc = ScrollController(keepScrollOffset: true);
+  ScrollController _sc = ScrollController(keepScrollOffset: true);
 
   /// Allows for changing the appbar colour in [_revealSearchField]
   Color _appBarColor;
 
+  /// Colour behind the dropdown button. Toggles between blue and white in [_revealSearchField]
   Color _dropdownBackground = Colors.blue[800];
 
+  /// Colour of the selected item's text on the drop down button. 
+  /// Toggles between white and black in [_revealSearchField]
   Color _dropdownSelected = Colors.white;
 
-  var prefSize = kToolbarHeight;
+  /// The preferred size of the dropdown button. 
+  /// Toggles between [kToolbarHeight] and `0.0` in [_revealSearchField].
+  var _prefSize = kToolbarHeight;
 
   /// Load all contacts when page is loaded initially
   @override
   void initState() {
-    HandleHerokuRequests.getResultsJSON('$_baseParam$_extraParam')
+    getResultsJSON('$_baseParam$_extraParam')
         .then((data) => _contacts = data.toSet().toList());
     super.initState();
   }
 
+
   @override
   void dispose() {
-    sc.dispose();
+    _sc.dispose();
     super.dispose();
   }
 
@@ -115,8 +120,9 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     // width and height calculations made using the [MediaQueryData]
     var mq = MediaQuery.of(context);
-    var conPadW = mq.size.width * 0.1;
-    var conPadH = (mq.size.height - (kToolbarHeight * 2)) * 0.07;
+    // horizontal and vertical padding for the list of contacts
+    var padH = mq.size.width * 0.1;
+    var padV = (mq.size.height - (kToolbarHeight * 2)) * 0.07;
 
     return Scaffold(
       appBar: AppBar(
@@ -124,7 +130,6 @@ class _ContactPageState extends State<ContactPage> {
         title: _appBarTitle,
         actions: <Widget>[
           IconButton(icon: _searchIcon, onPressed: _revealSearchField),
-          //_filterPopupMenu()
         ],
         bottom: _filterDropDown(context),
         centerTitle: false,
@@ -136,12 +141,12 @@ class _ContactPageState extends State<ContactPage> {
                 height: mq.size.height - (kToolbarHeight * 2),
                 width: mq.size.width,
                 padding:
-                    EdgeInsets.fromLTRB(conPadW, conPadH, conPadW, conPadH),
+                    EdgeInsets.fromLTRB(padH, padV, padH, padV),
                 child: Column(
                     mainAxisSize: MainAxisSize.max,
                     verticalDirection: VerticalDirection.down,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       Expanded(child: _contactFutureBuilder())
                     ]),
@@ -164,7 +169,7 @@ class _ContactPageState extends State<ContactPage> {
           Icons.filter_list,
           color: Colors.white,
         );
-        prefSize = 0.0;
+        _prefSize = 0.0;
         _dropdownSelected = Colors.black45;
         _dropdownBackground = Colors.white;
         _appBarTitle = TextField(
@@ -199,7 +204,7 @@ class _ContactPageState extends State<ContactPage> {
         );
         _baseParam = 'contact/?search=';
         _contacts.clear();
-        prefSize = kToolbarHeight;
+        _prefSize = kToolbarHeight;
         _dropdownSelected = Colors.white;
       }
     });
@@ -209,7 +214,7 @@ class _ContactPageState extends State<ContactPage> {
   /// in the list of [contacts].
   Widget _buildContactListView(List<dynamic> contacts) {
     return Scrollbar(
-      controller: sc,
+      controller: _sc,
       child: ListView.builder(
           itemCount: contacts.length,
           semanticChildCount: contacts.length,
@@ -228,7 +233,7 @@ class _ContactPageState extends State<ContactPage> {
   /// no matches were found and a message if an error occured.
   Widget _contactFutureBuilder() {
     return FutureBuilder(
-      future: HandleHerokuRequests.getResultsJSON('$_baseParam$_extraParam'),
+      future: getResultsJSON('$_baseParam$_extraParam'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -255,41 +260,13 @@ class _ContactPageState extends State<ContactPage> {
     );
   } // _contactFutureBuilder
 
-  /// Builds the list of choices to filter by for [_filterPopupMenu] using the options from [_categories].
-  List<PopupMenuEntry<dynamic>> _filterChooserBuilder(context) {
-    List<PopupMenuEntry<dynamic>> popup = [];
-
-    //popup.add(PopupMenuDivider());
-    _categories.forEach((e) {
-      popup.add(PopupMenuItem(
-        child: Text(e['title']),
-        value: '&${e['queryParam']}=${e['value']}',
-      ));
-      //popup.add(PopupMenuDivider());
-    });
-    return popup;
-  }
-
-  /// Builds the filter [PopupMenu]
-  Widget _filterPopupMenu() {
-    return PopupMenuButton(
-      initialValue: this._initialValue,
-      onSelected: (value) {
-        setState(() {
-          _extraParam = value;
-          this._initialValue = value;
-        });
-      },
-      icon: _filterIcon,
-      itemBuilder: (context) => _filterChooserBuilder(context),
-    );
-  }
-
+  /// Drop down button to filter the list of [_contacts] by [_categories].
   _filterDropDown(BuildContext context) {
     return PreferredSize(
         child: Container(
             color: _dropdownBackground,
-            height: prefSize,
+            height: _prefSize,
+            width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: DropdownButtonHideUnderline(
@@ -308,26 +285,30 @@ class _ContactPageState extends State<ContactPage> {
                   },
                   isExpanded: true,
                   icon: _filterIcon,
-                  value: dropdownValue,
-                  items: _filterDropDownItemBuilder(),
+                  value: _dropdownValue,
+                  items: _filterDropDownItemBuilder(context),
                   onChanged: (value) {
-                    dropdownValue = value;
+                    _dropdownValue = value;
                   }),
             )),
-        preferredSize: Size.fromHeight(prefSize));
+        preferredSize: Size.fromHeight(_prefSize));
   }
 
-  List<DropdownMenuItem<dynamic>> _filterDropDownItemBuilder() {
+  /// Builds the  dropdown list for [_filterDropDown] from [_categories].
+  List<DropdownMenuItem<dynamic>> _filterDropDownItemBuilder(context) {
     return List.generate(_categories.length, (i) {
       return DropdownMenuItem(
         child: Container(
           alignment: Alignment.centerLeft,
           height: kMinInteractiveDimension,
-          color: _categories[i]['title'] == dropdownValue
-              ? Colors.grey[300]
-              : Colors.white,
+          width: MediaQuery.of(context).size.width,
           child: Text(
             _categories[i]['title'],
+            style: _categories[i]['title'] == _dropdownValue
+                ? TextStyle(
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w800)
+                : null,
           ),
         ),
         onTap: () {
@@ -342,49 +323,4 @@ class _ContactPageState extends State<ContactPage> {
       );
     });
   }
-
-  /* Widget _buildChipCarousel() {
-    var totalWidth = MediaQuery.of(context).size.width -
-        ((MediaQuery.of(context).size.width * 0.07) * 2);
-    var hMargin = totalWidth * 0.05;
-    var height = 140.0;
-
-    var chipColor = Colors.grey[200];
-
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: height,
-          width: totalWidth,
-          child: PageView.builder(
-            onPageChanged: (i) {
-              setState(() {
-                _extraParam =
-                    '&${_categories[i]['queryParam']}=${_categories[i]['value']}';
-              });
-            },
-            controller: PageController(
-                initialPage: 0, keepPage: true, viewportFraction: 0.7),
-            itemCount: _categories.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                constraints: BoxConstraints(maxHeight: height,minHeight: height),
-                margin: EdgeInsets.symmetric(horizontal: hMargin),
-                decoration: BoxDecoration(
-                    color: chipColor,
-                    borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                child: ChoiceChip(
-                    label: Text(
-                      _categories[index]['title'],
-                      textWidthBasis: TextWidthBasis.parent,
-                    ),
-                    selected: false),
-              );
-            },
-          ),
-        );
-      },
-    );
-  } */
 } // _ContactPageState
