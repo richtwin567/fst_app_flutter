@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/widgets/contact_detail_image.dart';
 
 /// A [ListTile] that
 /// allows navigation to the [ContactDetailPage] for this [ContactTile] when tapped.
@@ -21,6 +24,8 @@ class ContactTile extends StatelessWidget {
   /// [namedRoute].
   final GestureTapCallback tapFunc;
 
+  final String tag;
+
   /// Creates a contact tile.
   ///
   /// A contact tile has a [title] and [subtitle].
@@ -36,7 +41,8 @@ class ContactTile extends StatelessWidget {
       @required this.subtitle,
       this.namedRoute,
       this.tapFunc,
-      this.arguments})
+      this.arguments,
+      this.tag})
       : assert((namedRoute == null && tapFunc != null) ||
             (namedRoute != null && tapFunc == null)),
         super(key: key);
@@ -59,9 +65,20 @@ class ContactTile extends StatelessWidget {
                   arguments != null
                       ? Navigator.pushNamed(context, namedRoute,
                           arguments: arguments)
-                      : Navigator.pushNamed(context, namedRoute);
+                      : Navigator.pushNamed(context, namedRoute); 
                 }
               : tapFunc,
+            leading: CircleAvatar(backgroundColor: Colors.blue[300],
+              child: Hero(
+                              tag: tag,
+                              child: CustomPaint(
+                      painter: ContactDetailSvg(
+                          start: Point(
+                              0.0,-6.0),
+                          scale:
+                              1.2,
+                          color: Colors.blue[800])),
+              ),),
           title: Text(
             title,
             maxLines: 2,

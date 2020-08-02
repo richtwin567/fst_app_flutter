@@ -1,12 +1,14 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/routing/generate_routes.dart';
+import 'package:fst_app_flutter/routing/routes.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contacts_page_general.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
 
 import 'package:fst_app_flutter/screens/homescreen/home_view.dart';
 
 void main() => runApp(
-      FSTApp()
+      DevicePreview(child: FSTApp())
     );
 
 class FSTApp extends StatelessWidget {
@@ -16,13 +18,8 @@ class FSTApp extends StatelessWidget {
     return MaterialApp(
       builder: DevicePreview.appBuilder,
       title: 'Flutter Demo',
-      initialRoute: ContactPage.routeName,
-      routes: {
-        '/home': (context) => HomeView(),
-        ContactPage.routeName: (context) => ContactPage(),
-        ContactDetailPage.routeName: (context) =>
-            ContactDetailPage(),
-      },
+      initialRoute: contactRoute,
+      onGenerateRoute: Router.generateRoute,
       theme: ThemeData(
         primaryColor: Color.fromRGBO(0, 62, 138, 1.0),
         accentColor: Colors.blue[800],

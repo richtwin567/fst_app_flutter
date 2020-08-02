@@ -1,17 +1,22 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/widgets/contact_card.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
 import 'package:fst_app_flutter/widgets/contact_detail_image.dart';
 
+/// A page that shows all the details for the selected contact. 
+/// It allows the user to open websites, call the contact and send an email to 
+/// the contact directly from the app.
 class ContactDetailPage extends StatelessWidget {
-  static const routeName = '/contactDetail';
+  /// The information [Map] for this contact
+  final dynamic contactDetails;
+
+  /// [contactDetails] is passed from [RouterSettings] in [Router.generateRoute]
+  ContactDetailPage(this.contactDetails, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final dynamic contactDetails = ModalRoute.of(context).settings.arguments;
     final ContactCard contactMethods =
         _contactDetailList(contactDetails, mq, context);
     final ContactCard contactInfo = _aboutContactList(contactDetails, mq);
@@ -20,29 +25,21 @@ class ContactDetailPage extends StatelessWidget {
         body: CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-            //TODO: investigate: are these actions feasible?
-            /* actions: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.share,
-                      color: Theme.of(context).iconTheme.color),
-                  onPressed: null),
-              IconButton(
-                  icon: Icon(Icons.save,
-                      color: Theme.of(context).iconTheme.color),
-                  onPressed: null)
-            ], */
             floating: false,
             pinned: true,
             snap: false,
             expandedHeight: mq.size.height / 2.5,
             flexibleSpace: FlexibleSpaceBar(
-                background: CustomPaint(
-                    painter: ContactDetailSvg(
-                        start: Point(
-                            mq.size.width / 2, (mq.size.height / 2.5) / 2),
-                        scale:
-                            (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
-                        color: Colors.blue[800])),
+                background: Hero(
+                  tag: 'avatar${contactDetails['id']}',
+                  child: CustomPaint(
+                      painter: ContactDetailSvg(
+                          start: Point(
+                              mq.size.width / 2, (mq.size.height / 2.5) / 2),
+                          scale:
+                              (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
+                          color: Colors.blue[800])),
+                ),
                 title: Padding(
                   padding: EdgeInsets.only(right: mq.size.width / 4),
                   child: Text(
@@ -57,8 +54,10 @@ class ContactDetailPage extends StatelessWidget {
         )
       ],
     ));
-  }
+  }// build
 
+  /// Creates a [ContactCard] for the phone numbers, email address and 
+  /// fax number if applicable.
   ContactCard _contactDetailList(
       final dynamic data, final MediaQueryData mq, BuildContext context) {
     List<dynamic> phoneNums =
@@ -118,6 +117,7 @@ class ContactDetailPage extends StatelessWidget {
         ));
   }
 
+  /// Creates a [ContactCard] for the website and description if applicable.
   ContactCard _aboutContactList(final dynamic data, final MediaQueryData mq) {
     List<dynamic> iconifiedList;
     if (data['website'] != '' || data['description'] != '') {

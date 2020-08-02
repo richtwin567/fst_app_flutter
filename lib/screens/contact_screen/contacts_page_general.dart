@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
 import 'package:fst_app_flutter/widgets/contact_tile.dart';
+import 'package:fst_app_flutter/routing/routes.dart';
 
 class ContactPage extends StatefulWidget {
-  static const routeName = '/contact';
 
   const ContactPage({Key key}) : super(key: key);
 
@@ -12,7 +12,8 @@ class ContactPage extends StatefulWidget {
   _ContactPageState createState() => _ContactPageState();
 } // ContactPage definition
 
-class _ContactPageState extends State<ContactPage> {
+class _ContactPageState extends State<ContactPage>
+    with SingleTickerProviderStateMixin {
   /// This [String] will be modified to include the search value entered by the user.
   /// Otherwise, it will be passed to the [getResultsJSON] like this.
   var _baseParam = 'contact/?search=';
@@ -68,7 +69,7 @@ class _ContactPageState extends State<ContactPage> {
   /// a list to store all contacts that were a returned from the query
   List<dynamic> _contacts = [];
 
-  /// Currently selected dropdown item value. Allows for differential 
+  /// Currently selected dropdown item value. Allows for differential
   /// of text in the dropdown list for the item that is selected.
   var _dropdownValue = 'All';
 
@@ -87,33 +88,37 @@ class _ContactPageState extends State<ContactPage> {
   /// Returns the list to the position it was at before navigatimg to another route
   ScrollController _sc = ScrollController(keepScrollOffset: true);
 
-  /// Allows for changing the appbar colour in [_revealSearchField]
-  Color _appBarColor;
+  // Controller for dropdown sliding animation
+  AnimationController _animationController;
 
-  /// Colour behind the dropdown button. Toggles between blue and white in [_revealSearchField]
-  Color _dropdownBackground = Colors.blue[800];
-
-  /// Colour of the selected item's text on the drop down button. 
-  /// Toggles between white and black in [_revealSearchField]
-  Color _dropdownSelected = Colors.white;
-
-  /// The preferred size of the dropdown button. 
-  /// Toggles between [kToolbarHeight] and `0.0` in [_revealSearchField].
-  var _prefSize = kToolbarHeight;
+  Animatable<Color> _appBarBgColor;
 
   /// Load all contacts when page is loaded initially
   @override
   void initState() {
+    super.initState();
     getResultsJSON('$_baseParam$_extraParam')
         .then((data) => _contacts = data.toSet().toList());
-    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 250),
+    );
+    _appBarBgColor = TweenSequence([
+      TweenSequenceItem(
+          tween: ColorTween(
+              begin: Color.fromRGBO(0, 62, 138, 1.0), end: Colors.blue[800]),
+          weight: 1.0),
+      TweenSequenceItem(
+          tween: ColorTween(begin: Colors.blue[800], end: Colors.white),
+          weight: 0.5)
+    ]);
   }
-
 
   @override
   void dispose() {
-    _sc.dispose();
     super.dispose();
+    _sc.dispose();
+    _animationController.dispose();
   }
 
   @override
@@ -125,42 +130,77 @@ class _ContactPageState extends State<ContactPage> {
     var padV = (mq.size.height - (kToolbarHeight * 2)) * 0.07;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: _appBarColor,
-        title: _appBarTitle,
-        actions: <Widget>[
-          IconButton(icon: _searchIcon, onPressed: _revealSearchField),
-        ],
-        bottom: _filterDropDown(context),
-        centerTitle: false,
-      ),
-      body: mq.orientation == Orientation.portrait
-          ? SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: Container(
-                height: mq.size.height - (kToolbarHeight * 2),
-                width: mq.size.width,
-                padding:
-                    EdgeInsets.fromLTRB(padH, padV, padH, padV),
-                child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    verticalDirection: VerticalDirection.down,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Expanded(child: _contactFutureBuilder())
-                    ]),
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: SafeArea(
+          child: AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          var slideDist = -kToolbarHeight * _animationController.value;
+
+          return Stack(
+            children: <Widget>[
+              Container(),
+              Positioned(
+                top: kToolbarHeight * 2,
+                child: Transform(
+                    transform: Matrix4.identity()..translate(0.0, slideDist),
+                    child: Container(
+                      height: mq.size.height - (kToolbarHeight * 2),
+                      width: mq.size.width,
+                      padding: EdgeInsets.fromLTRB(padH, padV, padH, padV),
+                      child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          verticalDirection: VerticalDirection.down,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Expanded(child: _contactFutureBuilder())
+                          ]),
+                    )),
               ),
-            )
-          : Container(),
+              Positioned(
+                top: kToolbarHeight,
+                child: Transform(
+                    transform: Matrix4.identity()..translate(0.0, slideDist),
+                    child: Card(
+                        margin: EdgeInsets.all(0.0),
+                        elevation: 4.0,
+                        child: _filterDropDown(context))),
+              ),
+              Container(
+                height: kToolbarHeight,
+                child: AppBar(
+                  elevation: 0.0,
+                  actions: <Widget>[_searchButton()],
+                  centerTitle: false,
+                  backgroundColor: _appBarBgColor.evaluate(CurvedAnimation(
+                      parent: _animationController,
+                      curve: Interval(0.40, 1.0, curve: Curves.ease))),
+                  title: _appBarTitle,
+                ),
+              ),
+            ],
+          );
+        },
+      )),
     );
   } // build
 
+  /// Builds the Search [IconButton] that goes in the [AppBar] actions.
+  Widget _searchButton() {
+    return IconButton(icon: _searchIcon, onPressed: _revealSearchField);
+  }
+
+  /// Toggle appbar and dropdown button animations
+  void toggleAnimation() => _animationController.isDismissed
+      ? _animationController.forward()
+      : _animationController.reverse();
+
   /// Toggles the [AppBar] between the page title and the search [TextField]
   void _revealSearchField() {
+    toggleAnimation();
     setState(() {
       if (_searchIcon.icon == Icons.search) {
-        _appBarColor = Colors.white;
         _searchIcon = Icon(
           Icons.close,
           color: Colors.black45,
@@ -169,9 +209,6 @@ class _ContactPageState extends State<ContactPage> {
           Icons.filter_list,
           color: Colors.white,
         );
-        _prefSize = 0.0;
-        _dropdownSelected = Colors.black45;
-        _dropdownBackground = Colors.white;
         _appBarTitle = TextField(
           onChanged: (value) {
             setState(() {
@@ -181,31 +218,24 @@ class _ContactPageState extends State<ContactPage> {
           },
           decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
-              //contentPadding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
               hintText: 'Search',
-              filled: true,
-              fillColor: Colors.white,
+              filled: false,
               border: OutlineInputBorder(
-                //borderRadius: BorderRadius.all(Radius.circular(40.0)),
                 borderSide: BorderSide.none,
               )),
         );
       } else {
-        _dropdownBackground = Theme.of(context).accentColor;
         _searchIcon = Icon(
           Icons.search,
           color: Colors.white,
         );
         _appBarTitle = Text('Contacts');
-        _appBarColor = Theme.of(context).appBarTheme.color;
         _filterIcon = Icon(
           Icons.filter_list,
           color: Colors.white,
         );
         _baseParam = 'contact/?search=';
         _contacts.clear();
-        _prefSize = kToolbarHeight;
-        _dropdownSelected = Colors.white;
       }
     });
   } // revealSearchField
@@ -220,9 +250,10 @@ class _ContactPageState extends State<ContactPage> {
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
             return ContactTile(
+                tag: 'avatar${contacts[index]['id']}',
                 title: contacts[index]['name'],
                 subtitle: contacts[index]['description'],
-                namedRoute: ContactDetailPage.routeName,
+                namedRoute: contactDetailRoute,
                 arguments: contacts[index]);
           }),
     );
@@ -264,21 +295,20 @@ class _ContactPageState extends State<ContactPage> {
   _filterDropDown(BuildContext context) {
     return PreferredSize(
         child: Container(
-            color: _dropdownBackground,
-            height: _prefSize,
+            color: Theme.of(context).accentColor,
+            height: kToolbarHeight,
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: DropdownButtonHideUnderline(
               child: DropdownButton(
-                  //style: TextStyle(color: Colors.red),
                   selectedItemBuilder: (context) {
                     return _categories
                         .map((e) => Align(
                               alignment: Alignment.centerLeft,
                               child: Text(e['title'],
                                   style: TextStyle(
-                                      color: _dropdownSelected,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.w600)),
                             ))
                         .toList();
@@ -291,7 +321,7 @@ class _ContactPageState extends State<ContactPage> {
                     _dropdownValue = value;
                   }),
             )),
-        preferredSize: Size.fromHeight(_prefSize));
+        preferredSize: Size.fromHeight(kToolbarHeight));
   }
 
   /// Builds the  dropdown list for [_filterDropDown] from [_categories].
