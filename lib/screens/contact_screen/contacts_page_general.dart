@@ -4,7 +4,6 @@ import 'package:fst_app_flutter/widgets/contact_tile.dart';
 import 'package:fst_app_flutter/routing/routes.dart';
 
 class ContactPage extends StatefulWidget {
-  
   const ContactPage({Key key}) : super(key: key);
 
   @override
@@ -266,10 +265,12 @@ class _ContactPageState extends State<ContactPage>
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
             return ContactTile(
-                title: contacts[index]['name'],
-                subtitle: contacts[index]['description'],
-                namedRoute: contactDetailRoute,
-                arguments: contacts[index], thickness: 1.0,);
+              title: contacts[index]['name'],
+              subtitle: contacts[index]['description'],
+              namedRoute: contactDetailRoute,
+              arguments: contacts[index],
+              thickness: 1.0,
+            );
           }),
     );
   } // buildContactCard

@@ -12,10 +12,8 @@ class ContactViewTabletPortrait extends BaseModelWidget<ContactViewModel> {
     return Scaffold(
         key: _scaffoldKey,
         body: ContactViewStateful(state: ContactViewTabletPortraitState()));
-          }
-        }
-        
-  
+  }
+}
 
 class ContactViewTabletLandscape extends BaseModelWidget<ContactViewModel> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -25,8 +23,6 @@ class ContactViewTabletLandscape extends BaseModelWidget<ContactViewModel> {
     return Scaffold(
       key: _scaffoldKey,
       body: ContactViewStateful(state: ContactViewTabletLandscapeState()),
-          );
-        }
-      }
-      
-      
+    );
+  }
+}

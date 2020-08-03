@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_state.dart';
 
-class ContactViewTabletPortraitState extends ContactViewTabletLandscapeState {
-
-}
+class ContactViewTabletPortraitState extends ContactViewTabletLandscapeState {}
 
 class ContactViewTabletLandscapeState extends ContactViewState {
   AnimationController fc;
@@ -39,15 +37,18 @@ class ContactViewTabletLandscapeState extends ContactViewState {
               child: Stack(
                 children: [
                   buildContactListArea(
-                    titleStyle: TextStyle(fontSize: 18.0,fontWeight: FontWeight.w500),
-                    subtitleStyle:TextStyle(fontSize: 14.0,fontWeight: FontWeight.w500) ,
+                      titleStyle: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.w500),
+                      subtitleStyle: TextStyle(
+                          fontSize: 14.0, fontWeight: FontWeight.w500),
                       posFromTop: kToolbarHeight,
                       slideDist: 0.0,
                       height: screenHeight - kToolbarHeight,
                       width: screenWidth - kMinInteractiveDimension,
                       padH: screenWidth * 0.07,
                       padV: screenHeight * 0.05,
-                      posFromLeft: kMinInteractiveDimension, thickness: 1.0),
+                      posFromLeft: kMinInteractiveDimension,
+                      thickness: 1.5),
                 ],
               ),
             ),
@@ -93,7 +94,8 @@ class ContactViewTabletLandscapeState extends ContactViewState {
                 height: height,
                 child: Container(
                   alignment: Alignment.center,
-                  margin: EdgeInsets.only(right: kMinInteractiveDimension, left: width*0.05),
+                  margin: EdgeInsets.only(
+                      right: kMinInteractiveDimension, left: width * 0.05),
                   child: ListView.builder(
                     itemBuilder: (context, i) =>
                         filterDrawerListBuilder(context, i, height),
@@ -113,13 +115,19 @@ class ContactViewTabletLandscapeState extends ContactViewState {
                     height: height,
                     width: kMinInteractiveDimension,
                     color: bgColor,
-                    child: Center(
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_right,
-                            color: Colors.white,
-                          ),
-                          onPressed: () => toggleDrawer()),
+                    child: RotationTransition(
+                      turns: Tween<double>(begin: 1.0, end: 0.5).animate(
+                          CurvedAnimation(
+                              parent: fc,
+                              curve: Interval(0.0, 0.4, curve: Curves.linear))),
+                      child: Center(
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_right,
+                              color: Colors.white,
+                            ),
+                            onPressed: () => toggleDrawer()),
+                      ),
                     )),
               ),
             ),
@@ -143,7 +151,9 @@ class ContactViewTabletLandscapeState extends ContactViewState {
         margin: EdgeInsets.only(bottom: height * 0.01, top: height * 0.01),
         height: (height / categories.length) - ((height * 0.01) * 2),
         decoration: BoxDecoration(
-            color: currentFilter == categories[i]['title']?  Color.lerp(Colors.blue[600],Colors.blue[700],0.5) :filterOptionBgColor,
+            color: currentFilter == categories[i]['title']
+                ? Color.lerp(Colors.blue[600], Colors.blue[700], 0.5)
+                : filterOptionBgColor,
             borderRadius: BorderRadius.circular(40.0)),
         child: ListTile(
           title: Text(

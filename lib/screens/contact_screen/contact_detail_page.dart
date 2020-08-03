@@ -5,8 +5,8 @@ import 'package:fst_app_flutter/widgets/contact_card.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
 import 'package:fst_app_flutter/widgets/contact_detail_image.dart';
 
-/// A page that shows all the details for the selected contact. 
-/// It allows the user to open websites, call the contact and send an email to 
+/// A page that shows all the details for the selected contact.
+/// It allows the user to open websites, call the contact and send an email to
 /// the contact directly from the app.
 class ContactDetailPage extends StatelessWidget {
   /// The information [Map] for this contact
@@ -24,8 +24,8 @@ class ContactDetailPage extends StatelessWidget {
 
     return Scaffold(
         body: SafeArea(
-                  child: CustomScrollView(
-      slivers: <Widget>[
+      child: CustomScrollView(
+        slivers: <Widget>[
           SliverAppBar(
               floating: false,
               pinned: true,
@@ -33,16 +33,15 @@ class ContactDetailPage extends StatelessWidget {
               expandedHeight: mq.size.height / 2.5,
               flexibleSpace: FlexibleSpaceBar(
                   background: CustomPaint(
-                        painter: ContactDetailSvg(
-                            start: Point(
-                                mq.size.width / 2, (mq.size.height / 2.5) / 2),
-                            scale:
-                                (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
-                            color: Colors.blue[800])),
-                  
+                      painter: ContactDetailSvg(
+                          start: Point(
+                              mq.size.width / 2, (mq.size.height / 2.5) / 2),
+                          scale:
+                              (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
+                          color: Colors.blue[800])),
                   title: Padding(
                     padding: EdgeInsets.only(right: mq.size.width / 4),
-                    child:  Text(
+                    child: Text(
                       contactDetails['name'],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -52,12 +51,12 @@ class ContactDetailPage extends StatelessWidget {
             delegate:
                 SliverChildListDelegate.fixed([contactMethods, contactInfo]),
           )
-      ],
-    ),
-        ));
-  }// build
+        ],
+      ),
+    ));
+  } // build
 
-  /// Creates a [ContactCard] for the phone numbers, email address and 
+  /// Creates a [ContactCard] for the phone numbers, email address and
   /// fax number if applicable.
   ContactCard _contactDetailList(
       final dynamic data, final MediaQueryData mq, BuildContext context) {
