@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/routing/slide_up_route.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_view.dart';
-import 'package:fst_app_flutter/screens/contact_screen/contacts_page_general.dart';
 import 'package:fst_app_flutter/screens/homescreen/home_view.dart';
 import 'routes.dart';
 
