@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_state.dart';
 
-class ContactViewTabletPortraitState extends ContactViewState {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
+class ContactViewTabletPortraitState extends ContactViewTabletLandscapeState {
+
 }
 
 class ContactViewTabletLandscapeState extends ContactViewState {
@@ -42,13 +39,15 @@ class ContactViewTabletLandscapeState extends ContactViewState {
               child: Stack(
                 children: [
                   buildContactListArea(
+                    titleStyle: TextStyle(fontSize: 18.0,fontWeight: FontWeight.w500),
+                    subtitleStyle:TextStyle(fontSize: 14.0,fontWeight: FontWeight.w500) ,
                       posFromTop: kToolbarHeight,
                       slideDist: 0.0,
                       height: screenHeight - kToolbarHeight,
                       width: screenWidth - kMinInteractiveDimension,
                       padH: screenWidth * 0.07,
                       padV: screenHeight * 0.05,
-                      posFromLeft: kMinInteractiveDimension, thickness: 7.0),
+                      posFromLeft: kMinInteractiveDimension, thickness: 1.0),
                 ],
               ),
             ),

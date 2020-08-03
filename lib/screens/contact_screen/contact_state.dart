@@ -184,6 +184,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double padV,
       @required posFromLeft,
       @required thickness,
+      TextStyle titleStyle,
+      TextStyle subtitleStyle,
       bool isDecorated = true}) {
     return Positioned(
       top: posFromTop,
@@ -200,7 +202,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Expanded(child: contactFutureBuilder(isDecorated:  isDecorated,thickness: thickness))
+                  Expanded(child: contactFutureBuilder(isDecorated:  isDecorated,thickness: thickness,titleStyle: titleStyle,
+     subtitleStyle: subtitleStyle,))
                 ]),
           )),
     );
@@ -261,7 +264,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   Widget buildContactListView(
       {@required List<dynamic> contacts,
       bool hasDecoration,
-      @required double thickness}) {
+      @required double thickness, TextStyle subtitleStyle, TextStyle titleStyle}) {
     return Scrollbar(
       controller: sc,
       child: ListView.builder(
@@ -269,7 +272,9 @@ abstract class ContactViewState extends State<ContactViewStateful>
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
             return ContactTile(
+              subtitleStyle: subtitleStyle,
               hasDecoration: hasDecoration,
+              titleStyle: titleStyle,
               title: contacts[index]['name'],
               subtitle: contacts[index]['description'],
               namedRoute: contactDetailRoute,
@@ -284,7 +289,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Also displays message indicating that no matches were found if
   /// no matches were found and a message if an error occured.
   Widget contactFutureBuilder(
-      {@required bool isDecorated, @required double thickness}) {
+      {@required bool isDecorated, @required double thickness, TextStyle subtitleStyle, TextStyle titleStyle}) {
     return FutureBuilder(
       future: getResultsJSON('$baseParam$extraParam'),
       builder: (context, snapshot) {
@@ -299,6 +304,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
             contacts = snapshot.data.toSet().toList();
             if (contacts.length > 0) {
               return buildContactListView(
+                titleStyle: titleStyle,
+                subtitleStyle: subtitleStyle,
                   contacts: contacts,
                   hasDecoration: isDecorated,
                   thickness: thickness);
