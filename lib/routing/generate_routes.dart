@@ -19,7 +19,7 @@ class Router {
         return MaterialPageRoute(
             builder: (context) => Scaffold(
                   appBar: AppBar(
-                    title: Text('hELP'),
+                    title: Text('Temp'),
                   ),
                 ));
     }
