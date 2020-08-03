@@ -13,11 +13,14 @@ class ResponsiveBuilder extends StatelessWidget {
     return LayoutBuilder(builder: (context, boxConstraints) {
       var mediaQuery = MediaQuery.of(context);
       var sizingInformation = SizingInformation(
+        orientation: MediaQuery.of(context).orientation,
         deviceScreenType: getDeviceType(mediaQuery),
         screenSize: mediaQuery.size,
         localWidgetSize:
             Size(boxConstraints.maxWidth, boxConstraints.maxHeight),
       );
+      //print('responsive_builder');
+      //print(sizingInformation);
       return builder(context, sizingInformation);
     });
   }

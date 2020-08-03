@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
-import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
 import 'package:fst_app_flutter/widgets/contact_tile.dart';
 import 'package:fst_app_flutter/routing/routes.dart';
 
 class ContactPage extends StatefulWidget {
-
+  
   const ContactPage({Key key}) : super(key: key);
 
   @override
@@ -85,21 +84,31 @@ class _ContactPageState extends State<ContactPage>
   /// function.
   Widget _appBarTitle = Text('Contacts');
 
-  /// Returns the list to the position it was at before navigatimg to another route
+  /// Returns the list to the position it was at before navigatimg to another route.
   ScrollController _sc = ScrollController(keepScrollOffset: true);
 
-  // Controller for dropdown sliding animation
-  AnimationController _animationController;
+  /// Controller for dropdown sliding animation.
+  AnimationController _ac;
 
+  /// Controls the search text field.
+  TextEditingController _tec;
+
+  /// Color change sequence for app bar animation.
   Animatable<Color> _appBarBgColor;
 
-  /// Load all contacts when page is loaded initially
+  /// Allows app bar leading icon to be removed and added in [_revealSearchField]
+  Widget _appBarLeading = BackButton();
+
+  /// The searchField in the app bar
+  TextField _searchField;
+
+  /// Load all contacts when page is loaded initially. Initilize animations and controllers.
   @override
   void initState() {
     super.initState();
     getResultsJSON('$_baseParam$_extraParam')
         .then((data) => _contacts = data.toSet().toList());
-    _animationController = AnimationController(
+    _ac = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 250),
     );
@@ -112,13 +121,31 @@ class _ContactPageState extends State<ContactPage>
           tween: ColorTween(begin: Colors.blue[800], end: Colors.white),
           weight: 0.5)
     ]);
+    _tec = TextEditingController();
+    _tec.addListener(() {
+      setState(() {
+        _baseParam = 'contact/?search=${_tec.value.text}';
+        _contacts.clear();
+      });
+    });
+    _searchField = TextField(
+      controller: _tec,
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.search),
+          hintText: 'Search',
+          filled: false,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+          )),
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
     _sc.dispose();
-    _animationController.dispose();
+    _ac.dispose();
+    _tec.dispose();
   }
 
   @override
@@ -133,9 +160,9 @@ class _ContactPageState extends State<ContactPage>
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
           child: AnimatedBuilder(
-        animation: _animationController,
+        animation: _ac,
         builder: (context, child) {
-          var slideDist = -kToolbarHeight * _animationController.value;
+          var slideDist = -kToolbarHeight * _ac.value;
 
           return Stack(
             children: <Widget>[
@@ -170,11 +197,13 @@ class _ContactPageState extends State<ContactPage>
               Container(
                 height: kToolbarHeight,
                 child: AppBar(
+                  automaticallyImplyLeading: false,
+                  leading: _appBarLeading,
                   elevation: 0.0,
                   actions: <Widget>[_searchButton()],
                   centerTitle: false,
                   backgroundColor: _appBarBgColor.evaluate(CurvedAnimation(
-                      parent: _animationController,
+                      parent: _ac,
                       curve: Interval(0.40, 1.0, curve: Curves.ease))),
                   title: _appBarTitle,
                 ),
@@ -192,14 +221,13 @@ class _ContactPageState extends State<ContactPage>
   }
 
   /// Toggle appbar and dropdown button animations
-  void toggleAnimation() => _animationController.isDismissed
-      ? _animationController.forward()
-      : _animationController.reverse();
+  void toggleAnimation() => _ac.isDismissed ? _ac.forward() : _ac.reverse();
 
   /// Toggles the [AppBar] between the page title and the search [TextField]
   void _revealSearchField() {
     toggleAnimation();
     setState(() {
+      _appBarLeading = null;
       if (_searchIcon.icon == Icons.search) {
         _searchIcon = Icon(
           Icons.close,
@@ -209,22 +237,9 @@ class _ContactPageState extends State<ContactPage>
           Icons.filter_list,
           color: Colors.white,
         );
-        _appBarTitle = TextField(
-          onChanged: (value) {
-            setState(() {
-              _baseParam = 'contact/?search=$value';
-              _contacts.clear();
-            });
-          },
-          decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Search',
-              filled: false,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              )),
-        );
+        _appBarTitle = _searchField;
       } else {
+        _appBarLeading = BackButton();
         _searchIcon = Icon(
           Icons.search,
           color: Colors.white,
@@ -236,6 +251,7 @@ class _ContactPageState extends State<ContactPage>
         );
         _baseParam = 'contact/?search=';
         _contacts.clear();
+        _tec.clear();
       }
     });
   } // revealSearchField
@@ -250,11 +266,10 @@ class _ContactPageState extends State<ContactPage>
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
             return ContactTile(
-                tag: 'avatar${contacts[index]['id']}',
                 title: contacts[index]['name'],
                 subtitle: contacts[index]['description'],
                 namedRoute: contactDetailRoute,
-                arguments: contacts[index]);
+                arguments: contacts[index], thickness: 1.0,);
           }),
     );
   } // buildContactCard

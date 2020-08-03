@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/widgets/contact_card.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
@@ -22,38 +23,38 @@ class ContactDetailPage extends StatelessWidget {
     final ContactCard contactInfo = _aboutContactList(contactDetails, mq);
 
     return Scaffold(
-        body: CustomScrollView(
+        body: SafeArea(
+                  child: CustomScrollView(
       slivers: <Widget>[
-        SliverAppBar(
-            floating: false,
-            pinned: true,
-            snap: false,
-            expandedHeight: mq.size.height / 2.5,
-            flexibleSpace: FlexibleSpaceBar(
-                background: Hero(
-                  tag: 'avatar${contactDetails['id']}',
-                  child: CustomPaint(
-                      painter: ContactDetailSvg(
-                          start: Point(
-                              mq.size.width / 2, (mq.size.height / 2.5) / 2),
-                          scale:
-                              (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
-                          color: Colors.blue[800])),
-                ),
-                title: Padding(
-                  padding: EdgeInsets.only(right: mq.size.width / 4),
-                  child: Text(
-                    contactDetails['name'],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ))),
-        SliverList(
-          delegate:
-              SliverChildListDelegate.fixed([contactMethods, contactInfo]),
-        )
+          SliverAppBar(
+              floating: false,
+              pinned: true,
+              snap: false,
+              expandedHeight: mq.size.height / 2.5,
+              flexibleSpace: FlexibleSpaceBar(
+                  background: CustomPaint(
+                        painter: ContactDetailSvg(
+                            start: Point(
+                                mq.size.width / 2, (mq.size.height / 2.5) / 2),
+                            scale:
+                                (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
+                            color: Colors.blue[800])),
+                  
+                  title: Padding(
+                    padding: EdgeInsets.only(right: mq.size.width / 4),
+                    child:  Text(
+                      contactDetails['name'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ))),
+          SliverList(
+            delegate:
+                SliverChildListDelegate.fixed([contactMethods, contactInfo]),
+          )
       ],
-    ));
+    ),
+        ));
   }// build
 
   /// Creates a [ContactCard] for the phone numbers, email address and 

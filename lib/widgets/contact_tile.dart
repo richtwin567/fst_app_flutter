@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/widgets/contact_detail_image.dart';
 
 /// A [ListTile] that
 /// allows navigation to the [ContactDetailPage] for this [ContactTile] when tapped.
@@ -24,7 +21,11 @@ class ContactTile extends StatelessWidget {
   /// [namedRoute].
   final GestureTapCallback tapFunc;
 
-  final String tag;
+  final bool hasDecoration;
+
+  final double thickness;
+  final TextStyle titleStyle;
+  final TextStyle subtitleStyle;
 
   /// Creates a contact tile.
   ///
@@ -35,15 +36,18 @@ class ContactTile extends StatelessWidget {
   /// The [arguments] would be the information for this contact.
   /// If a [tapFunc] is provided, the tile will execute that function when tapped.
   /// **Either one [tapFunc] or one [namedRoute] must be passed, not both.**
-  ContactTile(
-      {Key key,
-      @required this.title,
-      @required this.subtitle,
-      this.namedRoute,
-      this.tapFunc,
-      this.arguments,
-      this.tag})
-      : assert((namedRoute == null && tapFunc != null) ||
+  ContactTile({
+    Key key,
+    @required this.title,
+    @required this.subtitle,
+    this.namedRoute,
+    this.tapFunc,
+    this.arguments,
+    this.hasDecoration = true,
+    @required this.thickness,
+    this.titleStyle,
+    this.subtitleStyle,
+  })  : assert((namedRoute == null && tapFunc != null) ||
             (namedRoute != null && tapFunc == null)),
         super(key: key);
 
@@ -52,11 +56,18 @@ class ContactTile extends StatelessWidget {
     var mq = MediaQuery.of(context);
     var tileH = mq.size.height * 0.15;
 
+    var tStyle = titleStyle ?? Theme.of(context).textTheme.subtitle1;
+    var sStyle = subtitleStyle ?? Theme.of(context).textTheme.caption;
+
     return Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                    BorderSide(color: Theme.of(context).accentColor, style: BorderStyle.solid))),
+        decoration: hasDecoration == true
+            ? BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(
+                        width: thickness,
+                        color: Theme.of(context).accentColor,
+                        style: BorderStyle.solid)))
+            : null,
         height: tileH,
         alignment: Alignment.center,
         child: ListTile(
@@ -65,27 +76,17 @@ class ContactTile extends StatelessWidget {
                   arguments != null
                       ? Navigator.pushNamed(context, namedRoute,
                           arguments: arguments)
-                      : Navigator.pushNamed(context, namedRoute); 
+                      : Navigator.pushNamed(context, namedRoute);
                 }
               : tapFunc,
-            leading: CircleAvatar(backgroundColor: Colors.blue[300],
-              child: Hero(
-                              tag: tag,
-                              child: CustomPaint(
-                      painter: ContactDetailSvg(
-                          start: Point(
-                              0.0,-6.0),
-                          scale:
-                              1.2,
-                          color: Colors.blue[800])),
-              ),),
           title: Text(
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+            style: tStyle,
           ),
           subtitle:
-              Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+              Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis,style: sStyle,),
           trailing:
               Icon(Icons.chevron_right, color: Theme.of(context).primaryColor),
         ));
