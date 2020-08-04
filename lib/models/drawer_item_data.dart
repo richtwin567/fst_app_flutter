@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class DrawerItemData {
   final String title;
   final IconData iconData;
-
+  final String route;
   DrawerItemData({
-    this.title,
-    this.iconData,
+    @required this.title,
+    @required this.iconData,
+    this.route,
   });
 }

@@ -6,11 +6,15 @@ class AppDrawerMobileLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
+
     return OrientationBuilder(
       builder: (context, orientation) => Container(
-          width: orientation == Orientation.portrait ? 250 : 100,
+          width: orientation == Orientation.portrait
+              ? 250
+              : queryData.size.width * 0.2,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color.fromRGBO(18, 29, 72, 1),
             boxShadow: [
               BoxShadow(
                 blurRadius: 16,
@@ -19,6 +23,8 @@ class AppDrawerMobileLayout extends StatelessWidget {
             ],
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: AppDrawer.getDrawerOptions(),
           )),
     );

@@ -7,22 +7,35 @@ class DrawerOptionMobilePortrait extends BaseModelWidget<DrawerItemData> {
   @override
   Widget build(BuildContext context, DrawerItemData data) {
     return Container(
-      padding: const EdgeInsets.only(left: 25),
       height: 80,
-      child: Row(
-        children: <Widget>[
-          Icon(
-            data.iconData,
-            size: 25,
+      child: Material(
+        color: Color.fromRGBO(18, 29, 72, 1),
+        child: InkWell(
+          splashColor: Colors.blue[900],
+          onTap: () {},
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                width: 25,
+              ),
+              Icon(
+                data.iconData,
+                size: 25,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 25,
+              ),
+              Text(
+                data.title,
+                style: TextStyle(
+                  fontSize: 21,
+                  color: Colors.white,
+                ),
+              )
+            ],
           ),
-          SizedBox(
-            width: 25,
-          ),
-          Text(
-            data.title,
-            style: TextStyle(fontSize: 21),
-          )
-        ],
+        ),
       ),
     );
   }
@@ -32,9 +45,22 @@ class DrawerOptionMobileLandscape extends BaseModelWidget<DrawerItemData> {
   @override
   Widget build(BuildContext context, DrawerItemData data) {
     return Container(
-      height: 70,
+      height: 60,
       alignment: Alignment.center,
-      child: Icon(data.iconData),
+      child: StatefulBuilder(builder: (context, updateState) {
+        bool isPressed = false;
+        return IconButton(
+          onPressed: () {
+            updateState(() {
+              isPressed = !isPressed;
+            });
+          },
+          icon: Icon(
+            data.iconData,
+            color: isPressed ? Colors.blue[900] : Colors.white,
+          ),
+        );
+      }),
     );
   }
 }
