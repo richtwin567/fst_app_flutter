@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/utils/device_screen_type.dart';
 import 'package:fst_app_flutter/utils/sizinginformation.dart';
 
 class ResponsiveBuilder extends StatelessWidget {
@@ -12,8 +13,9 @@ class ResponsiveBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, boxConstraints) {
       var mediaQuery = MediaQuery.of(context);
+      print("The device type is ${getDeviceType(mediaQuery)}");
       var sizingInformation = SizingInformation(
-        orientation: MediaQuery.of(context).orientation,
+        orientation: mediaQuery.orientation,
         deviceScreenType: getDeviceType(mediaQuery),
         screenSize: mediaQuery.size,
         localWidgetSize:

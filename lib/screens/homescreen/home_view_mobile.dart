@@ -1,59 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/home_view_model.dart';
 import 'package:fst_app_flutter/widgets/app_drawer/app_drawer.dart';
-import 'package:fst_app_flutter/widgets/base_data_model_widget.dart';
+import 'package:fst_app_flutter/widgets/card_container/card_container.dart';
 
-class HomeMobilePortrait extends BaseModelWidget<HomeViewModel> {
+class HomeMobilePortrait extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext context, HomeViewModel model) {
+  Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
+
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: AppDrawer(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          model.updateTitle();
-        },
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: IconButton(
-              icon: Icon(Icons.menu, size: 30),
-              onPressed: () {
-                _scaffoldKey?.currentState?.openDrawer();
-              },
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(model.title),
-            ),
-          )
+      appBar: AppBar(
+        title: Text("FST Go"),
+        centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+              onPressed: null)
         ],
       ),
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
+      body: Stack(fit: StackFit.passthrough, children: <Widget>[
+        Container(
+          margin: const EdgeInsets.only(
+            left: 30.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: queryData.size.height * 0.02,
+              ),
+              Text(
+                "Welcome to the\nFaculty of Greatness",
+                style: TextStyle(
+                    color: Color(0xff322F51),
+                    fontWeight: FontWeight.bold,
+                    fontSize: queryData.size.width * 0.055966),
+              ),
+              SizedBox(
+                height: queryData.size.height * 0.02,
+              ),
+              CardContainer(),
+            ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              height: queryData.size.height * 0.1442,
+              width: queryData.size.width,
+              child: FittedBox(
+                  fit: BoxFit.fill,
+                  child: Image(
+                    width: 50,
+                    image: AssetImage("assets/home_art.png"),
+                  ))),
+        )
+      ]),
     );
   }
 }
 
-class HomeMobileLandscape extends BaseModelWidget<HomeViewModel> {
+class HomeMobileLandscape extends StatelessWidget {
   @override
-  Widget build(BuildContext context, HomeViewModel model) {
+  Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          model.updateTitle();
-        },
-      ),
       body: Row(
-        children: <Widget>[AppDrawer(),Expanded(
-            child: Center(
-              child: Text(model.title),
-            ),
-          ),],
+        children: <Widget>[
+          AppDrawer(),
+          Expanded(
+            child: Stack(children: <Widget>[
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Opacity(
+                  opacity: 0.43,
+                  child: Container(
+                      height: queryData.size.height * 0.77,
+                      width: queryData.size.width,
+                      child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image(
+                            width: 50,
+                            image: AssetImage("assets/home_art.png"),
+                          ))),
+                ),
+              ),
+              Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                    Text(
+                      "Welcome to the Faculty of Greatness",
+                      style: TextStyle(
+                          color: Color(0xff322F51),
+                          fontWeight: FontWeight.bold,
+                          fontSize: queryData.size.shortestSide * 0.055966),
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[CardContainer()])
+                  ])),
+            ]),
+          ),
+        ],
       ),
     );
   }
