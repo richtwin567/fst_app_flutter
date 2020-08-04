@@ -9,12 +9,13 @@ class AppDrawerTabletPortrait extends StatelessWidget {
     return Container(
       height: 130,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromRGBO(18, 29, 72, 1),
         boxShadow: [
           BoxShadow(blurRadius: 16, color: Colors.black12),
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: AppDrawer.getDrawerOptions(),
       ),
     );
@@ -29,7 +30,7 @@ class AppDrawerTabletLandscape extends StatelessWidget {
     return Container(
       width: 250,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromRGBO(18, 29, 72, 1),
         boxShadow: [
           BoxShadow(blurRadius: 16, color: Colors.black12),
         ],

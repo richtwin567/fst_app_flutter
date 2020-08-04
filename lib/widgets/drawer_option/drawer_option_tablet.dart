@@ -9,33 +9,20 @@ class DrawerOptionTabletPortrait extends BaseModelWidget<DrawerItemData> {
     return Container(
       width: 152,
       alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Icon(
-            data.iconData,
-            size: 45,
-          ),
-          Text(data.title, style: TextStyle(fontSize: 20)),
-        ],
-      ),
-    );
-  }
-}
-
-class AppDrawerTabletLandscape extends BaseModelWidget<DrawerItemData> {
-  @override
-  Widget build(BuildContext context, DrawerItemData data) {
-    return Container(
-      width: 250,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(blurRadius: 16, color: Colors.black12),
-        ],
-      ),
-      child: Column(
-        children: AppDrawer.getDrawerOptions(),
+      child: InkWell(
+        onTap: () {},
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(
+              data.iconData,
+              size: 45,
+              color: Colors.white,
+            ),
+            Text(data.title,
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+          ],
+        ),
       ),
     );
   }
