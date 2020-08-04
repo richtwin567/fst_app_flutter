@@ -15,7 +15,6 @@ class Router {
       case contactDetailRoute:
         return SlideUpPageRoute(page: ContactDetailPage(settings.arguments));
       default:
-        //return MaterialPageRoute(builder: (context) => HomeView());
         return MaterialPageRoute(
             builder: (context) => HomeView());
     }

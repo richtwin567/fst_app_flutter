@@ -3,7 +3,7 @@
 /// [HomeView] route
 const homeRoute = '/home';
 
-/// [ContactPage] route
+/// [ContactView] route
 const contactRoute = '/contact';
 
 /// [ContactDetailPage] route

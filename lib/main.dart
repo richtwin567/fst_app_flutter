@@ -20,7 +20,7 @@ class FSTApp extends StatelessWidget {
     return MaterialApp(
         builder: DevicePreview.appBuilder,
         title: 'FST App',
-        initialRoute: contactRoute,
+        initialRoute: homeRoute,
         onGenerateRoute: Router.generateRoute,
         theme: ThemeData(
           primaryColor: Color.fromRGBO(0, 62, 138, 1.0),

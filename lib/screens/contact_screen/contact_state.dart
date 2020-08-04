@@ -4,7 +4,7 @@ import 'package:fst_app_flutter/widgets/contact_tile.dart';
 import 'package:fst_app_flutter/routing/routes.dart';
 import 'contact_view_stateful.dart';
 
-/// The base class for all contact views for different screen sizes and orientation.
+/// The base class for all contact view states for different screen sizes and orientations.
 abstract class ContactViewState extends State<ContactViewStateful>
     with TickerProviderStateMixin {
   /// This [String] will be modified to include the search value entered by the user.
