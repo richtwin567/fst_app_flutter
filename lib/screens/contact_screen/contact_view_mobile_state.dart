@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_state.dart';
 
+/// [ContactViewState] designed for phones in landscape orientation.
 class ContactViewMobileLandscapeState extends ContactViewState {
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class ContactViewMobileLandscapeState extends ContactViewState {
                             animationIntervalStart: 0.0,
                             animationIntervalEnd: 1.0,
                             actions: <Widget>[
-                              filterDropDown(context,
+                              filterDropdown(context,
                                   height: kToolbarHeight,
                                   width: mq.size.width / 3,
                                   isExpanded: true,
@@ -43,6 +44,7 @@ class ContactViewMobileLandscapeState extends ContactViewState {
   }
 }
 
+/// [ContactViewState] designed for phones in portrait orientation.
 class ContactViewMobilePortraitState extends ContactViewState {
   @override
   Widget build(BuildContext context) {
@@ -51,8 +53,6 @@ class ContactViewMobilePortraitState extends ContactViewState {
     // horizontal and vertical padding for the list of contacts
     var padH = mq.size.width * 0.1;
     var padV = (mq.size.height - (kToolbarHeight * 2)) * 0.07;
-
-    var slideDist = -kToolbarHeight * ac.value;
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -63,7 +63,7 @@ class ContactViewMobilePortraitState extends ContactViewState {
           children: <Widget>[
             Container(),
             buildContactListArea(
-              slideDist: slideDist,
+              slideDist: -kToolbarHeight * ac.value,
               height: mq.size.height - (kToolbarHeight * 2),
               padH: padH,
               padV: padV,
@@ -74,7 +74,7 @@ class ContactViewMobilePortraitState extends ContactViewState {
             ),
             buildFilterDropdownArea(context,
                 posFromTop: kToolbarHeight,
-                slideDist: slideDist,
+                slideDist: -kToolbarHeight * ac.value,
                 width: MediaQuery.of(context).size.width,
                 height: kToolbarHeight,
                 isExpanded: true,

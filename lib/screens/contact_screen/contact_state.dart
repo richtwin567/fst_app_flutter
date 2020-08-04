@@ -4,6 +4,7 @@ import 'package:fst_app_flutter/widgets/contact_tile.dart';
 import 'package:fst_app_flutter/routing/routes.dart';
 import 'contact_view_stateful.dart';
 
+/// The base class for all contact views for different screen sizes and orientation.
 abstract class ContactViewState extends State<ContactViewStateful>
     with TickerProviderStateMixin {
   /// This [String] will be modified to include the search value entered by the user.
@@ -16,7 +17,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// The default categories to filter by and their corresponding
   /// query parameter and value.
   ///
-  /// Used to construct the [filterDropDown]
+  /// Used to construct the [filterDropdown]
   final List<dynamic> categories = [
     {'title': 'All', 'queryParam': '', 'value': ''},
     {'title': 'Emergency', 'queryParam': 'type', 'value': 'EMERGENCY'},
@@ -63,13 +64,13 @@ abstract class ContactViewState extends State<ContactViewStateful>
 
   /// Currently selected dropdown item value. Allows for differential
   /// of text in the dropdown list for the item that is selected.
-  var dropdownValue = 'All';
+  String currentFilter = 'All';
 
   /// Used to switch the state of the appBar to a search field in the [revealSearchField]
   /// function.
   Icon searchIcon = Icon(Icons.search);
 
-  /// Used to switch between filters from [categories] in the [filterDropDown]
+  /// Used to switch between filters from [categories] in the [filterDropdown]
   /// function
   Icon filterIcon = Icon(Icons.filter_list, color: Colors.white);
 
@@ -92,8 +93,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Allows app bar leading icon to be removed and added in [revealSearchField]
   Widget appBarLeading = BackButton();
 
-  bool searchButtonPressed;
-  bool drawerPressed;
 
   /// Load all contacts when page is loaded initially. Initilize animations and controllers.
   @override
@@ -135,6 +134,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
   @override
   Widget build(BuildContext context);
 
+  /// Builds the app bar with specified [height], [elevation], [actions] and 
+  /// sets when [animationIntervalStart] and [animationIntervalEnd].
   Widget buildAppBarArea(
       {@required double height,
       @required double animationIntervalStart,
@@ -156,8 +157,19 @@ abstract class ContactViewState extends State<ContactViewStateful>
         title: appBarTitle,
       ),
     );
-  }
+  }// buildAppBarArea
 
+  /// Builds a [Positioned] [filterDropdown]. 
+  /// 
+  /// The distance from the top of the screen will be [posFromTop].
+  /// 
+  /// The drop down will be [height] tall and [width] wide.
+  /// 
+  /// It will have an [elevation] and the space the drop down 
+  /// uses will be determined by whether or not it [isExpanded].
+  /// 
+  /// [slideDist] controls the sliding animation distance when [revealSearchField]
+  /// is called by tapping [searchButton].
   Widget buildFilterDropdownArea(BuildContext context,
       {@required double slideDist,
       @required double posFromTop,
@@ -167,14 +179,31 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double elevation}) {
     return Positioned(
         top: posFromTop,
-        child: filterDropDown(context,
+        child: filterDropdown(context,
             height: height,
             width: width,
             isExpanded: isExpanded,
             elevation: elevation,
             slideDist: slideDist));
-  }
+  }// buildFilterDropdownArea
 
+
+  /// Builds a [Positioned] contact list using [contactFutureBuilder].
+  /// 
+  /// The list will be a distance of [posFromTop] from the top of the screen and 
+  /// [posFromLeft] from the left of the screen. 
+  /// 
+  /// It will have a height of [height] and a width of [width]. 
+  /// 
+  /// The amount of padding on the left and right will be [padH] and the padding
+  /// at the top and bottom will be [padV]. 
+  /// 
+  /// The title on each [ContactTile] will have a [titleStyle] and the subtitle
+  /// will have a [subtitleStyle]. 
+  /// 
+  /// The line between each [ContactTile] will be [thickness] in width. 
+  /// 
+  /// The distance for the animation is controlled by [slideDist].
   Widget buildContactListArea(
       {@required double posFromTop,
       @required double slideDist,
@@ -212,7 +241,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
                 ]),
           )),
     );
-  } // build
+  } // buildContactListArea
 
   /// Builds the Search [IconButton] that goes in the [AppBar] actions.
   Widget searchButton() {
@@ -220,11 +249,12 @@ abstract class ContactViewState extends State<ContactViewStateful>
   }
 
   /// Toggle appbar and dropdown button animations
-  void toggleAnimation() => ac.isDismissed ? ac.forward() : ac.reverse();
+  toggleAppBarAnimation() => ac.isDismissed ? ac.forward() : ac.reverse();
 
   /// Toggles the [AppBar] between the page title and the search [TextField]
   void revealSearchField() {
-    toggleAnimation();
+    toggleAppBarAnimation();
+    
     setState(() {
       appBarLeading = null;
       if (searchIcon.icon == Icons.search) {
@@ -261,7 +291,9 @@ abstract class ContactViewState extends State<ContactViewStateful>
         contacts.clear();
         tec.clear();
       }
+      
     });
+    
   } // revealSearchField
 
   /// Builds a [ListView] of [ContactTile] for each member
@@ -334,7 +366,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   } // _contactFutureBuilder
 
   /// Drop down button to filter the list of [contacts] by [categories].
-  filterDropDown(BuildContext context,
+  filterDropdown(BuildContext context,
       {@required double height,
       @required double width,
       @required bool isExpanded,
@@ -367,17 +399,17 @@ abstract class ContactViewState extends State<ContactViewStateful>
                           },
                           isExpanded: isExpanded,
                           icon: filterIcon,
-                          value: dropdownValue,
+                          value: currentFilter,
                           items:
                               filterDropDownItemBuilder(context, width: width),
                           onChanged: (value) {
-                            dropdownValue = value;
+                            currentFilter = value;
                           }),
                     )),
                 preferredSize: Size.fromHeight(height))));
   }
 
-  /// Builds the  dropdown list for [filterDropDown] from [categories].
+  /// Builds the  dropdown list for [filterDropdown] from [categories].
   List<DropdownMenuItem<dynamic>> filterDropDownItemBuilder(context,
       {@required double width}) {
     return List.generate(categories.length, (i) {
@@ -390,7 +422,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
             categories[i]['title'],
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: categories[i]['title'] == dropdownValue
+            style: categories[i]['title'] == currentFilter
                 ? TextStyle(
                     color: Theme.of(context).accentColor,
                     fontWeight: FontWeight.w800)

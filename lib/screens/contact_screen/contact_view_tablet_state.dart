@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_state.dart';
 
+/// ContactViewState designed for tablets in portrait orientation.
+/// Currently the same as the landscape state.
 class ContactViewTabletPortraitState extends ContactViewTabletLandscapeState {}
 
+/// ContactViewState designed for tablets in landscape orientation.
 class ContactViewTabletLandscapeState extends ContactViewState {
+  /// The filterDrawer animation controller.
   AnimationController fc;
 
+  /// Sets the background colour of the non-selected filter options.
   Color filterOptionBgColor;
 
-  String currentFilter = 'All';
-
+  /// Also initialize [fc]
   @override
   void initState() {
     super.initState();
@@ -69,8 +73,12 @@ class ContactViewTabletLandscapeState extends ContactViewState {
         ),
       )),
     );
-  }
+  }// build
 
+  /// Creates a collapsing drawer with the list of filter options by [categories].
+  /// 
+  /// It has a specific [height], [width] and background colour, [bgColor]. It
+  /// is [Positioned] [posFromTop] from the top of the screen.
   Widget filterDrawer({
     @required double width,
     @required double height,
@@ -134,10 +142,12 @@ class ContactViewTabletLandscapeState extends ContactViewState {
             Container(),
           ],
         ));
-  }
+  }// filterDrawer
 
+  /// Opens and closes the drawer while moving the list to make space.
   toggleDrawer() => fc.isDismissed ? fc.forward() : fc.reverse();
 
+  /// Builds each item for the list of filter options for the [filterDrawer].
   filterDrawerListBuilder(context, i, height) {
     return InkWell(
       onTap: () {
@@ -164,5 +174,5 @@ class ContactViewTabletLandscapeState extends ContactViewState {
         ),
       ),
     );
-  }
+  }// filterDrawerListBuilder
 }

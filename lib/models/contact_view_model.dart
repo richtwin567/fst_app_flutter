@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Notifies the contact screen of changes.
 class ContactViewModel extends ChangeNotifier {
-  String title='title';
-
   void initialise() {
-    title = 'works';
     notifyListeners();
   }
 }

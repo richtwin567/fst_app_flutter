@@ -4,6 +4,7 @@ import 'package:fst_app_flutter/screens/contact_screen/contact_view_stateful.dar
 import 'package:fst_app_flutter/screens/contact_screen/contact_view_tablet_state.dart';
 import 'package:fst_app_flutter/widgets/base_data_model_widget.dart';
 
+/// Full portrait tablet contact view made using [ContactViewTabletPortraitState].
 class ContactViewTabletPortrait extends BaseModelWidget<ContactViewModel> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -15,6 +16,7 @@ class ContactViewTabletPortrait extends BaseModelWidget<ContactViewModel> {
   }
 }
 
+/// Full landscape tablet landscape view made using [ContactViewTabletLandscapeState].
 class ContactViewTabletLandscape extends BaseModelWidget<ContactViewModel> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 

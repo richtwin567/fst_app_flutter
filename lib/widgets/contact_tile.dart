@@ -21,15 +21,24 @@ class ContactTile extends StatelessWidget {
   /// [namedRoute].
   final GestureTapCallback tapFunc;
 
+  /// Whether or not the tiles have lines between them.
   final bool hasDecoration;
 
+  /// If [hasDecoration] is set to true then this is used to determine
+  /// the width of the line.
   final double thickness;
+
+  /// The style of the title text. If null the default style is used.
   final TextStyle titleStyle;
+
+  /// The style of the subtitle text. If null the default style is used.
   final TextStyle subtitleStyle;
 
   /// Creates a contact tile.
   ///
-  /// A contact tile has a [title] and [subtitle].
+  /// A contact tile has a [title] that has a [titleStyle] and [subtitle] that 
+  /// has a [subtitleStyle]. If the tile [hasDecoration] it is painted with [thickness]
+  /// width.
   /// If a [namedRoute] is provided, when tapped, this tile will navigate to
   /// the page defined by the [namedRoute]
   /// and pass its [arguments], if given, to that page.

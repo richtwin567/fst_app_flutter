@@ -19,8 +19,6 @@ class ResponsiveBuilder extends StatelessWidget {
         localWidgetSize:
             Size(boxConstraints.maxWidth, boxConstraints.maxHeight),
       );
-      //print('responsive_builder');
-      //print(sizingInformation);
       return builder(context, sizingInformation);
     });
   }

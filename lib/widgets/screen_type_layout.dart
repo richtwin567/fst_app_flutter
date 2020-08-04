@@ -15,8 +15,6 @@ class ScreenTypeLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(builder: (context, sizingInformation) {
-      //print('\nscreen type layout');
-      //print(sizingInformation);
       // If sizing indicates Tablet and we have a tablet widget then return
       if (sizingInformation.deviceScreenType == DeviceScreenType.Tablet) {
         if (tablet != null) {

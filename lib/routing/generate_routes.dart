@@ -17,11 +17,7 @@ class Router {
       default:
         //return MaterialPageRoute(builder: (context) => HomeView());
         return MaterialPageRoute(
-            builder: (context) => Scaffold(
-                  appBar: AppBar(
-                    title: Text('Temp'),
-                  ),
-                ));
+            builder: (context) => HomeView());
     }
   }
 }
