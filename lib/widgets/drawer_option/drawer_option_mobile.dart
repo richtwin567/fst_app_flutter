@@ -12,7 +12,7 @@ class DrawerOptionMobilePortrait extends BaseModelWidget<DrawerItemData> {
         color: Color.fromRGBO(18, 29, 72, 1),
         child: InkWell(
           splashColor: Colors.blue[900],
-          onTap: () {},
+          onTap: () => Navigator.pushNamed(context, data.route),
           child: Row(
             children: <Widget>[
               SizedBox(
@@ -53,6 +53,7 @@ class DrawerOptionMobileLandscape extends BaseModelWidget<DrawerItemData> {
           onPressed: () {
             updateState(() {
               isPressed = !isPressed;
+              Navigator.pushNamed(context, data.route);
             });
           },
           icon: Icon(

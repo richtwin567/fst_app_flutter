@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/routing/routes.dart';
 import 'package:fst_app_flutter/widgets/app_drawer/app_drawer_mobile.dart';
 import 'package:fst_app_flutter/widgets/app_drawer/app_drawer_tablet.dart';
 import 'package:fst_app_flutter/widgets/drawer_option/drawer_option.dart';
@@ -16,6 +17,7 @@ class AppDrawer extends StatelessWidget {
       DrawerOption(
         title: 'Contacts',
         iconData: Icons.contacts,
+        route: contactRoute,
       ),
       DrawerOption(
         title: 'FST Guild',
