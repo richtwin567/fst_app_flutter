@@ -20,7 +20,7 @@ class DrawerOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider.value(
-      value: DrawerItemData(title: title, iconData: iconData),
+      value: DrawerItemData(title: title, iconData: iconData, route: route),
       child: ScreenTypeLayout(
         mobile: OrientationLayout(
           landscape: (context) => DrawerOptionMobileLandscape(),

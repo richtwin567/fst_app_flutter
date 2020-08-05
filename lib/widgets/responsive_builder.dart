@@ -13,7 +13,7 @@ class ResponsiveBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, boxConstraints) {
       var mediaQuery = MediaQuery.of(context);
-      print("The device type is ${getDeviceType(mediaQuery)}");
+      //print("The device type is ${getDeviceType(mediaQuery)}");
       var sizingInformation = SizingInformation(
         orientation: mediaQuery.orientation,
         deviceScreenType: getDeviceType(mediaQuery),

@@ -8,6 +8,7 @@ class ContactViewMobileLandscapeState extends ContactViewState {
     var mq = MediaQuery.of(context);
 
     return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         body: SafeArea(
             child: AnimatedBuilder(
                 animation: ac,

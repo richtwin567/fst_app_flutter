@@ -29,6 +29,7 @@ class ContactViewTabletLandscapeState extends ContactViewState {
     var sidepanelWidth = screenWidth * 0.25 + kMinInteractiveDimension;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
           child: AnimatedBuilder(
         animation: ac,
