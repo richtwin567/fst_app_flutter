@@ -78,7 +78,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// function.
   Widget appBarTitle = Text('Contacts');
 
-  /// Returns the list to the position it was at before navigatimg to another route.
+  /// Returns the list to the position it was at before navigating to another route.
   ScrollController scrollController = ScrollController(keepScrollOffset: true);
 
   /// Controls the search text field.
@@ -90,10 +90,17 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Allows app bar leading icon to be removed and added in [revealSearchField]
   Widget appBarLeading = BackButton();
 
+  /// Controller for animations related to the [filterDropdown] hiding when
+  /// [revealSearchField] is called
   AnimationController dropdownController;
 
+
+  /// Controller for animations related to the appBar changing from blue to white
+  /// when [revealSearchField] is called.
   AnimationController appBarColorController;
 
+  /// Whether or not all the actions are displayed on the appBar. This value is 
+  /// toggle in [revealSearchField].
   bool extraActions = true;
 
   /// Load all contacts when page is loaded initially. Initilize animations and controllers.
