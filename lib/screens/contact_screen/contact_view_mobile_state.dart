@@ -10,42 +10,38 @@ class ContactViewMobileLandscapeState extends ContactViewState {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: SafeArea(
-            child: AnimatedBuilder(
-                animation: ac,
-                builder: (context, child) => Stack(
-                      children: <Widget>[
-                        Container(),
-                        buildContactListAreaStatic(
-                          posFromTop: kToolbarHeight,
-                          height: mq.size.height - kToolbarHeight,
-                          width: mq.size.width,
-                          padH: mq.size.width * 0.05,
-                          padV: mq.size.height * 0.05,
-                          posFromLeft: 0.0,
-                          thickness: 1.0,
-                        ),
-                        Container(),
-                        buildAppBarArea(
-                            height: kToolbarHeight,
-                            animationIntervalStart: 0.0,
-                            animationIntervalEnd: 1.0,
-                            actions: <Widget>[
-                              filterDropdown(context,
-                                  height: kToolbarHeight,
-                                  width: mq.size.width / 3,
-                                  isExpanded: true,
-                                  elevation: 0.0),
-                            ],
-                            elevation: 4.0),
-                      ],
-                    ))));
+            child: Stack(
+          children: <Widget>[
+            Container(),
+            buildStaticContactListArea(
+              posFromTop: kToolbarHeight,
+              height: mq.size.height - kToolbarHeight,
+              width: mq.size.width,
+              padH: mq.size.width * 0.05,
+              padV: mq.size.height * 0.05,
+              posFromLeft: 0.0,
+              thickness: 1.0,
+            ),
+            Container(),
+            buildAppBarArea(
+                height: kToolbarHeight,
+                animationIntervalStart: 0.0,
+                animationIntervalEnd: 1.0,
+                actions: <Widget>[
+                  filterDropdown(context,
+                      height: kToolbarHeight,
+                      width: mq.size.width / 3,
+                      isExpanded: true,
+                      elevation: 0.0),
+                ],
+                elevation: 4.0),
+          ],
+        )));
   }
 }
 
 /// [ContactViewState] designed for phones in portrait orientation.
 class ContactViewMobilePortraitState extends ContactViewState {
-
-
   @override
   Widget build(BuildContext context) {
     // width and height calculations made using the [MediaQueryData]
@@ -57,12 +53,10 @@ class ContactViewMobilePortraitState extends ContactViewState {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
-          child: AnimatedBuilder(
-        animation: ac,
-        builder: (context, child) => Stack(
+        child: Stack(
           children: <Widget>[
             Container(),
-            buildContactListAreaMoving(
+            buildMovingContactListArea(
               height: mq.size.height - (kToolbarHeight * 2),
               padH: padH,
               padV: padV,
@@ -71,12 +65,12 @@ class ContactViewMobilePortraitState extends ContactViewState {
               posFromLeft: 0.0,
               thickness: 1.0,
               growLeft: 0.0,
-              growTop: (kToolbarHeight * 2)*0.5,
+              growTop: (kToolbarHeight * 2) * 0.5,
               growBottom: 0.0,
               growRight: 0.0,
               posFromBottom: 0.0,
               posFromRight: 0.0,
-              controller: cc,
+              controller: dropdownController,
             ),
             buildFilterDropdownArea(context,
                 posFromTop: kToolbarHeight,
@@ -92,7 +86,7 @@ class ContactViewMobilePortraitState extends ContactViewState {
                 elevation: 0.0),
           ],
         ),
-      )),
+      ),
     );
   }
 }
