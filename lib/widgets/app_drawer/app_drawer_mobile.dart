@@ -14,7 +14,7 @@ class AppDrawerMobileLayout extends StatelessWidget {
               ? 250
               : queryData.size.width * 0.2,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(18, 29, 72, 1),
+            color: Theme.of(context).primaryColor,
             boxShadow: [
               BoxShadow(
                 blurRadius: 16,

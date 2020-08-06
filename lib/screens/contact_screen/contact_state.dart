@@ -93,6 +93,9 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Allows app bar leading icon to be removed and added in [revealSearchField]
   Widget appBarLeading = BackButton();
 
+  AnimationController cc;
+
+  AnimationController oc;
 
   /// Load all contacts when page is loaded initially. Initilize animations and controllers.
   @override
@@ -104,6 +107,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
       vsync: this,
       duration: Duration(milliseconds: 250),
     );
+    oc =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     appBarBgColor = TweenSequence([
       TweenSequenceItem(
           tween: ColorTween(
@@ -113,6 +118,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
           tween: ColorTween(begin: Colors.blue[800], end: Colors.white),
           weight: 0.5)
     ]);
+    cc =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     tec = TextEditingController();
     tec.addListener(() {
       setState(() {
@@ -126,7 +133,9 @@ abstract class ContactViewState extends State<ContactViewStateful>
   void dispose() {
     super.dispose();
     sc.dispose();
+    oc.dispose();
     ac.dispose();
+    cc.dispose();
     tec.dispose();
   }
 
@@ -134,7 +143,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   @override
   Widget build(BuildContext context);
 
-  /// Builds the app bar with specified [height], [elevation], [actions] and 
+  /// Builds the app bar with specified [height], [elevation], [actions] and
   /// sets when [animationIntervalStart] and [animationIntervalEnd].
   Widget buildAppBarArea(
       {@required double height,
@@ -142,71 +151,122 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double animationIntervalEnd,
       @required List<Widget> actions,
       @required double elevation}) {
-    return Container(
-      height: height,
-      child: AppBar(
-        automaticallyImplyLeading: false,
-        leading: appBarLeading,
-        elevation: elevation,
-        actions: actions,
-        centerTitle: false,
-        backgroundColor: appBarBgColor.evaluate(CurvedAnimation(
-            parent: ac,
-            curve: Interval(animationIntervalStart, animationIntervalEnd,
-                curve: Curves.ease))),
-        title: appBarTitle,
-      ),
+    return AnimatedBuilder(
+      animation: oc,
+      builder: (BuildContext context, Widget child) {
+        return StatefulBuilder(
+          builder: (BuildContext context,
+              void Function(void Function()) changeState) {
+            return Container(
+              height: height,
+              child: AppBar(
+                automaticallyImplyLeading: false,
+                leading: appBarLeading,
+                elevation: elevation,
+                actions: [
+                  ...actions,
+                  IconButton(
+                      icon: searchIcon,
+                      onPressed: () {
+                        changeState(() {
+                          revealSearchField();
+                        });
+                      })
+                ],
+                centerTitle: false,
+                backgroundColor: appBarBgColor
+                    .evaluate(CurvedAnimation(parent: oc, curve: Curves.ease)),
+                title: appBarTitle,
+              ),
+            );
+          },
+        );
+      },
     );
-  }// buildAppBarArea
+  } // buildAppBarArea
 
-  /// Builds a [Positioned] [filterDropdown]. 
-  /// 
+  /// Builds a [Positioned] [filterDropdown].
+  ///
   /// The distance from the top of the screen will be [posFromTop].
-  /// 
+  ///
   /// The drop down will be [height] tall and [width] wide.
-  /// 
-  /// It will have an [elevation] and the space the drop down 
+  ///
+  /// It will have an [elevation] and the space the drop down
   /// uses will be determined by whether or not it [isExpanded].
-  /// 
+  ///
   /// [slideDist] controls the sliding animation distance when [revealSearchField]
   /// is called by tapping [searchButton].
   Widget buildFilterDropdownArea(BuildContext context,
-      {@required double slideDist,
-      @required double posFromTop,
+      {@required double posFromTop,
       @required double height,
       @required double width,
       @required bool isExpanded,
       @required double elevation}) {
     return Positioned(
         top: posFromTop,
-        child: filterDropdown(context,
-            height: height,
-            width: width,
-            isExpanded: isExpanded,
-            elevation: elevation,
-            slideDist: slideDist));
-  }// buildFilterDropdownArea
-
+        child: filterDropdown(
+          context,
+          height: height,
+          width: width,
+          isExpanded: isExpanded,
+          elevation: elevation,
+        ));
+  } // buildFilterDropdownArea
 
   /// Builds a [Positioned] contact list using [contactFutureBuilder].
-  /// 
-  /// The list will be a distance of [posFromTop] from the top of the screen and 
-  /// [posFromLeft] from the left of the screen. 
-  /// 
-  /// It will have a height of [height] and a width of [width]. 
-  /// 
+  ///
+  /// The list will be a distance of [posFromTop] from the top of the screen and
+  /// [posFromLeft] from the left of the screen.
+  ///
+  /// It will have a height of [height] and a width of [width].
+  ///
   /// The amount of padding on the left and right will be [padH] and the padding
-  /// at the top and bottom will be [padV]. 
-  /// 
+  /// at the top and bottom will be [padV].
+  ///
   /// The title on each [ContactTile] will have a [titleStyle] and the subtitle
-  /// will have a [subtitleStyle]. 
-  /// 
-  /// The line between each [ContactTile] will be [thickness] in width. 
-  /// 
-  /// The distance for the animation is controlled by [slideDist].
-  Widget buildContactListArea(
+  /// will have a [subtitleStyle].
+  ///
+  /// The line between each [ContactTile] will be [thickness] in width.
+  ///
+  /// The distance for the animation is controlled by [begin] and [end].
+  Widget buildContactListAreaMoving(
+      {
+      @required double posFromTop,
+      @required double posFromLeft,
+      @required double posFromRight,
+      @required double posFromBottom,
+      @required double growTop,
+      @required double growLeft,
+      @required double growRight,
+      @required double growBottom,
+      @required AnimationController controller,
+      @required double height,
+      @required double width,
+      @required double padH,
+      @required double padV,      
+      @required double thickness,
+      TextStyle titleStyle,
+      TextStyle subtitleStyle,
+      bool isDecorated = true}) {
+    return PositionedTransition(
+        rect: RelativeRectTween(
+                begin: RelativeRect.fromLTRB(posFromLeft, posFromTop, posFromRight, posFromBottom),
+                end: RelativeRect.fromLTRB( growLeft, growTop,  growRight,  growBottom))
+            .animate(CurvedAnimation(parent: controller, curve: Curves.ease)),
+        child: contactFutureBuilder(
+          isDecorated: isDecorated,
+          thickness: thickness,
+          titleStyle: titleStyle,
+          subtitleStyle: subtitleStyle,
+          height: height,
+          padH: padH,
+          padV: padV,
+          width: width,
+        ));
+  } // buildContactListArea
+
+  Widget buildContactListAreaStatic(
       {@required double posFromTop,
-      @required double slideDist,
       @required double height,
       @required double width,
       @required double padH,
@@ -217,31 +277,19 @@ abstract class ContactViewState extends State<ContactViewStateful>
       TextStyle subtitleStyle,
       bool isDecorated = true}) {
     return Positioned(
-      top: posFromTop,
-      left: posFromLeft,
-      child: Transform(
-          transform: Matrix4.identity()..translate(0.0, slideDist),
-          child: Container(
-            height: height,
-            width: width,
-            padding: EdgeInsets.fromLTRB(padH, padV, padH, padV),
-            child: Column(
-                mainAxisSize: MainAxisSize.max,
-                verticalDirection: VerticalDirection.down,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Expanded(
-                      child: contactFutureBuilder(
-                    isDecorated: isDecorated,
-                    thickness: thickness,
-                    titleStyle: titleStyle,
-                    subtitleStyle: subtitleStyle,
-                  ))
-                ]),
-          )),
-    );
-  } // buildContactListArea
+        top: posFromTop,
+        left: posFromLeft,
+        child: contactFutureBuilder(
+          isDecorated: isDecorated,
+          thickness: thickness,
+          titleStyle: titleStyle,
+          subtitleStyle: subtitleStyle,
+          height: height,
+          padH: padH,
+          padV: padV,
+          width: width,
+        ));
+  } // build
 
   /// Builds the Search [IconButton] that goes in the [AppBar] actions.
   Widget searchButton() {
@@ -249,51 +297,50 @@ abstract class ContactViewState extends State<ContactViewStateful>
   }
 
   /// Toggle appbar and dropdown button animations
-  toggleAppBarAnimation() => ac.isDismissed ? ac.forward() : ac.reverse();
+  toggleFilterDropdownAnimation() =>
+      cc.isDismissed ? cc.forward() : cc.reverse();
+
+  toggleAppBarAnimation() => oc.isDismissed ? oc.forward() : oc.reverse();
 
   /// Toggles the [AppBar] between the page title and the search [TextField]
   void revealSearchField() {
+    toggleFilterDropdownAnimation();
     toggleAppBarAnimation();
-    
-    setState(() {
-      appBarLeading = null;
-      if (searchIcon.icon == Icons.search) {
-        searchIcon = Icon(
-          Icons.close,
-          color: Colors.black45,
-        );
-        filterIcon = Icon(
-          Icons.filter_list,
-          color: Colors.white,
-        );
-        appBarTitle = TextField(
-          controller: tec,
-          decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Search',
-              filled: false,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              )),
-        );
-      } else {
-        appBarLeading = BackButton();
-        searchIcon = Icon(
-          Icons.search,
-          color: Colors.white,
-        );
-        appBarTitle = Text('Contacts');
-        filterIcon = Icon(
-          Icons.filter_list,
-          color: Colors.white,
-        );
-        baseParam = 'contact/?search=';
-        contacts.clear();
-        tec.clear();
-      }
-      
-    });
-    
+    appBarLeading = null;
+    if (searchIcon.icon == Icons.search) {
+      searchIcon = Icon(
+        Icons.close,
+        color: Colors.black45,
+      );
+      filterIcon = Icon(
+        Icons.filter_list,
+        color: Colors.white,
+      );
+      appBarTitle = TextField(
+        controller: tec,
+        decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            hintText: 'Search',
+            filled: false,
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+            )),
+      );
+    } else {
+      appBarLeading = BackButton();
+      searchIcon = Icon(
+        Icons.search,
+        color: Colors.white,
+      );
+      appBarTitle = Text('Contacts');
+      filterIcon = Icon(
+        Icons.filter_list,
+        color: Colors.white,
+      );
+      baseParam = 'contact/?search=';
+      contacts.clear();
+      tec.clear();
+    }
   } // revealSearchField
 
   /// Builds a [ListView] of [ContactTile] for each member
@@ -330,39 +377,55 @@ abstract class ContactViewState extends State<ContactViewStateful>
   Widget contactFutureBuilder(
       {@required bool isDecorated,
       @required double thickness,
+      @required double padH,
+      @required double padV,
+      @required double height,
+      @required double width,
       TextStyle subtitleStyle,
       TextStyle titleStyle}) {
-    return FutureBuilder(
-      future: getResultsJSON('$baseParam$extraParam'),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.connectionState == ConnectionState.none) {
-          return Center(
-              child: Text(
-                  'Cannot load contacts. Check your internet connection.'));
-        } else if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            contacts = snapshot.data.toSet().toList();
-            if (contacts.length > 0) {
-              return buildContactListView(
-                  titleStyle: titleStyle,
-                  subtitleStyle: subtitleStyle,
-                  contacts: contacts,
-                  hasDecoration: isDecorated,
-                  thickness: thickness);
-            } else {
-              return Center(child: Text('No matches found'));
-            }
-          } else if (!snapshot.hasData || snapshot.hasError) {
-            return Center(child: Text('An error occured'));
-          } else {
-            return Center(child: Text('No matches found'));
-          }
-        }
-        return Container();
-      },
-    );
+    return Container(
+        height: height,
+        width: width,
+        padding: EdgeInsets.fromLTRB(padH, padV, padH, padV),
+        child: Column(
+            mainAxisSize: MainAxisSize.max,
+            verticalDirection: VerticalDirection.down,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                  child: FutureBuilder(
+                future: getResultsJSON('$baseParam$extraParam'),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.connectionState == ConnectionState.none) {
+                    return Center(
+                        child: Text(
+                            'Cannot load contacts. Check your internet connection.'));
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      contacts = snapshot.data.toSet().toList();
+                      if (contacts.length > 0) {
+                        return buildContactListView(
+                            titleStyle: titleStyle,
+                            subtitleStyle: subtitleStyle,
+                            contacts: contacts,
+                            hasDecoration: isDecorated,
+                            thickness: thickness);
+                      } else {
+                        return Center(child: Text('No matches found'));
+                      }
+                    } else if (!snapshot.hasData || snapshot.hasError) {
+                      return Center(child: Text('An error occured'));
+                    } else {
+                      return Center(child: Text('No matches found'));
+                    }
+                  }
+                  return Container();
+                },
+              ))
+            ]));
   } // _contactFutureBuilder
 
   /// Drop down button to filter the list of [contacts] by [categories].
@@ -370,10 +433,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
       {@required double height,
       @required double width,
       @required bool isExpanded,
-      @required double slideDist,
       @required double elevation}) {
-    return Transform(
-        transform: Matrix4.identity()..translate(0.0, slideDist),
+    return SlideTransition(
+        position: Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.0, -1.0))
+            .animate(CurvedAnimation(parent: cc, curve: Curves.ease)),
         child: Card(
             margin: EdgeInsets.all(0.0),
             elevation: elevation,
@@ -430,12 +493,12 @@ abstract class ContactViewState extends State<ContactViewStateful>
           ),
         ),
         onTap: () {
-          setState(
+          /* setState(
             () {
               extraParam =
                   '&${categories[i]['queryParam']}=${categories[i]['value']}';
             },
-          );
+          ); */
         },
         value: categories[i]['title'],
       );

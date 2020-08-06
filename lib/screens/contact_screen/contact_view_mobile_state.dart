@@ -15,9 +15,8 @@ class ContactViewMobileLandscapeState extends ContactViewState {
                 builder: (context, child) => Stack(
                       children: <Widget>[
                         Container(),
-                        buildContactListArea(
+                        buildContactListAreaStatic(
                           posFromTop: kToolbarHeight,
-                          slideDist: 0.0,
                           height: mq.size.height - kToolbarHeight,
                           width: mq.size.width,
                           padH: mq.size.width * 0.05,
@@ -35,9 +34,7 @@ class ContactViewMobileLandscapeState extends ContactViewState {
                                   height: kToolbarHeight,
                                   width: mq.size.width / 3,
                                   isExpanded: true,
-                                  slideDist: -kToolbarHeight * ac.value,
                                   elevation: 0.0),
-                              searchButton()
                             ],
                             elevation: 4.0),
                       ],
@@ -47,6 +44,8 @@ class ContactViewMobileLandscapeState extends ContactViewState {
 
 /// [ContactViewState] designed for phones in portrait orientation.
 class ContactViewMobilePortraitState extends ContactViewState {
+
+
   @override
   Widget build(BuildContext context) {
     // width and height calculations made using the [MediaQueryData]
@@ -63,8 +62,7 @@ class ContactViewMobilePortraitState extends ContactViewState {
         builder: (context, child) => Stack(
           children: <Widget>[
             Container(),
-            buildContactListArea(
-              slideDist: -kToolbarHeight * ac.value,
+            buildContactListAreaMoving(
               height: mq.size.height - (kToolbarHeight * 2),
               padH: padH,
               padV: padV,
@@ -72,10 +70,16 @@ class ContactViewMobilePortraitState extends ContactViewState {
               posFromTop: kToolbarHeight * 2,
               posFromLeft: 0.0,
               thickness: 1.0,
+              growLeft: 0.0,
+              growTop: (kToolbarHeight * 2)*0.5,
+              growBottom: 0.0,
+              growRight: 0.0,
+              posFromBottom: 0.0,
+              posFromRight: 0.0,
+              controller: cc,
             ),
             buildFilterDropdownArea(context,
                 posFromTop: kToolbarHeight,
-                slideDist: -kToolbarHeight * ac.value,
                 width: MediaQuery.of(context).size.width,
                 height: kToolbarHeight,
                 isExpanded: true,
@@ -84,7 +88,7 @@ class ContactViewMobilePortraitState extends ContactViewState {
                 height: kToolbarHeight,
                 animationIntervalStart: 0.40,
                 animationIntervalEnd: 1.0,
-                actions: <Widget>[searchButton()],
+                actions: <Widget>[],
                 elevation: 0.0),
           ],
         ),

@@ -6,7 +6,7 @@ import 'package:fst_app_flutter/utils/app_theme.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Color.fromRGBO(0, 62, 138, 1.0),
+    statusBarColor: AppTheme.apptheme.primaryColor,
   ));
 
   runApp(DevicePreview(child: FSTApp()));

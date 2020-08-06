@@ -9,7 +9,7 @@ class DrawerHeaderMobilePortrait extends BaseModelWidget<DrawerHeaderData> {
     MediaQueryData queryData = MediaQuery.of(context);
     return Container(
       margin: EdgeInsets.only(top: 10),
-      decoration: BoxDecoration(color: Color(0xff121D48)),
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       width: queryData.orientation == Orientation.portrait ? 250 : 100,
       child: Center(
         child: Image(

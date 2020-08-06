@@ -35,27 +35,28 @@ class ContactViewTabletLandscapeState extends ContactViewState {
         animation: ac,
         builder: (context, child) => Stack(
           children: <Widget>[
-            SlideTransition(
-              position:
-                  Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.25, 0.0))
-                      .animate(CurvedAnimation(parent: fc, curve: Curves.ease)),
-              child: Stack(
-                children: [
-                  buildContactListArea(
-                      titleStyle: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.w500),
-                      subtitleStyle: TextStyle(
-                          fontSize: 14.0, fontWeight: FontWeight.w500),
-                      posFromTop: kToolbarHeight,
-                      slideDist: 0.0,
-                      height: screenHeight - kToolbarHeight,
-                      width: screenWidth - kMinInteractiveDimension,
-                      padH: screenWidth * 0.07,
-                      padV: screenHeight * 0.05,
-                      posFromLeft: kMinInteractiveDimension,
-                      thickness: 1.5),
-                ],
-              ),
+            Stack(
+              children: [
+                buildContactListAreaMoving(
+                    titleStyle: TextStyle(
+                        fontSize: 18.0, fontWeight: FontWeight.w500),
+                    subtitleStyle: TextStyle(
+                        fontSize: 14.0, fontWeight: FontWeight.w500),
+                    posFromTop: kToolbarHeight,
+                    height: screenHeight - kToolbarHeight,
+                    width: screenWidth - kMinInteractiveDimension,
+                    padH: screenWidth * 0.07,
+                    padV: screenHeight * 0.05,
+                    posFromLeft: kMinInteractiveDimension,
+                    thickness: 1.5,
+                    posFromBottom: 0.0,
+                    posFromRight: 0.0,
+                    growBottom: 0.0,
+                    growLeft: sidepanelWidth,
+                    growRight: 0.0,
+                    growTop: kToolbarHeight,
+                    controller: fc ),
+              ],
             ),
             Container(),
             filterDrawer(
@@ -68,7 +69,7 @@ class ContactViewTabletLandscapeState extends ContactViewState {
                 height: kToolbarHeight,
                 animationIntervalStart: 0.0,
                 animationIntervalEnd: 1.0,
-                actions: <Widget>[searchButton()],
+                actions: <Widget>[],
                 elevation: 4.0)
           ],
         ),
