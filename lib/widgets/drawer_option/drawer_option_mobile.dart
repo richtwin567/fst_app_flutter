@@ -9,7 +9,7 @@ class DrawerOptionMobilePortrait extends BaseModelWidget<DrawerItemData> {
     return Container(
       height: 80,
       child: Material(
-        color: Color.fromRGBO(18, 29, 72, 1),
+        color: Theme.of(context).primaryColor,
         child: InkWell(
           splashColor: Colors.blue[900],
           onTap: () => Navigator.pushNamed(context, data.route),

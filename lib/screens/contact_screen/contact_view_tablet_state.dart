@@ -8,16 +8,17 @@ class ContactViewTabletPortraitState extends ContactViewTabletLandscapeState {}
 /// ContactViewState designed for tablets in landscape orientation.
 class ContactViewTabletLandscapeState extends ContactViewState {
   /// The filterDrawer animation controller.
-  AnimationController fc;
+  AnimationController filterDrawerController;
 
   /// Sets the background colour of the non-selected filter options.
   Color filterOptionBgColor;
 
-  /// Also initialize [fc]
+  /// Also initialize [filterDrawerController] aside from the initialization done in 
+  /// [super.initState]
   @override
   void initState() {
     super.initState();
-    fc = AnimationController(
+    filterDrawerController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1000));
   }
 
@@ -31,31 +32,30 @@ class ContactViewTabletLandscapeState extends ContactViewState {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
-          child: AnimatedBuilder(
-        animation: ac,
-        builder: (context, child) => Stack(
+        child: Stack(
           children: <Widget>[
-            SlideTransition(
-              position:
-                  Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.25, 0.0))
-                      .animate(CurvedAnimation(parent: fc, curve: Curves.ease)),
-              child: Stack(
-                children: [
-                  buildContactListArea(
-                      titleStyle: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.w500),
-                      subtitleStyle: TextStyle(
-                          fontSize: 14.0, fontWeight: FontWeight.w500),
-                      posFromTop: kToolbarHeight,
-                      slideDist: 0.0,
-                      height: screenHeight - kToolbarHeight,
-                      width: screenWidth - kMinInteractiveDimension,
-                      padH: screenWidth * 0.07,
-                      padV: screenHeight * 0.05,
-                      posFromLeft: kMinInteractiveDimension,
-                      thickness: 1.5),
-                ],
-              ),
+            Stack(
+              children: [
+                buildMovingContactListArea(
+                    titleStyle:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+                    subtitleStyle:
+                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
+                    posFromTop: kToolbarHeight,
+                    height: screenHeight - kToolbarHeight,
+                    width: screenWidth - kMinInteractiveDimension,
+                    padH: screenWidth * 0.07,
+                    padV: screenHeight * 0.05,
+                    posFromLeft: kMinInteractiveDimension,
+                    thickness: 1.5,
+                    posFromBottom: 0.0,
+                    posFromRight: 0.0,
+                    growBottom: 0.0,
+                    growLeft: sidepanelWidth,
+                    growRight: 0.0,
+                    growTop: kToolbarHeight,
+                    controller: filterDrawerController),
+              ],
             ),
             Container(),
             filterDrawer(
@@ -68,16 +68,50 @@ class ContactViewTabletLandscapeState extends ContactViewState {
                 height: kToolbarHeight,
                 animationIntervalStart: 0.0,
                 animationIntervalEnd: 1.0,
-                actions: <Widget>[searchButton()],
+                actions: <Widget>[],
                 elevation: 4.0)
           ],
         ),
-      )),
+      ),
     );
-  }// build
+  } // build
+
+  /// Opens and closes the drawer while moving the list to make space.
+  toggleDrawer() => filterDrawerController.isDismissed
+      ? filterDrawerController.forward()
+      : filterDrawerController.reverse();
+
+  /// Builds each item for the list of filter options for the [filterDrawer].
+  filterDrawerListBuilder(context, i, height) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          extraParam =
+              '&${categories[i]['queryParam']}=${categories[i]['value']}';
+          currentFilter = categories[i]['title'];
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: height * 0.01, top: height * 0.01),
+        height: (height / categories.length) - ((height * 0.01) * 2),
+        decoration: BoxDecoration(
+            color: currentFilter == categories[i]['title']
+                ? Color.lerp(Colors.blue[600], Colors.blue[700], 0.5)
+                : filterOptionBgColor,
+            borderRadius: BorderRadius.circular(40.0)),
+        child: ListTile(
+          title: Text(
+            categories[i]['title'],
+            softWrap: true,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
+    );
+  } // filterDrawerListBuilder
 
   /// Creates a collapsing drawer with the list of filter options by [categories].
-  /// 
+  ///
   /// It has a specific [height], [width] and background colour, [bgColor]. It
   /// is [Positioned] [posFromTop] from the top of the screen.
   Widget filterDrawer({
@@ -90,7 +124,7 @@ class ContactViewTabletLandscapeState extends ContactViewState {
         position:
             Tween<Offset>(begin: Offset(-0.25, 0.0), end: Offset(0.0, 0.0))
                 .animate(CurvedAnimation(
-                    parent: fc,
+                    parent: filterDrawerController,
                     curve: Curves.elasticOut,
                     reverseCurve: Curves.elasticIn)),
         child: Stack(
@@ -127,7 +161,7 @@ class ContactViewTabletLandscapeState extends ContactViewState {
                     child: RotationTransition(
                       turns: Tween<double>(begin: 1.0, end: 0.5).animate(
                           CurvedAnimation(
-                              parent: fc,
+                              parent: filterDrawerController,
                               curve: Interval(0.0, 0.4, curve: Curves.linear))),
                       child: Center(
                         child: IconButton(
@@ -143,37 +177,7 @@ class ContactViewTabletLandscapeState extends ContactViewState {
             Container(),
           ],
         ));
-  }// filterDrawer
+  } // filterDrawer
 
-  /// Opens and closes the drawer while moving the list to make space.
-  toggleDrawer() => fc.isDismissed ? fc.forward() : fc.reverse();
-
-  /// Builds each item for the list of filter options for the [filterDrawer].
-  filterDrawerListBuilder(context, i, height) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          extraParam =
-              '&${categories[i]['queryParam']}=${categories[i]['value']}';
-          currentFilter = categories[i]['title'];
-        });
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: height * 0.01, top: height * 0.01),
-        height: (height / categories.length) - ((height * 0.01) * 2),
-        decoration: BoxDecoration(
-            color: currentFilter == categories[i]['title']
-                ? Color.lerp(Colors.blue[600], Colors.blue[700], 0.5)
-                : filterOptionBgColor,
-            borderRadius: BorderRadius.circular(40.0)),
-        child: ListTile(
-          title: Text(
-            categories[i]['title'],
-            softWrap: true,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-        ),
-      ),
-    );
-  }// filterDrawerListBuilder
+  
 }

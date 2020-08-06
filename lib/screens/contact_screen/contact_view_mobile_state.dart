@@ -10,38 +10,33 @@ class ContactViewMobileLandscapeState extends ContactViewState {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: SafeArea(
-            child: AnimatedBuilder(
-                animation: ac,
-                builder: (context, child) => Stack(
-                      children: <Widget>[
-                        Container(),
-                        buildContactListArea(
-                          posFromTop: kToolbarHeight,
-                          slideDist: 0.0,
-                          height: mq.size.height - kToolbarHeight,
-                          width: mq.size.width,
-                          padH: mq.size.width * 0.05,
-                          padV: mq.size.height * 0.05,
-                          posFromLeft: 0.0,
-                          thickness: 1.0,
-                        ),
-                        Container(),
-                        buildAppBarArea(
-                            height: kToolbarHeight,
-                            animationIntervalStart: 0.0,
-                            animationIntervalEnd: 1.0,
-                            actions: <Widget>[
-                              filterDropdown(context,
-                                  height: kToolbarHeight,
-                                  width: mq.size.width / 3,
-                                  isExpanded: true,
-                                  slideDist: -kToolbarHeight * ac.value,
-                                  elevation: 0.0),
-                              searchButton()
-                            ],
-                            elevation: 4.0),
-                      ],
-                    ))));
+            child: Stack(
+          children: <Widget>[
+            Container(),
+            buildStaticContactListArea(
+              posFromTop: kToolbarHeight,
+              height: mq.size.height - kToolbarHeight,
+              width: mq.size.width,
+              padH: mq.size.width * 0.05,
+              padV: mq.size.height * 0.05,
+              posFromLeft: 0.0,
+              thickness: 1.0,
+            ),
+            Container(),
+            buildAppBarArea(
+                height: kToolbarHeight,
+                animationIntervalStart: 0.0,
+                animationIntervalEnd: 1.0,
+                actions: <Widget>[
+                  filterDropdown(context,
+                      height: kToolbarHeight,
+                      width: mq.size.width / 3,
+                      isExpanded: true,
+                      elevation: 0.0),
+                ],
+                elevation: 4.0),
+          ],
+        )));
   }
 }
 
@@ -58,13 +53,10 @@ class ContactViewMobilePortraitState extends ContactViewState {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
-          child: AnimatedBuilder(
-        animation: ac,
-        builder: (context, child) => Stack(
+        child: Stack(
           children: <Widget>[
             Container(),
-            buildContactListArea(
-              slideDist: -kToolbarHeight * ac.value,
+            buildMovingContactListArea(
               height: mq.size.height - (kToolbarHeight * 2),
               padH: padH,
               padV: padV,
@@ -72,10 +64,16 @@ class ContactViewMobilePortraitState extends ContactViewState {
               posFromTop: kToolbarHeight * 2,
               posFromLeft: 0.0,
               thickness: 1.0,
+              growLeft: 0.0,
+              growTop: (kToolbarHeight * 2) * 0.5,
+              growBottom: 0.0,
+              growRight: 0.0,
+              posFromBottom: 0.0,
+              posFromRight: 0.0,
+              controller: dropdownController,
             ),
             buildFilterDropdownArea(context,
                 posFromTop: kToolbarHeight,
-                slideDist: -kToolbarHeight * ac.value,
                 width: MediaQuery.of(context).size.width,
                 height: kToolbarHeight,
                 isExpanded: true,
@@ -84,11 +82,11 @@ class ContactViewMobilePortraitState extends ContactViewState {
                 height: kToolbarHeight,
                 animationIntervalStart: 0.40,
                 animationIntervalEnd: 1.0,
-                actions: <Widget>[searchButton()],
+                actions: <Widget>[],
                 elevation: 0.0),
           ],
         ),
-      )),
+      ),
     );
   }
 }

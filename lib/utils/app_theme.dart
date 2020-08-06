@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static get apptheme {
+  static ThemeData get apptheme {
     return ThemeData(
       // Define the default brightness and colors.
       primaryColor: Color.fromRGBO(0,62,138, 1),
