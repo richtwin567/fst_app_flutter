@@ -147,7 +147,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       title: Text(
         "Scholarships",
         style: TextStyle(
-          //fontFamily: "Monsterrat",
           color: Colors.white,
         ),
       ),
@@ -188,7 +187,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             "End of the List", 
             style: TextStyle(
               color: Colors.grey.shade400, 
-              fontSize: 18
+              fontSize: 18,
             ),
           ),
           SizedBox(height: 20),
@@ -204,7 +203,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                   color: Colors.white,
                 ),
               ),
-              color: Colors.blue.shade900,
+              color: Theme.of(context).primaryColor,
               onPressed: (){
                 _scroll.animateTo(0, duration: Duration(seconds: 2), curve: Curves.easeOut);
               },  
@@ -277,6 +276,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
         style: TextStyle(
           color: Colors.grey.shade400, 
           fontSize: 18,
+          fontFamily: "Monsterrat",
         ),
       ),
     );
