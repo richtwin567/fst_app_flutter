@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scholarship/screens/scholarship_screen/local_widgets/scholarcard.dart';
-import 'package:scholarship/models/scholarship.dart';
-import 'package:scholarship/services/scholarshipservice.dart';
-import 'package:scholarship/utils/debouncer.dart';
+import 'package:fst_app_flutter/screens/scholarship_screen/local_widget/scholarcard.dart';
+import 'package:fst_app_flutter/utils/debouncer.dart';
+import 'package:fst_app_flutter/models/scholarship.dart';
+import 'package:fst_app_flutter/services/scholarshipservice.dart';
 
 class ScholarshipMobile extends StatefulWidget {
   final String orientation;
