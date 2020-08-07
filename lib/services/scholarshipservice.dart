@@ -16,7 +16,6 @@ class ScholarshipService{
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
         return Future(() => ScholarshipList.fromJson(jsonResponse).scholarList);
-        //return Future(() => jsonResponse.map((i) => Scholarship.fromJson(i)).toList());
       } else {
         throw Exception('Failed to Load List from Server');
       }

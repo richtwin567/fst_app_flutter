@@ -8,3 +8,5 @@ const contactRoute = '/contact';
 
 /// [ContactDetailPage] route
 const contactDetailRoute = '/contactDetail';
+
+const scholarshipRoute = '/scholarship';
