@@ -19,7 +19,8 @@ class ContactDetailPage extends StatelessWidget {
     final mq = MediaQuery.of(context);
     final ContactCard contactMethods =
         _contactDetailList(contactDetails, mq, context);
-    final ContactCard contactInfo = _aboutContactList(contactDetails, mq);
+    final ContactCard contactInfo =
+        _aboutContactList(contactDetails, mq, context);
 
     return Scaffold(
         body: SafeArea(
@@ -64,7 +65,7 @@ class ContactDetailPage extends StatelessWidget {
       var icon;
       if (data['phone_contact_set'][i]['platforms'] == 'WHATSAPP') {
         icon = Image.asset(
-          'images/contact/WhatsApp_flat.png',
+          'assets/WhatsApp_flat.png',
           width: IconTheme.of(context).size,
         );
         return ListTile(
@@ -73,7 +74,10 @@ class ContactDetailPage extends StatelessWidget {
                 openUrl('tel:' + data['phone_contact_set'][i]['phone']),
             title: Text(data['phone_contact_set'][i]['phone']));
       } else {
-        icon = Icon(Icons.phone);
+        icon = Icon(
+          Icons.phone,
+          color: Theme.of(context).accentColor,
+        );
         return ListTile(
             leading: icon,
             onTap: () =>
@@ -82,12 +86,26 @@ class ContactDetailPage extends StatelessWidget {
       }
     });
 
+    List<dynamic> phoneNumsWithDivider = [];
+    if (phoneNums.length > 1) {
+      phoneNums.forEach((e) {
+        phoneNumsWithDivider
+            .addAll([e, Divider(indent: kMinInteractiveDimension + 24.0)]);
+      });
+      phoneNumsWithDivider.removeLast();
+    } else {
+      phoneNumsWithDivider.addAll(phoneNums);
+    }
+
     List<dynamic> iconifiedList = [
-      ...phoneNums,
+      ...phoneNumsWithDivider,
       phoneNums.length > 0 ? Divider() : null,
       data['email'] != ''
           ? ListTile(
-              leading: Icon(Icons.email),
+              leading: Icon(
+                Icons.email,
+                color: Theme.of(context).accentColor,
+              ),
               title: Text(data['email']),
               onTap: () => openUrl('mailto:' + data['email']),
             )
@@ -95,7 +113,7 @@ class ContactDetailPage extends StatelessWidget {
       data['fax'] != '' ? Divider() : null,
       data['fax'] != ''
           ? ListTile(
-              leading: Icon(Icons.print),
+              leading: Icon(Icons.print, color: Theme.of(context).accentColor),
               title: Text(data['fax']),
               subtitle: Text('Fax'),
             )
@@ -117,12 +135,15 @@ class ContactDetailPage extends StatelessWidget {
   }
 
   /// Creates a [ContactCard] for the website and description if applicable.
-  ContactCard _aboutContactList(final dynamic data, final MediaQueryData mq) {
+  ContactCard _aboutContactList(
+      final dynamic data, final MediaQueryData mq, BuildContext context) {
     List<dynamic> iconifiedList;
     if (data['website'] != '' || data['description'] != '') {
       iconifiedList = [
-        ListTile(title: Text("About ${data['name']}")),
-        data['website'] != '' ? Divider() : null,
+        ListTile(
+            title: Text("About ${data['name']}",
+                style: TextStyle(color: Theme.of(context).accentColor))),
+        data['website'] != '' || data['description'] != '' ? Divider() : null,
         data['website'] != ''
             ? ListTile(
                 onTap: () => openUrl(data['website']),
@@ -131,7 +152,11 @@ class ContactDetailPage extends StatelessWidget {
                 trailing: Icon(Icons.chevron_right),
               )
             : null,
-        data['description'] != '' ? Divider() : null,
+        data['website'] != ''
+            ? Divider(
+                indent: 16.0,
+              )
+            : null,
         data['description'] != ''
             ? ListTile(
                 title: Text('Additional Info'),
