@@ -29,7 +29,7 @@ class ScholarCard extends StatelessWidget {
 
   PageRouteBuilder _buildTransition(){
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => ScholarshipView(current: scholarship),
+      pageBuilder: (context, animation, secondaryAnimation) => ScholarshipDetails(current: scholarship),
       transitionDuration: Duration(milliseconds: 500,),
       transitionsBuilder: (context, animation, secondaryAnimation, child){
         animation = CurvedAnimation(

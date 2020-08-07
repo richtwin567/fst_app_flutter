@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/scholarship.dart';
 
-class ScholarshipView extends StatefulWidget {
+class ScholarshipDetails extends StatefulWidget {
   final Scholarship current;
 
-  ScholarshipView({this.current});
+  ScholarshipDetails({this.current});
 
   @override
-  _ScholarshipViewState createState() => _ScholarshipViewState();
+  _ScholarshipDetailsState createState() => _ScholarshipDetailsState();
 }
 
-class _ScholarshipViewState extends State<ScholarshipView> {
+class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   final  _scroll = ScrollController();
 
   void dispose(){
