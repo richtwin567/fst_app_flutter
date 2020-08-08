@@ -94,12 +94,11 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// [revealSearchField] is called
   AnimationController dropdownController;
 
-
   /// Controller for animations related to the appBar changing from blue to white
   /// when [revealSearchField] is called.
   AnimationController appBarColorController;
 
-  /// Whether or not all the actions are displayed on the appBar. This value is 
+  /// Whether or not all the actions are displayed on the appBar. This value is
   /// toggle in [revealSearchField].
   bool extraActions = true;
 
@@ -372,6 +371,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
     return Scrollbar(
       controller: scrollController,
       child: ListView.builder(
+          key: PageStorageKey('scrollPosition'),
+          controller: scrollController,
           itemCount: contacts.length,
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
