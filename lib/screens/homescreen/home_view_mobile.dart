@@ -3,7 +3,6 @@ import 'package:fst_app_flutter/widgets/app_drawer/app_drawer.dart';
 import 'package:fst_app_flutter/widgets/card_container/card_container.dart';
 
 class HomeMobilePortrait extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,6 @@ class HomeMobilePortrait extends StatelessWidget {
               onPressed: null)
         ],
       ),
-      key: _scaffoldKey,
       drawer: AppDrawer(),
       body: Stack(fit: StackFit.passthrough, children: <Widget>[
         Container(

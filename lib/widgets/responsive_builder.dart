@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/utils/device_screen_type.dart';
+import 'package:fst_app_flutter/utils/get_device_screen_type.dart';
 import 'package:fst_app_flutter/utils/sizinginformation.dart';
 
 class ResponsiveBuilder extends StatelessWidget {
@@ -21,6 +21,7 @@ class ResponsiveBuilder extends StatelessWidget {
         localWidgetSize:
             Size(boxConstraints.maxWidth, boxConstraints.maxHeight),
       );
+      print(sizingInformation);
       return builder(context, sizingInformation);
     });
   }
