@@ -91,11 +91,11 @@ The reason why we use the `mediaQuery.size.shortestSide` to determine the device
 
 Take this device for example:
 
-![portrait](https://github.com/richtwin567/fst_app_flutter/blob/contact_screen/Orientation_Layout_Explanation/MediaQuery.size_explanation/portrait.png)
+![portrait](https://github.com/richtwin567/fst_app_flutter/blob/contact_screen/Orientation_Screen_Layout_Explanation/MediaQuery.size_explanation/portrait.png)
 
 And when rotated:
 
-![landscape](https://github.com/richtwin567/fst_app_flutter/blob/contact_screen/Orientation_Layout_Explanation/MediaQuery.size_explanation/landscape.png)
+![landscape](https://github.com/richtwin567/fst_app_flutter/blob/contact_screen/Orientation_Screen_Layout_Explanation/MediaQuery.size_explanation/landscape.png)
 
 This would incorrectly cause the tablet layout to be displayed since the device width has exceeded 600 if we used `mediaQuery.size.width` instead of `mediaQuery.size.shortestSide`.
 
