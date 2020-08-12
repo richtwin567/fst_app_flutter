@@ -4,7 +4,6 @@ import 'package:fst_app_flutter/screens/contact_screen/contact_view_tablet_state
 
 /// Full portrait tablet contact view made using [ContactViewTabletPortraitState].
 class ContactViewTabletPortrait extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,11 +13,9 @@ class ContactViewTabletPortrait extends StatelessWidget {
 
 /// Full landscape tablet landscape view made using [ContactViewTabletLandscapeState].
 class ContactViewTabletLandscape extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ContactViewStateful(state: ContactViewTabletLandscapeState()),
-    );
+        body: ContactViewStateful(state: ContactViewTabletLandscapeState()));
   }
 }
