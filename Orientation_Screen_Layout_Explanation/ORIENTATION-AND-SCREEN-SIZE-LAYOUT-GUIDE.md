@@ -127,7 +127,7 @@ class SizingInformation {
 	}
 }
 ```
-<small>fst_app_flutter > lib > utils > sizinginformation.dart</small>
+<sup>fst_app_flutter > lib > utils > sizinginformation.dart</sup>
 
 <div align="right"><a href="#top">[Top]</a></div>
 
@@ -160,7 +160,7 @@ class ResponsiveBuilder extends StatelessWidget {
 	}
 }
 ```
-<small>fst_app_flutter > lib > widgets > responsive_builder.dart</small>
+<sup>fst_app_flutter > lib > widgets > responsive_builder.dart</sup>
 
 `ResponsiveBuilder` has a single field; a function called `builder` which accepts a `BuildContext` object and a `SizingInformation` object and return a [Widget](https://api.flutter.dev/flutter/widgets/Widget-class.html). In its build method, instantiates the `SizingInformation` object. It gets the `MediaQueryData` and passes it to `getDeviceType` which is used to set the `deviceScreenType` field. The `SizingInformation` is then passed to the `builder` whose `Widget` is returned.
 
@@ -207,7 +207,7 @@ class ScreenTypeLayout extends StatelessWidget {
 	}
 }
 ```
-<small>fst_app_flutter > lib > widgets > screen_type_layout.dart</small>
+<sup>fst_app_flutter > lib > widgets > screen_type_layout.dart</sup>
 
 Whatever widget you pass into `ScreenTypeLayout` for it's mobile field will always be returned if `SizingInformation` indicates that its a mobile device.
 
@@ -265,7 +265,7 @@ class OrientationLayout extends StatelessWidget {
 	}
 }
 ```
-<small>fst_app_flutter > lib > widgets > orientation_layout.dart</small>
+<sup>fst_app_flutter > lib > widgets > orientation_layout.dart</sup>
 
 The `OrientationLayout` class has two build methods as fields. One called `landscape` to build the landscape layout and one called `portrait` to build the portrait layout. These methods are set in the constructor. In the build method, you can see that we used the `ResponsiveBuilder` again, to get `SizingInformation.orientation`. Depending on the orientation either `portrait` or `landscape`'s `Widget` will be returned. In the case of `landscape`, it is only returned if it is not `null`.
 
@@ -325,7 +325,7 @@ class ContactView extends StatelessWidget {
 
 }
 ```
-<small>fst_app_flutter > lib > screens > contact_screen > contact_view.dart</small>
+<sup>fst_app_flutter > lib > screens > contact_screen > contact_view.dart</sup>
 
 `ContactViewMobilePortrait()`, `ContactViewMobileLandscape()`, `ContactViewTabletPortrait()` and `ContactViewTabletLandscape()` build the appropriate layout for each device screen type and orientation.
 
@@ -360,7 +360,7 @@ class ContactViewMobileLandscape extends StatelessWidget{
 	}
 }
 ```
-<small>fst_app_flutter > lib > screens > contact_screen > contact_view_mobile.dart</small>
+<sup>fst_app_flutter > lib > screens > contact_screen > contact_view_mobile.dart</sup>
 
 And at `ContactViewTabletPortrait()` and `ContactViewTabletLandscape()`:
 
@@ -389,7 +389,7 @@ class ContactViewTabletLandscape extends StatelessWidget {
 	}
 }
 ```
-<small>fst_app_flutter > lib > screens > contact_screen > contact_view_tablet.dart</small>
+<sup>fst_app_flutter > lib > screens > contact_screen > contact_view_tablet.dart</sup>
 
 What you may notice that these classes have in common is `ContactViewStateful` in the body of each `Scaffold`. It accepts a `state` and this is where the classes differ. A different object is passed in as the `state` in each class.
 
@@ -417,7 +417,7 @@ class ContactViewStateful extends StatefulWidget {
 	
 } // ContactViewStateful definition
 ```
-<small>fst_app_flutter > lib > screens > contact_screen > contact_view_stateful.dart</small>
+<sup>fst_app_flutter > lib > screens > contact_screen > contact_view_stateful.dart</sup>
 
 The `State` passed in is a subclass of `ContactViewState`. So 
 `ContactViewTabletLandscapeState`, `ContactViewTabletPortraitState`, `ContactViewMobileLandscapeState` and `ContactViewMobilePortraitState` that were passed to `ContactStateful` in the classes in contact_view_tablet.dart and contact_view_mobile.dart, are all sublasses of `ContactViewState`.
@@ -429,7 +429,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
 	// fields and methods
 }
 ```
-<small>fst_app_flutter > lib > screens > contact_screen > contact_state.dart</small>
+<sup>fst_app_flutter > lib > screens > contact_screen > contact_state.dart</sup>
 
 The build method is not implemented. Other methods to be used in the build method of the subclasses are defined, however.
 
@@ -496,7 +496,7 @@ class ContactViewMobilePortraitState extends ContactViewState {
 
 }
 ```
-<small>fst_app_flutter > lib > screens > contact_screen > contact_view_mobile_state.dart</small>
+<sup>fst_app_flutter > lib > screens > contact_screen > contact_view_mobile_state.dart</sup>
 
 All methods and fields used that you do not see a definition for in the `ContactViewMobilePortraitState` class were already defined in `ContactViewState`. The other state classes are done in a similar manner.
 
@@ -530,7 +530,7 @@ const contactDetailRoute = '/contactDetail';
 
 // Add your route here
 ```
-<small>fst_app_flutter > lib > routing > routes.dart</small>
+<sup>fst_app_flutter > lib > routing > routes.dart</sup>
 
 Then add a case for your route in the generateRoute switch statement in generate_routes.dart
 ```dart
@@ -562,7 +562,7 @@ class Router {
 }
 ```
 
-<small>fst_app_flutter > lib > routing > generate_routes.dart</small>
+<sup>fst_app_flutter > lib > routing > generate_routes.dart</sup>
 
 <div align="right"><a href="#top">[Top]</a></div>
 
