@@ -63,7 +63,7 @@ class ContactTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var mq = MediaQuery.of(context);
-    var tileH = mq.size.height * 0.15;
+    var tileH = kMinInteractiveDimension+ mq.size.longestSide * 0.07;
 
     var tStyle = titleStyle ?? Theme.of(context).textTheme.subtitle1;
     var sStyle = subtitleStyle ?? Theme.of(context).textTheme.caption;

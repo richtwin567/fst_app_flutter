@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:fst_app_flutter/models/theme_model.dart';
 import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
+import 'package:fst_app_flutter/utils/app_theme.dart';
 import 'package:fst_app_flutter/widgets/contact_tile.dart';
 import 'package:fst_app_flutter/routing/routes.dart';
 import 'contact_view_stateful.dart';
@@ -102,6 +105,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// toggle in [revealSearchField].
   bool extraActions = true;
 
+  ThemeModel themeModel;
+
+  ContactViewState({@required this.themeModel});
+
   /// Load all contacts when page is loaded initially. Initilize animations and controllers.
   @override
   void initState() {
@@ -110,15 +117,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-    appBarBgColor = TweenSequence([
-      TweenSequenceItem(
-          tween: ColorTween(
-              begin: Color.fromRGBO(0, 62, 138, 1.0), end: Colors.blue[800]),
-          weight: 1.0),
-      TweenSequenceItem(
-          tween: ColorTween(begin: Colors.blue[800], end: Colors.white),
-          weight: 0.5)
-    ]);
+    
+      appBarBgColor = ColorTween(
+                begin: AppTheme.getTheme(themeModel.selectedTheme,SchedulerBinding.instance.window.platformBrightness).appBarTheme.color,
+                end: AppTheme.getTheme(themeModel.selectedTheme,SchedulerBinding.instance.window.platformBrightness).scaffoldBackgroundColor);
     dropdownController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     searchController = TextEditingController();
@@ -129,6 +131,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
       });
     });
   }
+  
 
   /// Dispose all disposable controllers.
   @override

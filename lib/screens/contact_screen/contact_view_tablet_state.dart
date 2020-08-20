@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/models/theme_model.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_state.dart';
 
 /// ContactViewState designed for tablets in portrait orientation.
 /// Currently the same as the landscape state.
-class ContactViewTabletPortraitState extends ContactViewTabletLandscapeState {}
+class ContactViewTabletPortraitState extends ContactViewTabletLandscapeState {
+  ContactViewTabletPortraitState({@required ThemeModel themeModel})
+      : super(themeModel: themeModel);
+}
 
 /// ContactViewState designed for tablets in landscape orientation.
 class ContactViewTabletLandscapeState extends ContactViewState {
@@ -13,7 +17,10 @@ class ContactViewTabletLandscapeState extends ContactViewState {
   /// Sets the background colour of the non-selected filter options.
   Color filterOptionBgColor;
 
-  /// Also initialize [filterDrawerController] aside from the initialization done in 
+  ContactViewTabletLandscapeState({@required ThemeModel themeModel})
+      : super(themeModel: themeModel);
+
+  /// Also initialize [filterDrawerController] aside from the initialization done in
   /// [super.initState]
   @override
   void initState() {
@@ -28,50 +35,49 @@ class ContactViewTabletLandscapeState extends ContactViewState {
     var screenHeight = mq.size.height;
     var screenWidth = mq.size.width;
     var sidepanelWidth = screenWidth * 0.25 + kMinInteractiveDimension;
+    var topViewInsets = mq.padding.top;
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Stack(
-              children: [
-                buildMovingContactListArea(
-                    titleStyle:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-                    subtitleStyle:
-                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
-                    posFromTop: kToolbarHeight,
-                    height: screenHeight - kToolbarHeight,
-                    width: screenWidth - kMinInteractiveDimension,
-                    padH: screenWidth * 0.07,
-                    padV: screenHeight * 0.05,
-                    posFromLeft: kMinInteractiveDimension,
-                    thickness: 1.5,
-                    posFromBottom: 0.0,
-                    posFromRight: 0.0,
-                    growBottom: 0.0,
-                    growLeft: sidepanelWidth,
-                    growRight: 0.0,
-                    growTop: kToolbarHeight,
-                    controller: filterDrawerController),
-              ],
-            ),
-            Container(),
-            filterDrawer(
-                bgColor: Theme.of(context).accentColor,
-                width: sidepanelWidth,
-                height: screenHeight - kToolbarHeight,
-                posFromTop: kToolbarHeight),
-            Container(),
-            buildAppBarArea(
-                height: kToolbarHeight,
-                animationIntervalStart: 0.0,
-                animationIntervalEnd: 1.0,
-                actions: <Widget>[],
-                elevation: 4.0)
-          ],
-        ),
+      body: Stack(
+        children: <Widget>[
+          Stack(
+            children: [
+              buildMovingContactListArea(
+                  titleStyle:
+                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+                  subtitleStyle:
+                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
+                  posFromTop: kToolbarHeight + topViewInsets,
+                  height: screenHeight - kToolbarHeight,
+                  width: screenWidth - kMinInteractiveDimension,
+                  padH: screenWidth * 0.07,
+                  padV: screenHeight * 0.05,
+                  posFromLeft: kMinInteractiveDimension,
+                  thickness: 1.5,
+                  posFromBottom: 0.0,
+                  posFromRight: 0.0,
+                  growBottom: 0.0,
+                  growLeft: sidepanelWidth,
+                  growRight: 0.0,
+                  growTop: kToolbarHeight,
+                  controller: filterDrawerController),
+            ],
+          ),
+          Container(),
+          filterDrawer(
+              bgColor: Theme.of(context).accentColor,
+              width: sidepanelWidth,
+              height: screenHeight - kToolbarHeight,
+              posFromTop: kToolbarHeight + topViewInsets),
+          Container(),
+          buildAppBarArea(
+              height: kToolbarHeight + topViewInsets,
+              animationIntervalStart: 0.0,
+              animationIntervalEnd: 1.0,
+              actions: <Widget>[],
+              elevation: 4.0)
+        ],
       ),
     );
   } // build
@@ -179,5 +185,4 @@ class ContactViewTabletLandscapeState extends ContactViewState {
         ));
   } // filterDrawer
 
-  
 }
