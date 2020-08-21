@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:fst_app_flutter/models/theme_model.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
+import 'package:fst_app_flutter/routing/routes.dart';
+import 'package:fst_app_flutter/screens/contact_screen/contact_view_stateful.dart';
 import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
 import 'package:fst_app_flutter/utils/app_theme.dart';
-import 'package:fst_app_flutter/widgets/contact_tile.dart';
-import 'package:fst_app_flutter/routing/routes.dart';
-import 'contact_view_stateful.dart';
+import 'package:fst_app_flutter/widgets/animated_icons/rive_animated_icon_button.dart';
+import 'dart:math' as math;
+
+import 'package:fst_app_flutter/widgets/contact_widgets/contact_tile.dart';
 
 /// The base class for all contact view states for different screen sizes and orientations.
 abstract class ContactViewState extends State<ContactViewStateful>
@@ -69,10 +72,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// of text in the dropdown list for the item that is selected.
   String currentFilter = 'All';
 
-  /// Used to switch the state of the appBar to a search field in the [revealSearchField]
-  /// function.
-  Icon searchIcon = Icon(Icons.search);
-
   /// Used to switch between filters from [categories] in the [filterDropdown]
   /// function
   Icon filterIcon = Icon(Icons.filter_list, color: Colors.white);
@@ -107,6 +106,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
 
   ThemeModel themeModel;
 
+  bool isDark;
+
   ContactViewState({@required this.themeModel});
 
   /// Load all contacts when page is loaded initially. Initilize animations and controllers.
@@ -117,10 +118,22 @@ abstract class ContactViewState extends State<ContactViewStateful>
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-    
-      appBarBgColor = ColorTween(
-                begin: AppTheme.getTheme(themeModel.selectedTheme,SchedulerBinding.instance.window.platformBrightness).appBarTheme.color,
-                end: AppTheme.getTheme(themeModel.selectedTheme,SchedulerBinding.instance.window.platformBrightness).scaffoldBackgroundColor);
+
+    ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
+        SchedulerBinding.instance.window.platformBrightness);
+    var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
+    var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
+
+    isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system &&
+            SchedulerBinding.instance.window.platformBrightness ==
+                Brightness.dark);
+
+    appBarBgColor = ColorTween(
+        begin: isDark
+            ? Color.alphaBlend(overlayColor, theme.primaryColor)
+            : theme.primaryColor,
+        end: theme.scaffoldBackgroundColor);
     dropdownController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     searchController = TextEditingController();
@@ -131,7 +144,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
       });
     });
   }
-  
 
   /// Dispose all disposable controllers.
   @override
@@ -164,14 +176,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
       toggleAppBarAnimation();
       toggleFilterDropdownAnimation().then((value) {
         appBarLeading = null;
-        searchIcon = Icon(
-          Icons.close,
-          color: Colors.black45,
-        );
-        filterIcon = Icon(
-          Icons.filter_list,
-          color: Colors.white,
-        );
         extraActions = false;
         appBarTitle = Container(
           width: searchFieldWidth,
@@ -197,15 +201,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
       extraActions = true;
       toggleFilterDropdownAnimation().then((value) {
         appBarLeading = BackButton();
-        searchIcon = Icon(
-          Icons.search,
-          color: Colors.white,
-        );
         appBarTitle = Text('Contacts');
-        filterIcon = Icon(
-          Icons.filter_list,
-          color: Colors.white,
-        );
         baseParam = 'contact/?search=';
         contacts.clear();
         searchController.clear();
@@ -235,15 +231,14 @@ abstract class ContactViewState extends State<ContactViewStateful>
                 elevation: elevation,
                 actions: [
                   if (extraActions) ...actions else Container(),
-                  IconButton(
-                      icon: searchIcon,
-                      onPressed: () {
-                        changeState(() {
-                          revealSearchField(
-                              searchFieldWidth:
-                                  MediaQuery.of(context).size.width);
-                        });
-                      })
+                  RiveIconButton(
+                    name: 'search_clear',
+                    animationName: isDark? 'white_to_white':'white_to_black',
+                    setStateFunction: () {
+                      this.revealSearchField(
+                          searchFieldWidth: MediaQuery.of(context).size.width);
+                    },
+                  )
                 ],
                 centerTitle: false,
                 backgroundColor: appBarBgColor.evaluate(CurvedAnimation(
@@ -270,11 +265,11 @@ abstract class ContactViewState extends State<ContactViewStateful>
             .animate(CurvedAnimation(
                 parent: dropdownController, curve: Curves.ease)),
         child: Card(
-            margin: EdgeInsets.all(0.0),
+            margin: EdgeInsets.zero,
             elevation: elevation,
             child: PreferredSize(
                 child: Container(
-                    color: Theme.of(context).accentColor,
+                    color: isDark? ElevationOverlay.applyOverlay(context, Theme.of(context).primaryColor,8.0): Theme.of(context).accentColor,
                     height: height,
                     width: width,
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -367,8 +362,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// and [titleStyle] determine the style of the [ContactTile].
   Widget buildContactListView(
       {@required List<dynamic> contacts,
-      bool hasDecoration,
-      @required double thickness,
       TextStyle subtitleStyle,
       TextStyle titleStyle}) {
     return Scrollbar(
@@ -379,16 +372,14 @@ abstract class ContactViewState extends State<ContactViewStateful>
           itemCount: contacts.length,
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
-            return ContactTile(
+          return Column(children:[ContactTile(
               subtitleStyle: subtitleStyle,
-              hasDecoration: hasDecoration,
               titleStyle: titleStyle,
               title: contacts[index]['name'],
               subtitle: contacts[index]['description'],
               namedRoute: contactDetailRoute,
               arguments: contacts[index],
-              thickness: thickness,
-            );
+            ),Divider()]);
           }),
     );
   } // buildContactCard
@@ -398,8 +389,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Also displays message indicating that no matches were found if
   /// no matches were found and an error message if an error occured.
   Widget contactFutureBuilder(
-      {@required bool isDecorated,
-      @required double thickness,
+      {
       @required double padH,
       @required double padV,
       @required double height,
@@ -433,9 +423,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
                         return buildContactListView(
                             titleStyle: titleStyle,
                             subtitleStyle: subtitleStyle,
-                            contacts: contacts,
-                            hasDecoration: isDecorated,
-                            thickness: thickness);
+                            contacts: contacts,);
                       } else {
                         return Center(child: Text('No matches found'));
                       }
@@ -490,10 +478,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double width,
       @required double padH,
       @required double padV,
-      @required double thickness,
       TextStyle titleStyle,
-      TextStyle subtitleStyle,
-      bool isDecorated = true}) {
+      TextStyle subtitleStyle,}) {
     return PositionedTransition(
         rect: RelativeRectTween(
                 begin: RelativeRect.fromLTRB(
@@ -502,8 +488,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
                     growLeft, growTop, growRight, growBottom))
             .animate(CurvedAnimation(parent: controller, curve: Curves.ease)),
         child: contactFutureBuilder(
-          isDecorated: isDecorated,
-          thickness: thickness,
           titleStyle: titleStyle,
           subtitleStyle: subtitleStyle,
           height: height,
@@ -523,17 +507,13 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double width,
       @required double padH,
       @required double padV,
-      @required posFromLeft,
-      @required thickness,
+      @required double posFromLeft,
       TextStyle titleStyle,
-      TextStyle subtitleStyle,
-      bool isDecorated = true}) {
+      TextStyle subtitleStyle,}) {
     return Positioned(
         top: posFromTop,
         left: posFromLeft,
         child: contactFutureBuilder(
-          isDecorated: isDecorated,
-          thickness: thickness,
           titleStyle: titleStyle,
           subtitleStyle: subtitleStyle,
           height: height,

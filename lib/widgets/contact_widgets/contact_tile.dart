@@ -21,13 +21,6 @@ class ContactTile extends StatelessWidget {
   /// [namedRoute].
   final GestureTapCallback tapFunc;
 
-  /// Whether or not the tiles have lines between them.
-  final bool hasDecoration;
-
-  /// If [hasDecoration] is set to true then this is used to determine
-  /// the width of the line.
-  final double thickness;
-
   /// The style of the title text. If null the default style is used.
   final TextStyle titleStyle;
 
@@ -52,8 +45,6 @@ class ContactTile extends StatelessWidget {
     this.namedRoute,
     this.tapFunc,
     this.arguments,
-    this.hasDecoration = true,
-    @required this.thickness,
     this.titleStyle,
     this.subtitleStyle,
   })  : assert((namedRoute == null && tapFunc != null) ||
@@ -62,42 +53,28 @@ class ContactTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var mq = MediaQuery.of(context);
-    var tileH = kMinInteractiveDimension+ mq.size.longestSide * 0.07;
-
     var tStyle = titleStyle ?? Theme.of(context).textTheme.subtitle1;
     var sStyle = subtitleStyle ?? Theme.of(context).textTheme.caption;
 
-    return Container(
-        decoration: hasDecoration == true
-            ? BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        width: thickness,
-                        color: Theme.of(context).accentColor,
-                        style: BorderStyle.solid)))
-            : null,
-        height: tileH,
-        alignment: Alignment.center,
-        child: ListTile(
-          onTap: namedRoute != null
-              ? () {
-                  arguments != null
-                      ? Navigator.pushNamed(context, namedRoute,
-                          arguments: arguments)
-                      : Navigator.pushNamed(context, namedRoute);
-                }
-              : tapFunc,
-          title: Text(
-            title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: tStyle,
-          ),
-          subtitle:
-              Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis,style: sStyle,),
-          trailing:
-              Icon(Icons.chevron_right, color: Theme.of(context).primaryColor),
-        ));
+    return ListTile(
+      onTap: namedRoute != null
+          ? () {
+              arguments != null
+                  ? Navigator.pushNamed(context, namedRoute,
+                      arguments: arguments)
+                  : Navigator.pushNamed(context, namedRoute);
+            }
+          : tapFunc,
+      title: Text(
+        title,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: tStyle,
+      ),
+      subtitle:
+          Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis,style: sStyle,),
+      trailing:
+          Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
+    );
   }
 } // ContactTile definition

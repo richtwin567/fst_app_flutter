@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/routing/routes.dart';
 import 'package:fst_app_flutter/widgets/app_drawer/app_drawer.dart';
 import 'package:fst_app_flutter/widgets/card_container/card_container.dart';
 
@@ -12,14 +13,6 @@ class HomeMobilePortrait extends StatelessWidget {
       appBar: AppBar(
         title: Text("FST Go"),
         centerTitle: false,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.settings,
-                color: Colors.white,
-              ),
-              onPressed: null)
-        ],
       ),
       drawer: AppDrawer(),
       body: Stack(fit: StackFit.passthrough, children: <Widget>[

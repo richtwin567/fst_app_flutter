@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/theme_model.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_state.dart';
 
 /// ContactViewState designed for tablets in portrait orientation.
@@ -54,7 +54,6 @@ class ContactViewTabletLandscapeState extends ContactViewState {
                   padH: screenWidth * 0.07,
                   padV: screenHeight * 0.05,
                   posFromLeft: kMinInteractiveDimension,
-                  thickness: 1.5,
                   posFromBottom: 0.0,
                   posFromRight: 0.0,
                   growBottom: 0.0,

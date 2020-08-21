@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/theme_model.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_state.dart';
 
 /// [ContactViewState] designed for phones in landscape orientation.
@@ -24,7 +24,6 @@ class ContactViewMobileLandscapeState extends ContactViewState {
           padH: mq.size.width * 0.05,
           padV: mq.size.height * 0.05,
           posFromLeft: 0.0,
-          thickness: 1.0,
         ),
         Container(),
         buildAppBarArea(
@@ -70,7 +69,6 @@ class ContactViewMobilePortraitState extends ContactViewState {
             width: mq.size.width,
             posFromTop: kToolbarHeight * 2 + topViewInsets,
             posFromLeft: 0.0,
-            thickness: 1.0,
             growLeft: 0.0,
             growTop: (kToolbarHeight * 2) * 0.5,
             growBottom: 0.0,

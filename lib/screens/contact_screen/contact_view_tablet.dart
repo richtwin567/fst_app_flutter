@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/theme_model.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_view_stateful.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_view_tablet_state.dart';
 import 'package:provider/provider.dart';

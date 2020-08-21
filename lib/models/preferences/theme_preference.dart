@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class ThemePreference {
   var lightThemeStatus = ThemeMode.light.toString();
@@ -12,7 +13,7 @@ class ThemePreference {
   }
 
   setThemeMode(ThemeMode option) async {
-    _initializeFromDisk();
+    await _initializeFromDisk();
     if (option == ThemeMode.dark) {
       prefs.setBool(darkThemeStatus, true);
       prefs.setBool(lightThemeStatus, false);
@@ -27,9 +28,9 @@ class ThemePreference {
       prefs.setBool(systemThemeStatus, true);
     }
   }
-  
-  ThemeMode get mode {
-    _initializeFromDisk();
+
+  Future<ThemeMode> get mode async {
+    await _initializeFromDisk();
     if (prefs.getBool(darkThemeStatus) ?? false) {
       return ThemeMode.dark;
     } else if (prefs.getBool(lightThemeStatus) ?? false) {

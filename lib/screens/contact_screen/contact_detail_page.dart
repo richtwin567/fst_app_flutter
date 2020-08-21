@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/widgets/contact_card.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
-import 'package:fst_app_flutter/widgets/contact_detail_image.dart';
+import 'package:fst_app_flutter/widgets/contact_widgets/contact_card.dart';
+import 'package:fst_app_flutter/widgets/contact_widgets/contact_detail_image.dart';
 
 /// A page that shows all the details for the selected contact.
 /// It allows the user to open websites, call the contact and send an email to
@@ -38,7 +38,7 @@ class ContactDetailPage extends StatelessWidget {
                               mq.size.width / 2, (mq.size.height / 2.5) / 2),
                           scale:
                               (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
-                          color: Colors.blue[800])),
+                          color: Theme.of(context).primaryColorDark)),
                   title: Padding(
                     padding: EdgeInsets.only(right: mq.size.width / 4),
                     child: Text(
