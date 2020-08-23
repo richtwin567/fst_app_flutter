@@ -17,7 +17,7 @@ class ContactViewMobileLandscapeState extends ContactViewState {
         body: Stack(
       children: <Widget>[
         Container(),
-        buildStaticContactListArea(
+        buildFixedContactListArea(
           posFromTop: kToolbarHeight + topViewInsets,
           height: mq.size.height - kToolbarHeight,
           width: mq.size.width,

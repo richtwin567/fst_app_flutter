@@ -4,16 +4,17 @@ import 'package:flutter/services.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/routing/generate_routes.dart';
 import 'package:fst_app_flutter/utils/app_theme.dart';
+import 'package:fst_app_flutter/utils/precache_rive.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ThemeModel themeModel = ThemeModel();
   await themeModel.init();
-  runApp(DevicePreview(
-      child: FSTApp(
+  await precacheRive();
+  runApp(FSTApp(
     themeModel: themeModel,
-  )));
+  ));
 }
 
 class FSTApp extends StatelessWidget {

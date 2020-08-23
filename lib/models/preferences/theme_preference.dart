@@ -39,4 +39,9 @@ class ThemePreference {
       return ThemeMode.system;
     }
   }
+
+  @override
+  String toString() {
+    return 'Dark Mode On:\t${prefs.getBool(darkThemeStatus)}\nLight Mode On:\t${prefs.getBool(lightThemeStatus)}\nSystem Mode On:\t${prefs.getBool(systemThemeStatus)}';
+  }
 }

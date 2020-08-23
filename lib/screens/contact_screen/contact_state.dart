@@ -1,13 +1,14 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/routing/routes.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_view_stateful.dart';
 import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
 import 'package:fst_app_flutter/utils/app_theme.dart';
 import 'package:fst_app_flutter/widgets/animated_icons/rive_animated_icon_button.dart';
-import 'dart:math' as math;
-
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_tile.dart';
 
 /// The base class for all contact view states for different screen sizes and orientations.
@@ -66,7 +67,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   ];
 
   /// a list to store all contacts that were a returned from the query
-  List<dynamic> contacts = [];
+  List<Contact> contacts = [];
 
   /// Currently selected dropdown item value. Allows for differential
   /// of text in the dropdown list for the item that is selected.
@@ -109,12 +110,14 @@ abstract class ContactViewState extends State<ContactViewStateful>
   bool isDark;
 
   ContactViewState({@required this.themeModel});
+  HerokuRequest<Contact> request;
 
   /// Load all contacts when page is loaded initially. Initilize animations and controllers.
   @override
   void initState() {
     super.initState();
-    getResultsJSON('$baseParam$extraParam')
+    request = HerokuRequest();
+    request.getResultsJSON('$baseParam$extraParam', (data) => Contact(data))
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
@@ -233,7 +236,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
                   if (extraActions) ...actions else Container(),
                   RiveIconButton(
                     name: 'search_clear',
-                    animationName: isDark? 'white_to_white':'white_to_black',
+                    animationName: isDark ? 'white_to_white' : 'white_to_black',
                     setStateFunction: () {
                       this.revealSearchField(
                           searchFieldWidth: MediaQuery.of(context).size.width);
@@ -269,7 +272,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
             elevation: elevation,
             child: PreferredSize(
                 child: Container(
-                    color: isDark? ElevationOverlay.applyOverlay(context, Theme.of(context).primaryColor,8.0): Theme.of(context).accentColor,
+                    color: isDark
+                        ? ElevationOverlay.applyOverlay(
+                            context, Theme.of(context).primaryColor, 4.0)
+                        : Theme.of(context).accentColor,
                     height: height,
                     width: width,
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -361,7 +367,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// in the list of [contacts]. [hasDecoration], [thickness], [subtitleStyle]
   /// and [titleStyle] determine the style of the [ContactTile].
   Widget buildContactListView(
-      {@required List<dynamic> contacts,
+      {@required List<Contact> contacts,
       TextStyle subtitleStyle,
       TextStyle titleStyle}) {
     return Scrollbar(
@@ -372,14 +378,17 @@ abstract class ContactViewState extends State<ContactViewStateful>
           itemCount: contacts.length,
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
-          return Column(children:[ContactTile(
-              subtitleStyle: subtitleStyle,
-              titleStyle: titleStyle,
-              title: contacts[index]['name'],
-              subtitle: contacts[index]['description'],
-              namedRoute: contactDetailRoute,
-              arguments: contacts[index],
-            ),Divider()]);
+            return Column(children: [
+              ContactTile(
+                subtitleStyle: subtitleStyle,
+                titleStyle: titleStyle,
+                title: contacts[index].name,
+                subtitle: contacts[index].description,
+                namedRoute: contactDetailRoute,
+                arguments: contacts[index],
+              ),
+              Divider()
+            ]);
           }),
     );
   } // buildContactCard
@@ -389,8 +398,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Also displays message indicating that no matches were found if
   /// no matches were found and an error message if an error occured.
   Widget contactFutureBuilder(
-      {
-      @required double padH,
+      {@required double padH,
       @required double padV,
       @required double height,
       @required double width,
@@ -408,7 +416,9 @@ abstract class ContactViewState extends State<ContactViewStateful>
             children: <Widget>[
               Expanded(
                   child: FutureBuilder(
-                future: getResultsJSON('$baseParam$extraParam'),
+                initialData: contacts,
+                future: request.getResultsJSON(
+                    '$baseParam$extraParam', (data) => Contact(data)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -421,9 +431,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
                       contacts = snapshot.data.toSet().toList();
                       if (contacts.length > 0) {
                         return buildContactListView(
-                            titleStyle: titleStyle,
-                            subtitleStyle: subtitleStyle,
-                            contacts: contacts,);
+                          titleStyle: titleStyle,
+                          subtitleStyle: subtitleStyle,
+                          contacts: contacts,
+                        );
                       } else {
                         return Center(child: Text('No matches found'));
                       }
@@ -464,22 +475,23 @@ abstract class ContactViewState extends State<ContactViewStateful>
   ///
   /// The line between each [ContactTile] will be [thickness] in width if [isDecorated] is true.
   ///
-  Widget buildMovingContactListArea(
-      {@required double posFromTop,
-      @required double posFromLeft,
-      @required double posFromRight,
-      @required double posFromBottom,
-      @required double growTop,
-      @required double growLeft,
-      @required double growRight,
-      @required double growBottom,
-      @required AnimationController controller,
-      @required double height,
-      @required double width,
-      @required double padH,
-      @required double padV,
-      TextStyle titleStyle,
-      TextStyle subtitleStyle,}) {
+  Widget buildMovingContactListArea({
+    @required double posFromTop,
+    @required double posFromLeft,
+    @required double posFromRight,
+    @required double posFromBottom,
+    @required double growTop,
+    @required double growLeft,
+    @required double growRight,
+    @required double growBottom,
+    @required AnimationController controller,
+    @required double height,
+    @required double width,
+    @required double padH,
+    @required double padV,
+    TextStyle titleStyle,
+    TextStyle subtitleStyle,
+  }) {
     return PositionedTransition(
         rect: RelativeRectTween(
                 begin: RelativeRect.fromLTRB(
@@ -501,15 +513,16 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// not have any animated movement and no parameters to control an animation.
   ///
   /// [posFromTop] and [posFromLeft] are the only necessary positioning.
-  Widget buildStaticContactListArea(
-      {@required double posFromTop,
-      @required double height,
-      @required double width,
-      @required double padH,
-      @required double padV,
-      @required double posFromLeft,
-      TextStyle titleStyle,
-      TextStyle subtitleStyle,}) {
+  Widget buildFixedContactListArea({
+    @required double posFromTop,
+    @required double height,
+    @required double width,
+    @required double padH,
+    @required double padV,
+    @required double posFromLeft,
+    TextStyle titleStyle,
+    TextStyle subtitleStyle,
+  }) {
     return Positioned(
         top: posFromTop,
         left: posFromLeft,

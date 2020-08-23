@@ -1,6 +1,12 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart';
+import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
+import 'package:fst_app_flutter/models/sharing/vcard.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
+import 'package:fst_app_flutter/utils/save_contact.dart';
+import 'package:fst_app_flutter/utils/social_media_contact_share.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_card.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_detail_image.dart';
 
@@ -9,7 +15,7 @@ import 'package:fst_app_flutter/widgets/contact_widgets/contact_detail_image.dar
 /// the contact directly from the app.
 class ContactDetailPage extends StatelessWidget {
   /// The information [Map] for this contact
-  final dynamic contactDetails;
+  final Contact contactDetails;
 
   /// [contactDetails] is passed from [RouterSettings] in [Router.generateRoute]
   ContactDetailPage(this.contactDetails, {Key key}) : super(key: key);
@@ -30,6 +36,18 @@ class ContactDetailPage extends StatelessWidget {
               floating: false,
               pinned: true,
               snap: false,
+              actions: [
+                IconButton(
+                    icon: Icon(Icons.save),
+                    onPressed: () {
+                      saveContact(contactDetails.toNativeMap());
+                    }),
+                IconButton(
+                    icon: Icon(Icons.share),
+                    onPressed: () {
+                      shareContactToWhatsApp(VCard.fromContact(contactDetails));
+                    })
+              ],
               expandedHeight: mq.size.height / 2.5,
               flexibleSpace: FlexibleSpaceBar(
                   background: CustomPaint(
@@ -38,11 +56,11 @@ class ContactDetailPage extends StatelessWidget {
                               mq.size.width / 2, (mq.size.height / 2.5) / 2),
                           scale:
                               (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
-                          color: Theme.of(context).primaryColorDark)),
+                          color: Theme.of(context).accentColor)),
                   title: Padding(
                     padding: EdgeInsets.only(right: mq.size.width / 4),
                     child: Text(
-                      contactDetails['name'],
+                      contactDetails.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -59,30 +77,29 @@ class ContactDetailPage extends StatelessWidget {
   /// Creates a [ContactCard] for the phone numbers, email address and
   /// fax number if applicable.
   ContactCard _contactDetailList(
-      final dynamic data, final MediaQueryData mq, BuildContext context) {
-    List<dynamic> phoneNums =
-        List<dynamic>.generate(data['phone_contact_set'].length, (i) {
+      final Contact data, final MediaQueryData mq, BuildContext context) {
+    List<dynamic> phoneNums = List<dynamic>.generate(data.phones.length, (i) {
       var icon;
-      if (data['phone_contact_set'][i]['platforms'] == 'WHATSAPP') {
+      if (data.phones[i].platforms == Platform.WHATSAPP) {
         icon = Image.asset(
           'assets/WhatsApp_flat.png',
           width: IconTheme.of(context).size,
         );
         return ListTile(
             leading: icon,
-            onTap: () =>
-                openUrl('tel:' + data['phone_contact_set'][i]['phone']),
-            title: Text(data['phone_contact_set'][i]['phone']));
+            onTap: () => openWhatsAppChat(phone: data.phones[i].phone),
+            title: Text(data.phones[i].phone));
       } else {
         icon = Icon(
           Icons.phone,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).brightness == Brightness.light
+              ? Theme.of(context).accentColor
+              : null,
         );
         return ListTile(
             leading: icon,
-            onTap: () =>
-                openUrl('tel:' + data['phone_contact_set'][i]['phone']),
-            title: Text(data['phone_contact_set'][i]['phone']));
+            onTap: () => openUrl('tel:${data.phones[i].phone}'),
+            title: Text(data.phones[i].phone));
       }
     });
 
@@ -100,21 +117,26 @@ class ContactDetailPage extends StatelessWidget {
     List<dynamic> iconifiedList = [
       ...phoneNumsWithDivider,
       phoneNums.length > 0 ? Divider() : null,
-      data['email'] != ''
+      data.email != ''
           ? ListTile(
               leading: Icon(
                 Icons.email,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Theme.of(context).accentColor
+                    : null,
               ),
-              title: Text(data['email']),
-              onTap: () => openUrl('mailto:' + data['email']),
+              title: Text(data.email),
+              onTap: () => openUrl('mailto:${data.email}'),
             )
           : null,
-      data['fax'] != '' ? Divider() : null,
-      data['fax'] != ''
+      data.fax != '' ? Divider() : null,
+      data.fax != ''
           ? ListTile(
-              leading: Icon(Icons.print, color: Theme.of(context).accentColor),
-              title: Text(data['fax']),
+              leading: Icon(Icons.print,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Theme.of(context).accentColor
+                      : null),
+              title: Text(data.fax),
               subtitle: Text('Fax'),
             )
           : null
@@ -136,31 +158,37 @@ class ContactDetailPage extends StatelessWidget {
 
   /// Creates a [ContactCard] for the website and description if applicable.
   ContactCard _aboutContactList(
-      final dynamic data, final MediaQueryData mq, BuildContext context) {
+      final Contact data, final MediaQueryData mq, BuildContext context) {
     List<dynamic> iconifiedList;
-    if (data['website'] != '' || data['description'] != '') {
+    if (data.website != '' || data.description != '') {
       iconifiedList = [
         ListTile(
-            title: Text("About ${data['name']}",
-                style: TextStyle(color: Theme.of(context).accentColor))),
-        data['website'] != '' || data['description'] != '' ? Divider() : null,
-        data['website'] != ''
+            title: Text('About ${data.name}',
+                style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Theme.of(context).accentColor
+                        : null))),
+        data.website != '' || data.description != '' ? Divider() : null,
+        data.website != ''
             ? ListTile(
-                onTap: () => openUrl(data['website']),
+                onTap: () => openUrl(data.website),
                 title: Text('Website'),
-                subtitle: Text(data['website']),
+                subtitle: Text(data.website,
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                    )),
                 trailing: Icon(Icons.chevron_right),
               )
             : null,
-        data['website'] != ''
+        data.website != ''
             ? Divider(
                 indent: 16.0,
               )
             : null,
-        data['description'] != ''
+        data.description != ''
             ? ListTile(
                 title: Text('Additional Info'),
-                subtitle: Text(data['description']),
+                subtitle: Text(data.description),
                 isThreeLine: true,
               )
             : null,
