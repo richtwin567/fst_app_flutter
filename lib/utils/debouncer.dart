@@ -15,11 +15,6 @@ class Debouncer{
     _timer = Timer(Duration(milliseconds: milliseconds),action);
   }
 
-  static runAlone(VoidCallback action, int milliseconds){
-    Timer timer = Timer(Duration(milliseconds: milliseconds),action);
-    timer.cancel();
-  }
-
   static Future<void> wait(){
     return Future.delayed(Duration(seconds: 2), (){});
   }

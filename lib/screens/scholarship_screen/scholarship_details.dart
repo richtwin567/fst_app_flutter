@@ -91,7 +91,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 20,),
         child: ListView(
           controller: _scroll,
           children: <Widget>[
