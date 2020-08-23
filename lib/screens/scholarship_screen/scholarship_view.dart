@@ -8,8 +8,8 @@ class ScholarshipView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
       mobile: OrientationLayout(
-        portrait: (context) => ScholarshipMobile(orientation: "Potrait",),
-        landscape: (context) => ScholarshipMobile(orientation: "Landscape",),
+        portrait: (context) => ScholarshipMobile(),
+        landscape: (context) => ScholarshipMobile(),
       ),
       //tablet: ScholarshipTablet(),
     );

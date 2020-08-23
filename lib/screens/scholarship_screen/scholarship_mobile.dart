@@ -8,17 +8,14 @@ import 'package:fst_app_flutter/services/scholarshipservice.dart';
 import 'package:provider/provider.dart';
 
 class ScholarshipMobile extends StatefulWidget {
-  final String orientation;
-
-  ScholarshipMobile({Key key, this.orientation}) : super(key: key);
+   ScholarshipMobile({Key key}) : super(key: key);
 
   @override
-  _ScholarshipMobileState createState() => _ScholarshipMobileState(orientation: orientation);
+  _ScholarshipMobileState createState() => _ScholarshipMobileState();
 }
 
 class _ScholarshipMobileState extends State<ScholarshipMobile> {
   
-  String orientation;
   FocusNode textfocus;
   ScholarshipList symbol;
   int start;
@@ -29,10 +26,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   final _debouncer = Debouncer(milliseconds: 500);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   
-  @override
-  _ScholarshipMobileState({this.orientation});
-
-
   void initState() {
     super.initState();
 
