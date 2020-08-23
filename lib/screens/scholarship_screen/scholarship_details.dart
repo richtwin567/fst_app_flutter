@@ -21,7 +21,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildAppBar(){
     return AppBar(
         title: Text(widget.current.scholarshipName),
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0,
       );
   }
@@ -30,7 +30,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.blue.shade900,
+        color: Theme.of(context).accentColor,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Center(
@@ -68,7 +68,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildGTTButton(){
     return Center(
       child: FlatButton.icon(
-        color: Colors.blue.shade900,
+        color: Theme.of(context).primaryColor,
         onPressed: (){
           _scroll.animateTo(0, duration: Duration(milliseconds: 100,), curve: Curves.easeOut);
         }, 

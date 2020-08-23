@@ -22,7 +22,9 @@ class NavigationCard extends StatelessWidget {
     MediaQueryData queryData = MediaQuery.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(24),
-      onTap: (() {}),
+      onTap: (() {
+        Navigator.pushNamed(context,route);
+      }),
       child: Card(
         elevation: 10.0,
         shape: RoundedRectangleBorder(
