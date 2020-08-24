@@ -1,11 +1,11 @@
-import 'dart:math';
-import 'dart:typed_data';
-import 'package:flutter_contact/contact.dart';
+
+import 'package:flutter/services.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 
 class Contact {
+  static const platform = MethodChannel('com.example.fst_app_flutter/contacts');
   int _id;
   String _name;
   String _website;
@@ -90,50 +90,27 @@ class Contact {
   }
 
   Map<String, Object> toNativeMap() {
-    int id = Random().nextInt(9999);
     return {
-      //'identifier': id.toString(),
       "displayName": name,
-      'givenName': name.split(' ')[1],
-      'middleName': name.split(' ').length == 4 ? _name.split(' ')[2] : '',
-      'familyName': name.split(' ').length == 4
-          ? name.split(' ')[3]
-          : name.split(' ')[2],
-      'prefix': name.split(' ')[0],
-      'suffix': '',
-      'company': '',
-      'jobTitle': '',
-      'avatar': Uint8List(0),
       'note': description,
-      "linkedContactIds": <String>[],
-      'dates': <ContactDate>[],
-      'emails': email != ''
-          ? <Map>[
-              {'label': 'work', 'value': email}
-            ]
-          : <Map>[],
-      'phones': List<Map>.generate(phones.length,
-          (i) => {'label': 'work', 'value': phones[i].phone})..addAll(List<Map>.generate(fax!= ''?1:0, (i) => {'label':'fax work', 'value':fax})),
-      "socialProfiles": <Map>[],
-      'postalAddresses': <PostalAddress>[],
-      "urls": website != ''
-          ? <Map>[
-              {'label': 'website', 'value': website}
-            ]
-          : <Map>[],
-      //"unifiedContactId": id.toString(),
-      //"singleContactId": id.toString(),
-      "otherKeys": {},
-      "label": '',
+      'email': email,
+      'phones': List<Map<String,String>>.generate(
+          phones.length, (i) => {'label': 'work', 'value': phones[i].phone})
+        ..addAll(List<Map<String,String>>.generate(
+            fax != '' ? 1 : 0, (i) => {'label': 'fax work', 'value': fax})),
+      
+      'website': website,
       "date": DateTime.now().toIso8601String(),
       "lastModified": DateTime.now().toIso8601String(),
-      "street": '',
-      "city": '',
-      "postcode": '',
-      "region": '',
-      "country": '',
-      'keys': ContactKeys.empty(ContactMode.single)
     };
+  }
+
+  saveNatively() async {
+    try {
+      await platform.invokeMethod('saveNatively', toNativeMap());
+    } catch (e) {
+      print(e);
+    }
   }
 }
 

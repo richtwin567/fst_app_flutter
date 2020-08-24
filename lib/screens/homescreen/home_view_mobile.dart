@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/routing/routes.dart';
 import 'package:fst_app_flutter/widgets/app_drawer/app_drawer.dart';
 import 'package:fst_app_flutter/widgets/card_container/card_container.dart';
 

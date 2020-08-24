@@ -5,7 +5,6 @@ import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart'
 import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 import 'package:fst_app_flutter/models/sharing/vcard.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
-import 'package:fst_app_flutter/utils/save_contact.dart';
 import 'package:fst_app_flutter/utils/social_media_contact_share.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_card.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_detail_image.dart';
@@ -40,7 +39,7 @@ class ContactDetailPage extends StatelessWidget {
                 IconButton(
                     icon: Icon(Icons.save),
                     onPressed: () {
-                      saveContact(contactDetails.toNativeMap());
+                      contactDetails.saveNatively();
                     }),
                 IconButton(
                     icon: Icon(Icons.share),
@@ -78,17 +77,19 @@ class ContactDetailPage extends StatelessWidget {
   /// fax number if applicable.
   ContactCard _contactDetailList(
       final Contact data, final MediaQueryData mq, BuildContext context) {
-    List<dynamic> phoneNums = List<dynamic>.generate(data.phones.length, (i) {
+    List<dynamic> phoneNumsWhatsApp = [];
+    List<dynamic> phoneNums = [];
+    for (var i = 0; i < data.phones.length; i++) {
       var icon;
       if (data.phones[i].platforms == Platform.WHATSAPP) {
         icon = Image.asset(
           'assets/WhatsApp_flat.png',
           width: IconTheme.of(context).size,
         );
-        return ListTile(
+        phoneNumsWhatsApp.add(ListTile(
             leading: icon,
             onTap: () => openWhatsAppChat(phone: data.phones[i].phone),
-            title: Text(data.phones[i].phone));
+            title: Text(data.phones[i].phone)));
       } else {
         icon = Icon(
           Icons.phone,
@@ -96,12 +97,15 @@ class ContactDetailPage extends StatelessWidget {
               ? Theme.of(context).accentColor
               : null,
         );
-        return ListTile(
+        phoneNums.add(ListTile(
             leading: icon,
             onTap: () => openUrl('tel:${data.phones[i].phone}'),
-            title: Text(data.phones[i].phone));
+            title: Text(data.phones[i].phone)));
       }
-    });
+    }
+    
+    //ensure all WhatsApp numbers are listed first
+    phoneNums.insertAll(0, phoneNumsWhatsApp);
 
     List<dynamic> phoneNumsWithDivider = [];
     if (phoneNums.length > 1) {
