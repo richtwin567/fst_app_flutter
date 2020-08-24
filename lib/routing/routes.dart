@@ -8,3 +8,6 @@ const contactRoute = '/contact';
 
 /// [ContactDetailPage] route
 const contactDetailRoute = '/contactDetail';
+
+/// [AppPreferencesView] route
+const appPreferencesRoute = '/appConfig';

@@ -10,7 +10,8 @@ class ScreenTypeLayout extends StatelessWidget {
 
   const ScreenTypeLayout(
       {Key key, @required this.mobile, this.tablet, this.desktop})
-      : super(key: key);
+      : assert(mobile != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -29,10 +29,14 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
-  url_launcher: ^5.4.7
-
+  url_launcher: ^5.5.0
+  shared_preferences: ^0.5.8
+  flare_flutter: ^2.0.6
+  path_provider: ^1.6.11
+  flutter_share: ^1.0.2+1
   device_preview: ^0.1.9-beta
   provider: ^4.3.1
+  permission_handler: ^5.0.1+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -55,6 +59,7 @@ flutter:
     - assets/WhatsApp_flat.png
     - assets/FST_logo.png
     - assets/home_art.png
+    - assets/rive_animated_icons/
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

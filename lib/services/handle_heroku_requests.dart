@@ -1,36 +1,45 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-/// The [query] should be the end of the url for sending a request to the server.
-///
-/// eg. To get all contacts from the Chemistry department, I should pass
-/// ```
-/// 'contact/?department=CHEM'
-/// ```
-///
-/// The response body is returned as a [String].
-Future<String> _getResultsString(dynamic query) async {
-  String queryString = query.toString();
-  String contactUrl = 'https://fst-app-2.herokuapp.com/$queryString';
+class HerokuRequest<T> {
+  /// The [query] should be the end of the url for sending a request to the server.
+  ///
+  /// eg. To get all contacts from the Chemistry department, I should pass
+  /// ```
+  /// 'contact/?department=CHEM'
+  /// ```
+  ///
+  /// The response body is returned as a [String].
+  Future<String> _getResultsString(dynamic query) async {
+    String queryString = query.toString();
+    String contactUrl = 'https://fst-app-2.herokuapp.com/$queryString';
 
-  http.Response response = await http.get(Uri.encodeFull(contactUrl));
+    http.Response response = await http.get(Uri.encodeFull(contactUrl));
 
-  return response.body;
+    return response.body;
+  }
+
+  /// Parses the response from `_getResultsString` and returns a [List] of
+  /// `dynamic` objects. The objects are in JSON format which is
+  /// [Map<dynamic,dynamic>] format in flutter.
+  ///
+  /// A [Map] can be treated like a dictionary in Python in terms of
+  /// declaration and accessing its members.
+  ///
+  /// Continuing from the example given for `_getResultsString`, to get the
+  /// name of the first contact from the list of Chemistry department contacts,
+  /// I would call `data[0]['name']`.
+  Future<List<T>> getResultsJSON(dynamic value, _Instantiator<T> constructor) async {
+    return _getResultsString(value).then((responseBody) {
+      _Instantiator<T> model = constructor;
+      
+      List<dynamic> dataJSON = jsonDecode(responseBody);
+      
+      List<T> data = List.generate(dataJSON.length, (i) => model(dataJSON[i]));
+      return data;
+    });
+  }
+  
 }
+typedef S _Instantiator<S>(dynamic data);
 
-/// Parses the response from `_getResultsString` and returns a [List] of
-/// `dynamic` objects. The objects are in JSON format which is
-/// [Map<dynamic,dynamic>] format in flutter.
-///
-/// A [Map] can be treated like a dictionary in Python in terms of
-/// declaration and accessing its members.
-///
-/// Continuing from the example given for `_getResultsString`, to get the
-/// name of the first contact from the list of Chemistry department contacts,
-/// I would call `data[0]['name']`.
-Future<List<dynamic>> getResultsJSON(dynamic value) async {
-  return _getResultsString(value).then((responseBody) {
-    List<dynamic> data = jsonDecode(responseBody);
-    return data;
-  });
-}
