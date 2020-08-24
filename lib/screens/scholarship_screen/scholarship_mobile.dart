@@ -55,6 +55,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     return AppBar(
       automaticallyImplyLeading: true,
       backgroundColor: Theme.of(context).primaryColor,
+      centerTitle: false,
       title: Text(
         "Scholarships",
         style: TextStyle(

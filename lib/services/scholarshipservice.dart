@@ -5,7 +5,7 @@ import 'package:fst_app_flutter/models/scholarshiplist.dart';
 
 class ScholarshipService{
 
-  static String api = "http://192.168.0.7:8000/scholarship/";
+  static String api = "http://192.168.137.88:8000/scholarship/";
   static String url = "https://www.mona.uwi.edu/osf/scholarships-bursaries";
 
   static Future<ScholarshipList> getAllScholarships() async {
