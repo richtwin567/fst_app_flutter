@@ -21,14 +21,19 @@ class NavigationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
     return Card(
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(
-          side: BorderSide.none,
-          borderRadius: BorderRadius.circular(24),
-        ), 
-        child: InkWell(
-      onTap: () => Navigator.pushNamed(context, route),
-          child:Container(
+      clipBehavior: Clip.antiAlias,
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        side: BorderSide.none,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: InkWell(
+        onTap: () {
+          try {
+            Navigator.pushNamed(context, route);
+          } catch (e) {}
+        },
+        child: Container(
             height: height,
             width: width,
             child: Center(
@@ -37,12 +42,13 @@ class NavigationCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                      height: queryData.size.shortestSide * 0.1,
-                      width: queryData.size.shortestSide * 0.1,
-                      child: Center(
-                          child: Icon(
-                        icon,
-                      )),),
+                    height: queryData.size.shortestSide * 0.1,
+                    width: queryData.size.shortestSide * 0.1,
+                    child: Center(
+                        child: Icon(
+                      icon,
+                    )),
+                  ),
                   SizedBox(height: queryData.size.longestSide * 0.02),
                   Text(
                     title,

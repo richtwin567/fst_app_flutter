@@ -11,3 +11,6 @@ const contactDetailRoute = '/contactDetail';
 
 /// [AppPreferencesView] route
 const appPreferencesRoute = '/appConfig';
+
+/// [MapView] route
+const mapRoute = '/map';
