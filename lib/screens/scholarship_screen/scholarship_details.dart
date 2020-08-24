@@ -40,6 +40,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
             fontWeight: FontWeight.bold,
             fontSize: 22,
             color: Colors.white,
+            fontFamily: "Monsterrat",
           ),
         ),
       ),
@@ -52,6 +53,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
         style: TextStyle(
           color: Colors.black,
           fontSize: 15,
+          fontFamily: "Monsterrat",
         ),
         children: <TextSpan>[
           TextSpan(
@@ -60,7 +62,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
         ],
       ),
       showCursor: true,
-      cursorColor: Colors.blue.shade900,
+      cursorColor: Theme.of(context).accentColor,
       toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
     );
   }
@@ -80,6 +82,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
           "Go to Top",
           style: TextStyle(
             color: Colors.white,
+            fontFamily: "Monsterrat",
           ),
         ),
       ),

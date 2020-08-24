@@ -58,7 +58,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       title: Text(
         "Scholarships",
         style: TextStyle(
-          //fontFamily: "Monsterrat",
+          fontFamily: "Monsterrat",
           color: Colors.white,
         ),
       ),
@@ -134,6 +134,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           style: TextStyle(
             color: Colors.grey.shade400, 
             fontSize: 18,
+            fontFamily: "Monsterrat",
           ),
         ),
       );
@@ -163,10 +164,11 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
               "End of the List", 
               style: TextStyle(
                 color: Colors.grey.shade400, 
-                fontSize: 18
+                fontSize: 18,
+                fontFamily: "Monsterrat",
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Center(
               child: FlatButton.icon(
                 icon: Icon(
@@ -177,6 +179,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                   "Go to Top",
                   style: TextStyle(
                     color: Colors.white,
+                    fontFamily: "Monsterrat",
                   ),
                 ),
                 color: Theme.of(context).primaryColor,
@@ -210,10 +213,10 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       builder: (context, snapshot){
         switch(snapshot.connectionState){
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator(),);
+            return Center(child: CircularProgressIndicator(backgroundColor: Colors.amber,),);
           break;
           case ConnectionState.active:
-            return Center(child: CircularProgressIndicator(),);
+            return Center(child: CircularProgressIndicator(backgroundColor: Colors.amber,),);
           break;
           case ConnectionState.none:
             return Container(child: Center(child: Text("Nothing happened"),),);
