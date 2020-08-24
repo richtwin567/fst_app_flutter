@@ -28,7 +28,7 @@ class HomeMobilePortrait extends StatelessWidget {
               Text(
                 "Welcome to the\nFaculty of Greatness",
                 style: TextStyle(
-                    color: Color(0xff322F51),
+                    //color: Color(0xff322F51),
                     fontWeight: FontWeight.bold,
                     fontSize: queryData.size.width * 0.055966),
               ),
