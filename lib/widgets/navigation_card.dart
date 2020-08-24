@@ -20,15 +20,15 @@ class NavigationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
-    return InkWell(
-      onTap: () => Navigator.pushNamed(context, route),
-          child: Card(
+    return Card(
         elevation: 2.0,
         shape: RoundedRectangleBorder(
           side: BorderSide.none,
           borderRadius: BorderRadius.circular(24),
         ), 
-        child: Container(
+        child: InkWell(
+      onTap: () => Navigator.pushNamed(context, route),
+          child:Container(
             height: height,
             width: width,
             child: Center(
