@@ -1,7 +1,7 @@
 enum Platform { TEXT_CALL, WHATSAPP }
 
 extension PlatformShortString on Platform {
-  String asString() {
+  String toShortString() {
     return this.toString().split('.').last;
   }
 }

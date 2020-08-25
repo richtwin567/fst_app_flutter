@@ -28,49 +28,47 @@ class ContactDetailPage extends StatelessWidget {
         _aboutContactList(contactDetails, mq, context);
 
     return Scaffold(
-        body: SafeArea(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-              floating: false,
-              pinned: true,
-              snap: false,
-              actions: [
-                IconButton(
-                    icon: Icon(Icons.save),
-                    onPressed: () {
-                      contactDetails.saveNatively();
-                    }),
-                IconButton(
-                    icon: Icon(Icons.share),
-                    onPressed: () {
-                      shareContactToWhatsApp(VCard.fromContact(contactDetails));
-                    })
-              ],
-              expandedHeight: mq.size.height / 2.5,
-              flexibleSpace: FlexibleSpaceBar(
-                  background: CustomPaint(
-                      painter: ContactDetailSvg(
-                          start: Point(
-                              mq.size.width / 2, (mq.size.height / 2.5) / 2),
-                          scale:
-                              (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
-                          color: Theme.of(context).accentColor)),
-                  title: Padding(
-                    padding: EdgeInsets.only(right: mq.size.width / 4),
-                    child: Text(
-                      contactDetails.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ))),
-          SliverList(
-            delegate:
-                SliverChildListDelegate.fixed([contactMethods, contactInfo]),
-          )
-        ],
-      ),
-    ));
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+                floating: false,
+                pinned: true,
+                snap: false,
+                actions: [
+                  IconButton(
+                      icon: Icon(Icons.save),
+                      onPressed: () {
+                        contactDetails.saveNatively();
+                      }),
+                  IconButton(
+                      icon: Icon(Icons.share),
+                      onPressed: () {
+                        shareContactToWhatsApp(VCard.fromContact(contactDetails));
+                      })
+                ],
+                expandedHeight: mq.size.height / 2.5,
+                flexibleSpace: FlexibleSpaceBar(
+                    background: CustomPaint(
+                        painter: ContactDetailSvg(
+                            start: Point(
+                                mq.size.width / 2, (mq.size.height / 2.5) / 2),
+                            scale:
+                                (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
+                            color: Theme.of(context).accentColor)),
+                    title: Padding(
+                      padding: EdgeInsets.only(right: mq.size.width / 4),
+                      child: Text(
+                        contactDetails.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ))),
+            SliverList(
+              delegate:
+                  SliverChildListDelegate.fixed([contactMethods, contactInfo]),
+            )
+          ],
+        ));
   } // build
 
   /// Creates a [ContactCard] for the phone numbers, email address and
