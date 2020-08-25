@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/local_widget/scholarcard.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
-import 'package:fst_app_flutter/models/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
 import 'package:fst_app_flutter/models/scholarshiplist.dart';
 import 'package:fst_app_flutter/services/scholarshipservice.dart';
 import 'package:provider/provider.dart';

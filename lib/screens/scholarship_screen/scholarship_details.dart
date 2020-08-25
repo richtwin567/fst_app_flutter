@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
 
 class ScholarshipDetails extends StatefulWidget {
   final Scholarship current;
@@ -89,8 +89,13 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     );
   }
 
+  SizedBox _buildSizedBox(double hght){
+    return SizedBox(height: hght);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: _buildAppBar(),
       body: Container(
@@ -98,17 +103,17 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
         child: ListView(
           controller: _scroll,
           children: <Widget>[
-            SizedBox(height: 20),
+            _buildSizedBox(mq*.035),
             _buildHeader("Description"),
-            SizedBox(height: 20),
+            _buildSizedBox(mq*.035),
             _setParagraph(widget.current.scholarshipDescription),
-            SizedBox(height: 20),
+            _buildSizedBox(mq*.035),
             _buildHeader("Details"),
-            SizedBox(height: 20),
+            _buildSizedBox(mq*.035),
             _setParagraph(widget.current.scholarshipDetails),
-            SizedBox(height: 20),
+            _buildSizedBox(mq*.035),
             _buildGTTButton(),
-            SizedBox(height: 20),
+            _buildSizedBox(mq*.035),
           ],
         ),
       ),

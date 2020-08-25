@@ -1,4 +1,4 @@
-import 'package:fst_app_flutter/models/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
 import 'package:flutter/foundation.dart';
 
@@ -106,7 +106,7 @@ class ScholarshipList with ChangeNotifier{
     }
   }
 
-  //switches the list from to the paginated list
+  //switches the list to the paginated list
   void switchList(){
     current = viewList;
     notifyListeners();
