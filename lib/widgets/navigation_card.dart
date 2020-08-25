@@ -20,17 +20,19 @@ class NavigationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
-    return InkWell(
-      borderRadius: BorderRadius.circular(24),
-      onTap: (() {
-        Navigator.pushNamed(context,route);
-      }),
-      child: Card(
-        elevation: 10.0,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.white70, width: 1),
-          borderRadius: BorderRadius.circular(24),
-        ),
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        side: BorderSide.none,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: InkWell(
+        onTap: () {
+          try {
+            Navigator.pushNamed(context, route);
+          } catch (e) {}
+        },
         child: Container(
             height: height,
             width: width,
@@ -40,21 +42,17 @@ class NavigationCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                      height: queryData.size.shortestSide * 0.1,
-                      width: queryData.size.shortestSide * 0.1,
-                      child: Center(
-                          child: Icon(
-                        icon,
-                        color: Colors.white,
-                      )),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.blue[900])),
+                    height: queryData.size.shortestSide * 0.1,
+                    width: queryData.size.shortestSide * 0.1,
+                    child: Center(
+                        child: Icon(
+                      icon,
+                    )),
+                  ),
                   SizedBox(height: queryData.size.longestSide * 0.02),
                   Text(
                     title,
                     style: TextStyle(
-                        color: Colors.blue[900],
                         fontWeight: FontWeight.bold,
                         fontSize: queryData.size.shortestSide * 0.05064),
                     textAlign: TextAlign.center,

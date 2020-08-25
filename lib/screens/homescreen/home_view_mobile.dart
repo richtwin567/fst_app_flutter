@@ -3,7 +3,6 @@ import 'package:fst_app_flutter/widgets/app_drawer/app_drawer.dart';
 import 'package:fst_app_flutter/widgets/card_container/card_container.dart';
 
 class HomeMobilePortrait extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +12,7 @@ class HomeMobilePortrait extends StatelessWidget {
       appBar: AppBar(
         title: Text("FST Go"),
         centerTitle: false,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.settings,
-                color: Colors.white,
-              ),
-              onPressed: null)
-        ],
       ),
-      key: _scaffoldKey,
       drawer: AppDrawer(),
       body: Stack(fit: StackFit.passthrough, children: <Widget>[
         Container(
@@ -38,7 +28,7 @@ class HomeMobilePortrait extends StatelessWidget {
               Text(
                 "Welcome to the\nFaculty of Greatness",
                 style: TextStyle(
-                    color: Color(0xff322F51),
+                    //color: Color(0xff322F51),
                     fontWeight: FontWeight.bold,
                     fontSize: queryData.size.width * 0.055966),
               ),
@@ -100,7 +90,7 @@ class HomeMobileLandscape extends StatelessWidget {
                     Text(
                       "Welcome to the Faculty of Greatness",
                       style: TextStyle(
-                          color: Color(0xff322F51),
+                          //color: Color(0xff322F51),
                           fontWeight: FontWeight.bold,
                           fontSize: queryData.size.shortestSide * 0.055966),
                     ),

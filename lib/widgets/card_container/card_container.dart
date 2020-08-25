@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/routing/routes.dart';
 import 'package:fst_app_flutter/widgets/card_container/card_container_mobile.dart';
 import 'package:fst_app_flutter/widgets/orientation_layout.dart';
 import 'package:fst_app_flutter/widgets/screen_type_layout.dart';
@@ -24,6 +25,7 @@ class CardContainer extends StatelessWidget {
           width: queryData.size.shortestSide * 0.40,
           icon: Icons.location_on,
           title: "Map",
+          route: mapRoute,
         ),
         NavigationCard(
           height: queryData.size.longestSide * 0.16,

@@ -11,3 +11,8 @@ const contactDetailRoute = '/contactDetail';
 
 /// [ScholarshipView] route
 const scholarshipRoute = '/scholarship';
+/// [AppPreferencesView] route
+const appPreferencesRoute = '/appConfig';
+
+/// [MapView] route
+const mapRoute = '/map';

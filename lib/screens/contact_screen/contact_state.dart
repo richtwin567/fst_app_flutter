@@ -1,8 +1,15 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
-import 'package:fst_app_flutter/widgets/contact_tile.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/routing/routes.dart';
-import 'contact_view_stateful.dart';
+import 'package:fst_app_flutter/screens/contact_screen/contact_view_stateful.dart';
+import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
+import 'package:fst_app_flutter/utils/app_theme.dart';
+import 'package:fst_app_flutter/widgets/animated_icons/rive_animated_icon_button.dart';
+import 'package:fst_app_flutter/widgets/contact_widgets/contact_tile.dart';
 
 /// The base class for all contact view states for different screen sizes and orientations.
 abstract class ContactViewState extends State<ContactViewStateful>
@@ -60,15 +67,11 @@ abstract class ContactViewState extends State<ContactViewStateful>
   ];
 
   /// a list to store all contacts that were a returned from the query
-  List<dynamic> contacts = [];
+  List<Contact> contacts = [];
 
   /// Currently selected dropdown item value. Allows for differential
   /// of text in the dropdown list for the item that is selected.
   String currentFilter = 'All';
-
-  /// Used to switch the state of the appBar to a search field in the [revealSearchField]
-  /// function.
-  Icon searchIcon = Icon(Icons.search);
 
   /// Used to switch between filters from [categories] in the [filterDropdown]
   /// function
@@ -94,32 +97,46 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// [revealSearchField] is called
   AnimationController dropdownController;
 
-
   /// Controller for animations related to the appBar changing from blue to white
   /// when [revealSearchField] is called.
   AnimationController appBarColorController;
 
-  /// Whether or not all the actions are displayed on the appBar. This value is 
+  /// Whether or not all the actions are displayed on the appBar. This value is
   /// toggle in [revealSearchField].
   bool extraActions = true;
+
+  ThemeModel themeModel;
+
+  bool isDark;
+
+  ContactViewState({@required this.themeModel});
+  HerokuRequest<Contact> request;
 
   /// Load all contacts when page is loaded initially. Initilize animations and controllers.
   @override
   void initState() {
     super.initState();
-    getResultsJSON('$baseParam$extraParam')
+    request = HerokuRequest();
+    request.getResultsJSON('$baseParam$extraParam', (data) => Contact(data))
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-    appBarBgColor = TweenSequence([
-      TweenSequenceItem(
-          tween: ColorTween(
-              begin: Color.fromRGBO(0, 62, 138, 1.0), end: Colors.blue[800]),
-          weight: 1.0),
-      TweenSequenceItem(
-          tween: ColorTween(begin: Colors.blue[800], end: Colors.white),
-          weight: 0.5)
-    ]);
+
+    ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
+        SchedulerBinding.instance.window.platformBrightness);
+    var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
+    var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
+
+    isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system &&
+            SchedulerBinding.instance.window.platformBrightness ==
+                Brightness.dark);
+
+    appBarBgColor = ColorTween(
+        begin: isDark
+            ? Color.alphaBlend(overlayColor, theme.primaryColor)
+            : theme.primaryColor,
+        end: theme.scaffoldBackgroundColor);
     dropdownController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     searchController = TextEditingController();
@@ -162,14 +179,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
       toggleAppBarAnimation();
       toggleFilterDropdownAnimation().then((value) {
         appBarLeading = null;
-        searchIcon = Icon(
-          Icons.close,
-          color: Colors.black45,
-        );
-        filterIcon = Icon(
-          Icons.filter_list,
-          color: Colors.white,
-        );
         extraActions = false;
         appBarTitle = Container(
           width: searchFieldWidth,
@@ -195,15 +204,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
       extraActions = true;
       toggleFilterDropdownAnimation().then((value) {
         appBarLeading = BackButton();
-        searchIcon = Icon(
-          Icons.search,
-          color: Colors.white,
-        );
         appBarTitle = Text('Contacts');
-        filterIcon = Icon(
-          Icons.filter_list,
-          color: Colors.white,
-        );
         baseParam = 'contact/?search=';
         contacts.clear();
         searchController.clear();
@@ -233,15 +234,14 @@ abstract class ContactViewState extends State<ContactViewStateful>
                 elevation: elevation,
                 actions: [
                   if (extraActions) ...actions else Container(),
-                  IconButton(
-                      icon: searchIcon,
-                      onPressed: () {
-                        changeState(() {
-                          revealSearchField(
-                              searchFieldWidth:
-                                  MediaQuery.of(context).size.width);
-                        });
-                      })
+                  RiveIconButton(
+                    name: 'search_clear',
+                    animationName: isDark ? 'white_to_white' : 'white_to_black',
+                    setStateFunction: () {
+                      this.revealSearchField(
+                          searchFieldWidth: MediaQuery.of(context).size.width);
+                    },
+                  )
                 ],
                 centerTitle: false,
                 backgroundColor: appBarBgColor.evaluate(CurvedAnimation(
@@ -268,11 +268,14 @@ abstract class ContactViewState extends State<ContactViewStateful>
             .animate(CurvedAnimation(
                 parent: dropdownController, curve: Curves.ease)),
         child: Card(
-            margin: EdgeInsets.all(0.0),
+            margin: EdgeInsets.zero,
             elevation: elevation,
             child: PreferredSize(
                 child: Container(
-                    color: Theme.of(context).accentColor,
+                    color: isDark
+                        ? ElevationOverlay.applyOverlay(
+                            context, Theme.of(context).primaryColor, 4.0)
+                        : Theme.of(context).accentColor,
                     height: height,
                     width: width,
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -364,27 +367,28 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// in the list of [contacts]. [hasDecoration], [thickness], [subtitleStyle]
   /// and [titleStyle] determine the style of the [ContactTile].
   Widget buildContactListView(
-      {@required List<dynamic> contacts,
-      bool hasDecoration,
-      @required double thickness,
+      {@required List<Contact> contacts,
       TextStyle subtitleStyle,
       TextStyle titleStyle}) {
     return Scrollbar(
       controller: scrollController,
       child: ListView.builder(
+          key: PageStorageKey('scrollPosition'),
+          controller: scrollController,
           itemCount: contacts.length,
           semanticChildCount: contacts.length,
           itemBuilder: (BuildContext context, int index) {
-            return ContactTile(
-              subtitleStyle: subtitleStyle,
-              hasDecoration: hasDecoration,
-              titleStyle: titleStyle,
-              title: contacts[index]['name'],
-              subtitle: contacts[index]['description'],
-              namedRoute: contactDetailRoute,
-              arguments: contacts[index],
-              thickness: thickness,
-            );
+            return Column(children: [
+              ContactTile(
+                subtitleStyle: subtitleStyle,
+                titleStyle: titleStyle,
+                title: contacts[index].name,
+                subtitle: contacts[index].description,
+                namedRoute: contactDetailRoute,
+                arguments: contacts[index],
+              ),
+              Divider()
+            ]);
           }),
     );
   } // buildContactCard
@@ -394,9 +398,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Also displays message indicating that no matches were found if
   /// no matches were found and an error message if an error occured.
   Widget contactFutureBuilder(
-      {@required bool isDecorated,
-      @required double thickness,
-      @required double padH,
+      {@required double padH,
       @required double padV,
       @required double height,
       @required double width,
@@ -414,7 +416,9 @@ abstract class ContactViewState extends State<ContactViewStateful>
             children: <Widget>[
               Expanded(
                   child: FutureBuilder(
-                future: getResultsJSON('$baseParam$extraParam'),
+                initialData: contacts,
+                future: request.getResultsJSON(
+                    '$baseParam$extraParam', (data) => Contact(data)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -427,11 +431,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
                       contacts = snapshot.data.toSet().toList();
                       if (contacts.length > 0) {
                         return buildContactListView(
-                            titleStyle: titleStyle,
-                            subtitleStyle: subtitleStyle,
-                            contacts: contacts,
-                            hasDecoration: isDecorated,
-                            thickness: thickness);
+                          titleStyle: titleStyle,
+                          subtitleStyle: subtitleStyle,
+                          contacts: contacts,
+                        );
                       } else {
                         return Center(child: Text('No matches found'));
                       }
@@ -472,24 +475,23 @@ abstract class ContactViewState extends State<ContactViewStateful>
   ///
   /// The line between each [ContactTile] will be [thickness] in width if [isDecorated] is true.
   ///
-  Widget buildMovingContactListArea(
-      {@required double posFromTop,
-      @required double posFromLeft,
-      @required double posFromRight,
-      @required double posFromBottom,
-      @required double growTop,
-      @required double growLeft,
-      @required double growRight,
-      @required double growBottom,
-      @required AnimationController controller,
-      @required double height,
-      @required double width,
-      @required double padH,
-      @required double padV,
-      @required double thickness,
-      TextStyle titleStyle,
-      TextStyle subtitleStyle,
-      bool isDecorated = true}) {
+  Widget buildMovingContactListArea({
+    @required double posFromTop,
+    @required double posFromLeft,
+    @required double posFromRight,
+    @required double posFromBottom,
+    @required double growTop,
+    @required double growLeft,
+    @required double growRight,
+    @required double growBottom,
+    @required AnimationController controller,
+    @required double height,
+    @required double width,
+    @required double padH,
+    @required double padV,
+    TextStyle titleStyle,
+    TextStyle subtitleStyle,
+  }) {
     return PositionedTransition(
         rect: RelativeRectTween(
                 begin: RelativeRect.fromLTRB(
@@ -498,8 +500,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
                     growLeft, growTop, growRight, growBottom))
             .animate(CurvedAnimation(parent: controller, curve: Curves.ease)),
         child: contactFutureBuilder(
-          isDecorated: isDecorated,
-          thickness: thickness,
           titleStyle: titleStyle,
           subtitleStyle: subtitleStyle,
           height: height,
@@ -513,23 +513,20 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// not have any animated movement and no parameters to control an animation.
   ///
   /// [posFromTop] and [posFromLeft] are the only necessary positioning.
-  Widget buildStaticContactListArea(
-      {@required double posFromTop,
-      @required double height,
-      @required double width,
-      @required double padH,
-      @required double padV,
-      @required posFromLeft,
-      @required thickness,
-      TextStyle titleStyle,
-      TextStyle subtitleStyle,
-      bool isDecorated = true}) {
+  Widget buildFixedContactListArea({
+    @required double posFromTop,
+    @required double height,
+    @required double width,
+    @required double padH,
+    @required double padV,
+    @required double posFromLeft,
+    TextStyle titleStyle,
+    TextStyle subtitleStyle,
+  }) {
     return Positioned(
         top: posFromTop,
         left: posFromLeft,
         child: contactFutureBuilder(
-          isDecorated: isDecorated,
-          thickness: thickness,
           titleStyle: titleStyle,
           subtitleStyle: subtitleStyle,
           height: height,

@@ -5,13 +5,14 @@ class SlideUpPageRoute extends PageRouteBuilder {
 
   SlideUpPageRoute({@required this.page})
       : super(
-        transitionDuration: Duration(milliseconds: 400),
+            transitionDuration: Duration(milliseconds: 400),
             pageBuilder: (context, animation1, animation2) => page,
             transitionsBuilder: (context, animation1, animation2, child) =>
                 SlideTransition(
-                  position: Tween<Offset>(
-                          begin: const Offset(0, 1), end: Offset.zero)
-                      .animate(CurvedAnimation(parent: animation1, curve: Curves.easeOut)),
+                  position:
+                      Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+                          .animate(CurvedAnimation(
+                              parent: animation1, curve: Curves.easeOut)),
                   child: child,
                 ));
 }

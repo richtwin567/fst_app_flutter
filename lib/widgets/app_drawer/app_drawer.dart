@@ -35,6 +35,11 @@ class AppDrawer extends StatelessWidget {
         title: 'Timetable',
         iconData: Icons.calendar_today,
       ),
+      DrawerOption(
+        title: 'Settings',
+        iconData: Icons.settings,
+        route: appPreferencesRoute,
+      )
     ];
   }
 

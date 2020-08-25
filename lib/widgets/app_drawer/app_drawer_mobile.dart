@@ -22,11 +22,8 @@ class AppDrawerMobileLayout extends StatelessWidget {
               )
             ],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: AppDrawer.getDrawerOptions(),
-          )),
-    );
+          child:ListView(children: AppDrawer.getDrawerOptions()),
+          ));
+    
   }
 }
