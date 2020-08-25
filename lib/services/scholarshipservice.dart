@@ -13,7 +13,7 @@ class ScholarshipService{
       var result = await handler.getResultsJSON("scholarship/", (data) => Scholarship.fromJson(data));
       return Future(() => ScholarshipList(scholarships: result));
     } catch (e) {
-      throw Exception();
+      throw Exception('Cannot load from server');
     }
   }
 }

@@ -8,7 +8,8 @@ import 'package:fst_app_flutter/services/scholarshipservice.dart';
 import 'package:provider/provider.dart';
 
 class ScholarshipMobile extends StatefulWidget {
-   ScholarshipMobile({Key key}) : super(key: key);
+
+  ScholarshipMobile({Key key}) : super(key: key);
 
   @override
   _ScholarshipMobileState createState() => _ScholarshipMobileState();
@@ -85,6 +86,9 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     return TextField(
       focusNode: textfocus,
       controller: _controller,
+      style: TextStyle(
+        color: Colors.grey.shade400,
+      ),
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -98,8 +102,10 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           horizontal: 15,
         ),
         hintText: "Search",
+        hintStyle: TextStyle(color: Colors.grey.shade400),
         suffixIcon: Icon(
           Icons.search,
+          color: Colors.grey.shade400,
         ),
         fillColor: Colors.grey.shade200,
         filled: true,

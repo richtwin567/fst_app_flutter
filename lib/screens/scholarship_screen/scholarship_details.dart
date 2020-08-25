@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
 
 class ScholarshipDetails extends StatefulWidget {
@@ -30,7 +32,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Center(
@@ -51,9 +53,9 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return SelectableText.rich(
       TextSpan(
         style: TextStyle(
-          color: Colors.black,
           fontSize: 15,
           fontFamily: "Monsterrat",
+          color: Provider.of<ThemeModel>(context, listen: false).selectedTheme == ThemeMode.dark ? Colors.white : Colors.black,
         ),
         children: <TextSpan>[
           TextSpan(
@@ -70,7 +72,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildGTTButton(){
     return Center(
       child: FlatButton.icon(
-        color: Theme.of(context).primaryColor,
+        color: Provider.of<ThemeModel>(context, listen: false).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         onPressed: (){
           _scroll.animateTo(0, duration: Duration(milliseconds: 100,), curve: Curves.easeOut);
         }, 
@@ -96,25 +98,30 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20,),
-        child: ListView(
-          controller: _scroll,
-          children: <Widget>[
-            _buildSizedBox(mq*.035),
-            _buildHeader("Description"),
-            _buildSizedBox(mq*.035),
-            _setParagraph(widget.current.scholarshipDescription),
-            _buildSizedBox(mq*.035),
-            _buildHeader("Details"),
-            _buildSizedBox(mq*.035),
-            _setParagraph(widget.current.scholarshipDetails),
-            _buildSizedBox(mq*.035),
-            _buildGTTButton(),
-            _buildSizedBox(mq*.035),
-          ],
+    return Consumer<ThemeModel>(
+        builder: (context, theme, child){
+          return  child;
+        },
+        child: Scaffold(
+        appBar: _buildAppBar(),
+        body: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20,),
+          child: ListView(
+            controller: _scroll,
+            children: <Widget>[
+              _buildSizedBox(mq*.035),
+              _buildHeader("Description"),
+              _buildSizedBox(mq*.035),
+              _setParagraph(widget.current.scholarshipDescription),
+              _buildSizedBox(mq*.035),
+              _buildHeader("Details"),
+              _buildSizedBox(mq*.035),
+              _setParagraph(widget.current.scholarshipDetails),
+              _buildSizedBox(mq*.035),
+              _buildGTTButton(),
+              _buildSizedBox(mq*.035),
+            ],
+          ),
         ),
       ),
     );
