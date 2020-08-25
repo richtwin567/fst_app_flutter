@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/local_widget/scholarcard.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
-import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 import 'package:fst_app_flutter/models/scholarshiplist.dart';
 import 'package:fst_app_flutter/services/scholarshipservice.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +56,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
     return AppBar(
       automaticallyImplyLeading: true,
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
       centerTitle: false,
       title: Text(
         "Scholarships",
@@ -74,6 +75,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             try{
               openUrl(ScholarshipService.url);
             }catch(e){
+              //Better exception Handling for this, in a case where it doesn't work
               Scaffold.of(context).showSnackBar(SnackBar(content: Text(e), duration: Duration(seconds: 2,),));
             }
           },
@@ -87,7 +89,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       focusNode: textfocus,
       controller: _controller,
       style: TextStyle(
-        color: Colors.grey.shade400,
+        color: Colors.grey.shade600,
       ),
       decoration: InputDecoration(
         border: OutlineInputBorder(
@@ -102,10 +104,10 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           horizontal: 15,
         ),
         hintText: "Search",
-        hintStyle: TextStyle(color: Colors.grey.shade400),
+        hintStyle: TextStyle(color: Colors.grey.shade600,),
         suffixIcon: Icon(
           Icons.search,
-          color: Colors.grey.shade400,
+          color: Colors.grey.shade600,
         ),
         fillColor: Colors.grey.shade200,
         filled: true,
@@ -189,7 +191,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                     fontFamily: "Monsterrat",
                   ),
                 ),
-                color: Theme.of(context).primaryColor,
+                color: Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
                 onPressed: (){
                   _scroll.animateTo(0, duration: Duration(seconds: 2), curve: Curves.easeOut);
                 },  

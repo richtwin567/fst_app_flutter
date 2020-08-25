@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
-import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 
 class ScholarshipDetails extends StatefulWidget {
   final Scholarship current;
@@ -23,7 +23,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildAppBar(){
     return AppBar(
         title: Text(widget.current.scholarshipName),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         elevation: 0,
       );
   }
@@ -32,7 +32,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Provider.of<ThemeModel>(context, listen: false).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Center(

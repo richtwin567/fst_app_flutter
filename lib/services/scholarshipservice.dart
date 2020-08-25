@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 import 'package:fst_app_flutter/models/scholarshiplist.dart';
 import 'package:fst_app_flutter/services/handle_heroku_requests.dart';
 
