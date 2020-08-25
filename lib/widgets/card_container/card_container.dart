@@ -32,6 +32,7 @@ class CardContainer extends StatelessWidget {
           width: queryData.size.shortestSide * 0.40,
           icon: Icons.school,
           title: "Scholarships",
+          route: scholarshipRoute,
         ),
         NavigationCard(
           height: queryData.size.longestSide * 0.184,
@@ -64,6 +65,7 @@ class CardContainer extends StatelessWidget {
           width: queryData.size.shortestSide * 0.40,
           icon: Icons.school,
           title: "Scholarships",
+          route: scholarshipRoute,
         ),
         NavigationCard(
           height: queryData.size.longestSide * 0.20,
