@@ -117,7 +117,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
   void initState() {
     super.initState();
     request = HerokuRequest();
-    request.getResultsJSON('$baseParam$extraParam', (data) => Contact(data))
+    request
+        .getResultsJSON('$baseParam$extraParam', true, (data) => Contact(data))
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
@@ -418,7 +419,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
                   child: FutureBuilder(
                 initialData: contacts,
                 future: request.getResultsJSON(
-                    '$baseParam$extraParam', (data) => Contact(data)),
+                    '$baseParam$extraParam', true, (data) => Contact(data)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());

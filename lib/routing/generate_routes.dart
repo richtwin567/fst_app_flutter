@@ -4,6 +4,7 @@ import 'package:fst_app_flutter/screens/app_preferences_screen/app_preferences_v
 import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_view.dart';
 import 'package:fst_app_flutter/screens/homescreen/home_view.dart';
+import 'package:fst_app_flutter/screens/map_screen/map_view.dart';
 import 'routes.dart';
 
 /// Handles routing in the app
@@ -17,6 +18,10 @@ class Router {
         return SlideUpPageRoute(page: ContactDetailPage(settings.arguments));
       case appPreferencesRoute:
         return MaterialPageRoute(builder: (context) => AppPreferencesView());
+      case mapRoute:
+        return MaterialPageRoute(
+          builder: (context) => CampusMapView(),
+        );
       default:
         return MaterialPageRoute(builder: (context) => HomeView());
     }

@@ -12,8 +12,10 @@ void main() async {
   ThemeModel themeModel = ThemeModel();
   await themeModel.init();
   await precacheRive();
-  runApp(FSTApp(
-    themeModel: themeModel,
+  runApp(DevicePreview(
+      child: FSTApp(
+      themeModel: themeModel,
+    ),
   ));
 }
 
