@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
+import 'package:provider/provider.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 
 class ScholarshipDetails extends StatefulWidget {
   final Scholarship current;
@@ -12,6 +14,7 @@ class ScholarshipDetails extends StatefulWidget {
 
 class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   final  _scroll = ScrollController();
+  bool isDark;
 
   void dispose(){
     _scroll.dispose();
@@ -21,7 +24,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildAppBar(){
     return AppBar(
         title: Text(widget.current.scholarshipName),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         elevation: 0,
       );
   }
@@ -30,7 +33,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Theme.of(context).accentColor,
+        color: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Center(
@@ -51,9 +54,9 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return SelectableText.rich(
       TextSpan(
         style: TextStyle(
-          color: Colors.black,
           fontSize: 15,
           fontFamily: "Monsterrat",
+          color: isDark ? Colors.white : Colors.black,
         ),
         children: <TextSpan>[
           TextSpan(
@@ -70,7 +73,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildGTTButton(){
     return Center(
       child: FlatButton.icon(
-        color: Theme.of(context).primaryColor,
+        color: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         onPressed: (){
           _scroll.animateTo(0, duration: Duration(milliseconds: 100,), curve: Curves.easeOut);
         }, 
@@ -95,6 +98,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
 
   @override
   Widget build(BuildContext context) {
+    isDark = Provider.of<ThemeModel>(context).selectedTheme == ThemeMode.dark;
     final mq = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: _buildAppBar(),

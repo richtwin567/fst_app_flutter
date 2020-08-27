@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/local_widget/scholarcard.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
-import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 import 'package:fst_app_flutter/models/scholarshiplist.dart';
 import 'package:fst_app_flutter/services/scholarshipservice.dart';
 import 'package:provider/provider.dart';
 
 class ScholarshipMobile extends StatefulWidget {
-   ScholarshipMobile({Key key}) : super(key: key);
+
+  ScholarshipMobile({Key key}) : super(key: key);
 
   @override
   _ScholarshipMobileState createState() => _ScholarshipMobileState();
@@ -20,6 +22,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   ScholarshipList symbol;
   int start;
   String currentText;
+  bool isDark;
 
   final _controller = TextEditingController();
   final _scroll = ScrollController();
@@ -73,7 +76,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             try{
               openUrl(ScholarshipService.url);
             }catch(e){
-              Scaffold.of(context).showSnackBar(SnackBar(content: Text(e), duration: Duration(seconds: 2,),));
             }
           },
         ),
@@ -85,6 +87,9 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     return TextField(
       focusNode: textfocus,
       controller: _controller,
+      style: TextStyle(
+        color: Colors.grey.shade600,
+      ),
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -98,8 +103,10 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           horizontal: 15,
         ),
         hintText: "Search",
+        hintStyle: TextStyle(color: Colors.grey.shade600,),
         suffixIcon: Icon(
           Icons.search,
+          color: Colors.grey.shade600,
         ),
         fillColor: Colors.grey.shade200,
         filled: true,
@@ -113,10 +120,8 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
       onSubmitted: (query){
         _debouncer.run((){
-          _debouncer.run((){
-            currentText = query;
-            symbol.search(query);
-          });
+          currentText = query;
+          symbol.search(query);
         });
       },
     );
@@ -164,7 +169,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             Text(
               "End of the List", 
               style: TextStyle(
-                color: Colors.grey.shade400, 
+                color: isDark ? Colors.white : Colors.grey.shade400, 
                 fontSize: 18,
                 fontFamily: "Monsterrat",
               ),
@@ -183,7 +188,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                     fontFamily: "Monsterrat",
                   ),
                 ),
-                color: Theme.of(context).primaryColor,
+                color: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
                 onPressed: (){
                   _scroll.animateTo(0, duration: Duration(seconds: 2), curve: Curves.easeOut);
                 },  
@@ -241,7 +246,14 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                 },
                 child: Consumer<ScholarshipList>(
                   builder: (context, lst, child){
-                    return _buildTempList(lst.scholarList);
+                    return Scrollbar(
+                      controller: _scroll,
+                      isAlwaysShown: true,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: _buildTempList(lst.scholarList),
+                      ),
+                    );
                   },
                 ),
               );
@@ -256,6 +268,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
   @override
   Widget build(BuildContext context) {
+    isDark = Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark;
     return GestureDetector(
       onTap: (){
         textfocus.unfocus();
@@ -266,21 +279,35 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: _buildAppBar(),
-        body: Container(
-          padding: const EdgeInsets.fromLTRB(20,20,20,0),
-          child: Column(
-            children: <Widget>[
-              _buildTextField(),
-              SizedBox(
-                height: 10,
+        body: RefreshIndicator(
+          child: Stack(
+            children: [
+              ListView(
+                physics: AlwaysScrollableScrollPhysics(),
               ),
-              Expanded(
-                child: _buildBuilder(),
+              Container(
+                padding: const EdgeInsets.fromLTRB(20,20,20,0),
+                child: Column(
+                  children: <Widget>[
+                    _buildTextField(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: _buildBuilder(),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
+          onRefresh: refresh,
+        ), 
       ),
     );
+  }
+
+  Future<void> refresh(){
+    return Future(() => setState((){}));
   }
 }

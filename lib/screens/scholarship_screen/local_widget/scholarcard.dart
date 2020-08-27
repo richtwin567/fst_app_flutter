@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/scholarship_details.dart';
 
 class ScholarCard extends StatelessWidget {

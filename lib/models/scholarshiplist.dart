@@ -1,4 +1,4 @@
-import 'package:fst_app_flutter/models/from_postgres/scholarship.dart';
+import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
 import 'package:flutter/foundation.dart';
 
