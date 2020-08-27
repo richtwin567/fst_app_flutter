@@ -14,6 +14,7 @@ class ScholarshipDetails extends StatefulWidget {
 
 class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   final  _scroll = ScrollController();
+  bool isDark;
 
   void dispose(){
     _scroll.dispose();
@@ -23,7 +24,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildAppBar(){
     return AppBar(
         title: Text(widget.current.scholarshipName),
-        backgroundColor: Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
+        backgroundColor: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         elevation: 0,
       );
   }
@@ -32,7 +33,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Provider.of<ThemeModel>(context, listen: false).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
+        color: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Center(
@@ -55,7 +56,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
         style: TextStyle(
           fontSize: 15,
           fontFamily: "Monsterrat",
-          color: Provider.of<ThemeModel>(context, listen: false).selectedTheme == ThemeMode.dark ? Colors.white : Colors.black,
+          color: isDark ? Colors.white : Colors.black,
         ),
         children: <TextSpan>[
           TextSpan(
@@ -72,7 +73,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildGTTButton(){
     return Center(
       child: FlatButton.icon(
-        color: Provider.of<ThemeModel>(context, listen: false).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
+        color: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
         onPressed: (){
           _scroll.animateTo(0, duration: Duration(milliseconds: 100,), curve: Curves.easeOut);
         }, 
@@ -97,31 +98,27 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
 
   @override
   Widget build(BuildContext context) {
+    isDark = Provider.of<ThemeModel>(context).selectedTheme == ThemeMode.dark;
     final mq = MediaQuery.of(context).size.height;
-    return Consumer<ThemeModel>(
-        builder: (context, theme, child){
-          return  child;
-        },
-        child: Scaffold(
-        appBar: _buildAppBar(),
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20,),
-          child: ListView(
-            controller: _scroll,
-            children: <Widget>[
-              _buildSizedBox(mq*.035),
-              _buildHeader("Description"),
-              _buildSizedBox(mq*.035),
-              _setParagraph(widget.current.scholarshipDescription),
-              _buildSizedBox(mq*.035),
-              _buildHeader("Details"),
-              _buildSizedBox(mq*.035),
-              _setParagraph(widget.current.scholarshipDetails),
-              _buildSizedBox(mq*.035),
-              _buildGTTButton(),
-              _buildSizedBox(mq*.035),
-            ],
-          ),
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20,),
+        child: ListView(
+          controller: _scroll,
+          children: <Widget>[
+            _buildSizedBox(mq*.035),
+            _buildHeader("Description"),
+            _buildSizedBox(mq*.035),
+            _setParagraph(widget.current.scholarshipDescription),
+            _buildSizedBox(mq*.035),
+            _buildHeader("Details"),
+            _buildSizedBox(mq*.035),
+            _setParagraph(widget.current.scholarshipDetails),
+            _buildSizedBox(mq*.035),
+            _buildGTTButton(),
+            _buildSizedBox(mq*.035),
+          ],
         ),
       ),
     );

@@ -22,6 +22,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   ScholarshipList symbol;
   int start;
   String currentText;
+  bool isDark;
 
   final _controller = TextEditingController();
   final _scroll = ScrollController();
@@ -56,7 +57,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
     return AppBar(
       automaticallyImplyLeading: true,
-      backgroundColor: Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).primaryColor,
       centerTitle: false,
       title: Text(
         "Scholarships",
@@ -75,8 +76,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             try{
               openUrl(ScholarshipService.url);
             }catch(e){
-              //Better exception Handling for this, in a case where it doesn't work
-              Scaffold.of(context).showSnackBar(SnackBar(content: Text(e), duration: Duration(seconds: 2,),));
             }
           },
         ),
@@ -170,7 +169,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             Text(
               "End of the List", 
               style: TextStyle(
-                color: Colors.grey.shade400, 
+                color: isDark ? Colors.white : Colors.grey.shade400, 
                 fontSize: 18,
                 fontFamily: "Monsterrat",
               ),
@@ -189,7 +188,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                     fontFamily: "Monsterrat",
                   ),
                 ),
-                color: Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
+                color: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
                 onPressed: (){
                   _scroll.animateTo(0, duration: Duration(seconds: 2), curve: Curves.easeOut);
                 },  
@@ -247,7 +246,14 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                 },
                 child: Consumer<ScholarshipList>(
                   builder: (context, lst, child){
-                    return _buildTempList(lst.scholarList);
+                    return Scrollbar(
+                      controller: _scroll,
+                      isAlwaysShown: true,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: _buildTempList(lst.scholarList),
+                      ),
+                    );
                   },
                 ),
               );
@@ -262,6 +268,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
   @override
   Widget build(BuildContext context) {
+    isDark = Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark;
     return GestureDetector(
       onTap: (){
         textfocus.unfocus();
