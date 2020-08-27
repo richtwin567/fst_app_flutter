@@ -121,10 +121,8 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
       onSubmitted: (query){
         _debouncer.run((){
-          _debouncer.run((){
-            currentText = query;
-            symbol.search(query);
-          });
+          currentText = query;
+          symbol.search(query);
         });
       },
     );
