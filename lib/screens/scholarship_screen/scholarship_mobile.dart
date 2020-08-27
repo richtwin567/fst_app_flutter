@@ -279,21 +279,35 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: _buildAppBar(),
-        body: Container(
-          padding: const EdgeInsets.fromLTRB(20,20,20,0),
-          child: Column(
-            children: <Widget>[
-              _buildTextField(),
-              SizedBox(
-                height: 10,
+        body: RefreshIndicator(
+          child: Stack(
+            children: [
+              ListView(
+                physics: AlwaysScrollableScrollPhysics(),
               ),
-              Expanded(
-                child: _buildBuilder(),
+              Container(
+                padding: const EdgeInsets.fromLTRB(20,20,20,0),
+                child: Column(
+                  children: <Widget>[
+                    _buildTextField(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: _buildBuilder(),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
+          onRefresh: refresh,
+        ), 
       ),
     );
+  }
+
+  Future<void> refresh(){
+    return Future(() => setState((){}));
   }
 }
