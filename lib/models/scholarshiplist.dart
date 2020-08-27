@@ -73,6 +73,7 @@ class ScholarshipList with ChangeNotifier{
 
   }
 
+  //Add more data to the paginated list 
   void getMoreData() async{
     
     if (!isPerformingRequest) {

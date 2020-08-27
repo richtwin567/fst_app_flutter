@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 
+///Widget used to display the details of the [Scholarship] from a [ScholarCard]
 class ScholarshipDetails extends StatefulWidget {
   final Scholarship current;
 
@@ -14,13 +15,15 @@ class ScholarshipDetails extends StatefulWidget {
 
 class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   final  _scroll = ScrollController();
-  bool isDark;
+  bool isDark; //Boolean to represent if the current Theme Mode is Dark Mode
 
   void dispose(){
     _scroll.dispose();
     super.dispose();
   }
 
+  /// Builds the [AppBar] Widget for the screen
+  /// The colour of the widget will depend on what the [ThemeMode] is
   Widget _buildAppBar(){
     return AppBar(
         title: Text(widget.current.scholarshipName),
@@ -49,7 +52,9 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
       ),
     );
   }
-
+  //returns a Widget which will build the text containing the details of the scholarhship.
+  //The text is selectable and it can be copied. The color of the characters will also depend on 
+  /// the current [ThemeMode] selected. The text given to the function will be the one displayed.
   Widget _setParagraph(String text){
     return SelectableText.rich(
       TextSpan(
@@ -70,6 +75,8 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     );
   }
 
+  ///returns a Widget that when built will be a [FlatButton] with the primary color being dependent on the 
+  ///the current [ThemeMode] selected. [onPressed] the scroll position will return to the original position.
   Widget _buildGTTButton(){
     return Center(
       child: FlatButton.icon(
