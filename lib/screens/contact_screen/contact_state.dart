@@ -421,29 +421,86 @@ abstract class ContactViewState extends State<ContactViewStateful>
                 future: request.getResults(
                     '$baseParam$extraParam', true, (data) => Contact(data)),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.connectionState == ConnectionState.none) {
-                    return Center(
-                        child: Text(
-                            'Cannot load contacts. Check your internet connection.'));
-                  } else if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      contacts = snapshot.data.toSet().toList();
-                      if (contacts.length > 0) {
-                        return buildContactListView(
-                          titleStyle: titleStyle,
-                          subtitleStyle: subtitleStyle,
-                          contacts: contacts,
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return RefreshIndicator(
+                        onRefresh: () {
+                          return request
+                              .getResults('$baseParam$extraParam', true,
+                                  (data) => Contact(data))
+                              .then((value) {
+                            setState(() {
+                              contacts = value;
+                            });
+                          });
+                        },
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  child: Center(
+                                      child: Text(
+                                    'No connection specified.',
+                                    textAlign: TextAlign.center,
+                                  )),
+                                ),
+                              ),
+                            ]),
+                      );
+                      break;
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                      break;
+                    case ConnectionState.active:
+                      return Center(child: CircularProgressIndicator());
+                      break;
+                    case ConnectionState.done:
+                      if (snapshot.hasData) {
+                        contacts = snapshot.data.toSet().toList();
+                        if (contacts.length > 0) {
+                          return buildContactListView(
+                            titleStyle: titleStyle,
+                            subtitleStyle: subtitleStyle,
+                            contacts: contacts,
+                          );
+                        } else {
+                          return Center(child: Text('No matches found'));
+                        }
+                      } else if (!snapshot.hasData || snapshot.hasError) {
+                        return RefreshIndicator(
+                          onRefresh: () {
+                            return request
+                                .getResults('$baseParam$extraParam', true,
+                                    (data) => Contact(data))
+                                .then((value) {
+                              setState(() {
+                                contacts = value;
+                              });
+                            });
+                          },
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                    child: Center(
+                                        child: Text(
+                                      'Cannot load contacts. Check your internet connection.',
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  ),
+                                ),
+                              ]),
                         );
                       } else {
                         return Center(child: Text('No matches found'));
                       }
-                    } else if (!snapshot.hasData || snapshot.hasError) {
-                      return Center(child: Text('An error occured'));
-                    } else {
-                      return Center(child: Text('No matches found'));
-                    }
+                      break;
                   }
                   return Container();
                 },

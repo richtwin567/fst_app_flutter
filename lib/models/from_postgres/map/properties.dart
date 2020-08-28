@@ -1,6 +1,8 @@
+import 'package:fst_app_flutter/models/enums/department.dart';
+
 class Properties {
   final String title;
-  final String associatedWith;
+  final Department associatedWith;
   final String description;
   final String altName;
 
@@ -9,7 +11,7 @@ class Properties {
   toGeoJSONFile() {
     return {
       '\"title\"': '\"$title\"',
-      '\"associatedWith\"': '\"$associatedWith\"',
+      '\"associatedWith\"': '\"${associatedWith.toShortString()}\"',
       '\"description\"': '\"$description\"',
       '\"altName\"': '\"$altName\"'
     };
@@ -18,7 +20,7 @@ class Properties {
   toGeoJSON() {
     return {
       'title': title,
-      'associatedWith': associatedWith,
+      'associatedWith': associatedWith.toShortString(),
       'description': description,
       'altName': altName
     };
