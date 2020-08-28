@@ -1,4 +1,4 @@
-package com.example.fst_app_flutter;
+package com.example.fst_app_flutter.contact;
 
 
 import android.content.ContentValues;
@@ -28,7 +28,7 @@ public class NativeContact {
 	 * @param map a Map object passed in from dart saveNatively method in
 	 *            *                  contact_model.dart
 	 */
-	NativeContact(HashMap<String, Object> map) {
+	public NativeContact(HashMap<String, Object> map) {
 		this.displayName = (String) map.get("displayName");
 		this.email = (String) map.get("email");
 		this.note = (String) map.get("note");

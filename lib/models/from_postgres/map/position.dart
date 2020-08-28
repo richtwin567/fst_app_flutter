@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Position {
+class GeoJSONPosition {
   double _longitude; //MUST COME BEFORE LATITUDE
 
   double _latitude;
@@ -13,8 +14,10 @@ class Position {
 
   double get elevation => _elevation;
 
-  Position(
-      {@required double newLongitude, @required double newLatitude, double elevation})
+  GeoJSONPosition(
+      {@required double newLongitude,
+      @required double newLatitude,
+      double elevation})
       : assert(newLatitude != null && newLongitude != null) {
     _elevation = elevation;
     _longitude = newLongitude;
@@ -29,10 +32,15 @@ class Position {
 
   @override
   operator ==(o) =>
-      o is Position &&
+      o is GeoJSONPosition &&
       o.longitude == longitude &&
       o.latitude == latitude &&
       o.elevation == elevation;
 
-  toGeoJSON() => [latitude,longitude];
+  toGeoJSON() => [latitude, longitude];
+
+  
+  List<LatLng> extractLatLng() {
+    return [LatLng(latitude, longitude)];
+  }
 }

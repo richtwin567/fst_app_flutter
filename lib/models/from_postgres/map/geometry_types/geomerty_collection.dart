@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_object.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 
-class GeometryCollection extends GeometryObject {
-  List<GeometryObject> geometries;
-  GeometryCollection({@required geometries})
-      : super(GeometryType.GeometryCollection);
+class GeoJSONGeometryCollection extends GeoJSONGeometryObject {
+  List<GeoJSONGeometryObject> geometries;
+  GeoJSONGeometryCollection({@required geometries})
+      : super(GeoJSONGeometryType.GeometryCollection);
+
+  @override
+  toGeoJSONFile() {
+    throw UnimplementedError();
+  }
 
   @override
   toGeoJSON() {
-    // TODO: implement toGeoJSON
+    throw UnimplementedError();
+  }
+
+  @override
+  extractLatLng() {
     throw UnimplementedError();
   }
 }

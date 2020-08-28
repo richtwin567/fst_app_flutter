@@ -1,4 +1,4 @@
-enum GeometryType {
+enum GeoJSONGeometryType {
   Point,
   MultiPoint,
   LineString,
@@ -8,7 +8,7 @@ enum GeometryType {
   GeometryCollection
 }
 
-extension GeometryTypeShortString on GeometryType {
+extension GeometryTypeShortString on GeoJSONGeometryType {
   String toShortString() {
     return this.toString().split('.').last;
   }

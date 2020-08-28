@@ -5,4 +5,8 @@ abstract class GeoJSONObject {
   List<int> bbox;
 
   GeoJSONObject(this.type);
+
+  toGeoJSONFile();
+
+  Map<String, Object> toGeoJSON();
 }

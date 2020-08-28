@@ -37,6 +37,7 @@ dependencies:
   device_preview: ^0.1.9-beta
   provider: ^4.3.1
   permission_handler: ^5.0.1+1
+  google_maps_flutter: ^0.5.30
 dev_dependencies:
   flutter_test:
     sdk: flutter

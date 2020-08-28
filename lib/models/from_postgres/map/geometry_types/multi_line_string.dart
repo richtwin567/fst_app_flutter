@@ -3,17 +3,17 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/line_string.dart';
 
-class MultiLineString extends GeometryObject {
-  List<LineString> coordinates;
-  MultiLineString({@required coordsJSON})
+class GeoJSONMultiLineString extends GeoJSONGeometryObject {
+  List<GeoJSONLineString> coordinates;
+  GeoJSONMultiLineString({@required coordsJSON})
       : assert(coordsJSON != null),
-        super(GeometryType.MultiLineString) {
+        super(GeoJSONGeometryType.MultiLineString) {
     coordinates = [];
     var lineStringCoords = [];
     for (var i = 0; i < coordsJSON.length; i++) {
       if (coordsJSON[i]['marker'] == 'END') {
         lineStringCoords.add(coordsJSON[i]);
-        coordinates.add(LineString(coordsJSON: lineStringCoords));
+        coordinates.add(GeoJSONLineString(coordsJSON: lineStringCoords));
         lineStringCoords = [];
       } else {
         lineStringCoords.add(coordsJSON[i]);
@@ -22,10 +22,23 @@ class MultiLineString extends GeometryObject {
   }
 
   @override
-  toGeoJSON() {
+  toGeoJSONFile() {
     return {
       '\"type\"': '\"${type.toShortString()}\"',
-      '\"coordinates\"': coordinates.map((e) => e.toGeoJSON()).toList()
+      '\"coordinates\"': coordinates.map((e) => e.toGeoJSONFile()).toList()
     };
+  }
+
+  @override
+  toGeoJSON() {
+    return {
+      'type': type.toShortString(),
+      'coordinates': coordinates.map((e) => e.toGeoJSON()).toList()
+    };
+  }
+
+  @override
+  extractLatLng() {
+    return coordinates.expand((e) => e.extractLatLng());
   }
 }
