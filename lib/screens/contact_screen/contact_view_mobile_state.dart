@@ -19,7 +19,7 @@ class ContactViewMobileLandscapeState extends ContactViewState {
         Container(),
         buildFixedContactListArea(
           posFromTop: kToolbarHeight + topViewInsets,
-          height: mq.size.height - kToolbarHeight,
+          height: mq.size.height - kToolbarHeight - topViewInsets,
           width: mq.size.width,
           padH: mq.size.width * 0.05,
           padV: mq.size.height * 0.05,
@@ -27,12 +27,12 @@ class ContactViewMobileLandscapeState extends ContactViewState {
         ),
         Container(),
         buildAppBarArea(
-            height: kToolbarHeight,
+            height: kToolbarHeight+topViewInsets,
             animationIntervalStart: 0.0,
             animationIntervalEnd: 1.0,
             actions: <Widget>[
               filterDropdown(context,
-                  height: kToolbarHeight,
+                  height: kToolbarHeight+topViewInsets,
                   width: mq.size.width / 3,
                   isExpanded: true,
                   elevation: 0.0),

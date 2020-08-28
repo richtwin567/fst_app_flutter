@@ -9,21 +9,20 @@ class AppDrawerMobileLayout extends StatelessWidget {
     MediaQueryData queryData = MediaQuery.of(context);
 
     return OrientationBuilder(
-      builder: (context, orientation) => Container(
-          width: orientation == Orientation.portrait
-              ? 250
-              : queryData.size.width * 0.2,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 16,
-                color: Colors.black12,
-              )
-            ],
-          ),
-          child:ListView(children: AppDrawer.getDrawerOptions()),
-          ));
-    
+        builder: (context, orientation) => Container(
+              width: orientation == Orientation.portrait
+                  ? 250
+                  : queryData.size.width * 0.2,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 16,
+                    color: Colors.black12,
+                  )
+                ],
+              ),
+              child: ListView(children: AppDrawer.getDrawerOptions()),
+            ));
   }
 }

@@ -16,22 +16,19 @@ class ThemeChooserDialogState extends State<ThemeChooserDialog> {
     var themeModel = ModalRoute.of(context).settings.arguments as ThemeModel;
     ThemeMode themeGroupValue = themeModel.selectedTheme;
     ThemeData currentTheme = AppTheme.getTheme(themeModel.selectedTheme,
-                    SchedulerBinding.instance.window.platformBrightness);
+        SchedulerBinding.instance.window.platformBrightness);
 
-        var radioTextStyle = Theme.of(context).textTheme.subtitle1.copyWith(
-            color: currentTheme
-            .textTheme
-            .subtitle1
-            .color);
+    var radioTextStyle = Theme.of(context)
+        .textTheme
+        .subtitle1
+        .copyWith(color: currentTheme.textTheme.subtitle1.color);
     return AlertDialog(
-        backgroundColor: currentTheme
-            .cardColor,
+        backgroundColor: currentTheme.cardColor,
         contentTextStyle: radioTextStyle,
-        titleTextStyle: Theme.of(context).textTheme.headline6.copyWith(
-            color: currentTheme
-                .textTheme
-                .headline6
-                .color),
+        titleTextStyle: Theme.of(context)
+            .textTheme
+            .headline6
+            .copyWith(color: currentTheme.textTheme.headline6.color),
         actions: [
           FlatButton(onPressed: () => Navigator.pop(context), child: Text('OK'))
         ],
@@ -55,7 +52,10 @@ class ThemeChooserDialogState extends State<ThemeChooserDialog> {
                     });
                   },
                 ),
-                title: Text('System', style: radioTextStyle,),
+                title: Text(
+                  'System',
+                  style: radioTextStyle,
+                ),
               ),
               ListTile(
                 trailing: Radio(
@@ -69,11 +69,13 @@ class ThemeChooserDialogState extends State<ThemeChooserDialog> {
                     });
                   },
                 ),
-                title: Text('Dark',style: radioTextStyle,),
+                title: Text(
+                  'Dark',
+                  style: radioTextStyle,
+                ),
               ),
               ListTile(
                 trailing: Radio(
-                  
                   activeColor: currentTheme.toggleableActiveColor,
                   value: ThemeMode.light,
                   groupValue: themeGroupValue,
@@ -84,7 +86,10 @@ class ThemeChooserDialogState extends State<ThemeChooserDialog> {
                     });
                   },
                 ),
-                title: Text('Light',style: radioTextStyle,),
+                title: Text(
+                  'Light',
+                  style: radioTextStyle,
+                ),
               )
             ],
           ),

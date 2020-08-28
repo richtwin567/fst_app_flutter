@@ -65,7 +65,7 @@ class ContactViewTabletLandscapeState extends ContactViewState {
           ),
           Container(),
           filterDrawer(
-              bgColor: Theme.of(context).accentColor,
+              bgColor: themeModel.selectedTheme == ThemeMode.dark? ElevationOverlay.applyOverlay(context,Theme.of(context).primaryColor , 2.0) : Theme.of(context).accentColor,
               width: sidepanelWidth,
               height: screenHeight - kToolbarHeight,
               posFromTop: kToolbarHeight + topViewInsets),
@@ -101,7 +101,7 @@ class ContactViewTabletLandscapeState extends ContactViewState {
         height: (height / categories.length) - ((height * 0.01) * 2),
         decoration: BoxDecoration(
             color: currentFilter == categories[i]['title']
-                ? Color.lerp(Colors.blue[600], Colors.blue[700], 0.5)
+                ? themeModel.selectedTheme == ThemeMode.dark? Theme.of(context).primaryColor : Color.lerp(Colors.blue[600], Colors.blue[700], 0.5)
                 : filterOptionBgColor,
             borderRadius: BorderRadius.circular(40.0)),
         child: ListTile(
