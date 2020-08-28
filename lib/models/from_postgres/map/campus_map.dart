@@ -10,7 +10,7 @@ class CampusMap {
   static Future<FeatureCollection> get locations async {
     HerokuRequest<Feature> request = HerokuRequest();
     var locations = FeatureCollection(
-        features: await request.getResultsJSON(
+        features: await request.getResults(
             _herokuFeatures, true, (data) => Feature(data)));
     //print(locations);
     return locations;

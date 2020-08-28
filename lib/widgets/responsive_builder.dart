@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/utils/get_device_screen_type.dart';
-import 'package:fst_app_flutter/utils/sizinginformation.dart';
+import 'package:fst_app_flutter/utils/sizing_information.dart';
 
 class ResponsiveBuilder extends StatelessWidget {
   final Widget Function(

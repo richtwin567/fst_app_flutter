@@ -37,7 +37,7 @@ class HerokuRequest<T> {
   /// Continuing from the example given for `_getResultsString`, to get the
   /// name of the first contact from the list of Chemistry department contacts,
   /// I would call `data[0]['name']`.
-  Future<List<T>> getResultsJSON(dynamic valueToQuery, bool queryIsForFSTHeroku,
+  Future<List<T>> getResults(dynamic valueToQuery, bool queryIsForFSTHeroku,
       _Instantiator<T> constructor) async {
     return _getResultsString(valueToQuery, queryIsForFSTHeroku)
         .then((responseBody) {
