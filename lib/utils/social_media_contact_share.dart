@@ -14,9 +14,9 @@ openWhatsAppChat({@required String phone, String message = ''}) async {
   }
 
   if (await canLaunch(formatUrl())) {
-    await launch((formatUrl()));
-  } else {
-    throw 'Could not launch ${formatUrl()}';
+    try {
+      await launch((formatUrl()));
+    } catch (e) {}
   }
 }
 

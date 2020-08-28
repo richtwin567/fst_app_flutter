@@ -23,6 +23,7 @@ class ContactDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('yes');
     final mq = MediaQuery.of(context);
     final ContactCard contactMethods =
         _contactDetailList(contactDetails, mq, context);
@@ -40,6 +41,7 @@ class ContactDetailPage extends StatelessWidget {
               IconButton(
                   icon: Icon(Icons.save),
                   onPressed: () {
+                    print('yes2');
                     if (requestPermission(Permission.contacts) ?? false) {
                       contactDetails.saveNatively();
                     }
@@ -47,7 +49,12 @@ class ContactDetailPage extends StatelessWidget {
               IconButton(
                   icon: Icon(Icons.share),
                   onPressed: () {
-                    shareContactToWhatsApp(VCard.fromContact(contactDetails));
+                    print('yes1');
+                    if (requestPermission(Permission.storage)) {
+                      print('yes3');
+                      shareContactToWhatsApp(VCard.fromContact(contactDetails));
+                    }
+                    print('yes4');
                   })
             ],
             expandedHeight: mq.size.height / 2.5,

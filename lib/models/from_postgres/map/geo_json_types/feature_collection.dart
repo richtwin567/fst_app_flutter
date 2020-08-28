@@ -4,6 +4,7 @@ import 'package:fst_app_flutter/models/from_postgres/map/geo_json_types/geo_json
 import 'package:fst_app_flutter/models/from_postgres/map/geo_json_types/geo_json_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:fst_app_flutter/models/enums/department.dart';
 
 class FeatureCollection extends GeoJSONObject {
   List<Feature> features;
@@ -31,10 +32,7 @@ class FeatureCollection extends GeoJSONObject {
     return features
         .where((feature) => feature.geometry.type == GeoJSONGeometryType.Point)
         .map((e) => Marker(
-          onDragEnd:(value) {
-            
-          },
-
+            onDragEnd: (value) {},
             markerId: MarkerId('${e.id}'),
             infoWindow: InfoWindow(
                 snippet:
@@ -52,9 +50,9 @@ class FeatureCollection extends GeoJSONObject {
             (feature) => feature.geometry.type == GeoJSONGeometryType.Polygon)
         .map((e) => Polygon(
             polygonId: PolygonId('${e.id}'),
-            fillColor: Colors.blue.withAlpha(70),
+            fillColor: e.properties.associatedWith.departmentColour.withAlpha(70),
             strokeWidth: 1,
-            strokeColor: Colors.blue.withAlpha(70),
+            strokeColor: e.properties.associatedWith.departmentColour.withAlpha(70),
             points: e.geometry.extractLatLng()))
         .toSet();
   }

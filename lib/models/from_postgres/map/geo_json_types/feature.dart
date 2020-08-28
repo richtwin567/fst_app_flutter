@@ -1,3 +1,4 @@
+import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geo_json_types/geo_json_object.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geo_json_types/geo_json_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_object.dart';
@@ -7,49 +8,26 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/multi_po
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/point.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/polygon.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/properties.dart';
+import 'package:fst_app_flutter/utils/string_to_enum.dart';
 
 class Feature extends GeoJSONObject {
   GeoJSONGeometryObject geometry;
   Properties properties;
   int id;
 
-  GeoJSONGeometryType _stringToGeometryType(str) {
-    switch (str) {
-      case "GeometryCollection":
-        return GeoJSONGeometryType.GeometryCollection;
-        break;
-      case "LineString":
-        return GeoJSONGeometryType.LineString;
-        break;
-      case 'MultiLineString':
-        return GeoJSONGeometryType.MultiLineString;
-        break;
-      case 'MultiPoint':
-        return GeoJSONGeometryType.MultiPoint;
-        break;
-      case 'MultiPolygon':
-        return GeoJSONGeometryType.MultiPolygon;
-        break;
-      case 'Polygon':
-        return GeoJSONGeometryType.Polygon;
-        break;
-      default:
-        return GeoJSONGeometryType.Point;
-        break;
-    }
-  }
+  
 
   Feature(dynamic feature) : super(GeoJSONType.Feature) {
     properties = Properties(
         title: feature['code'],
         description: feature['title'],
-        associatedWith: feature['associated_with'],
+        associatedWith: stringToDepartment(feature['associated_with']),
         altName: feature['alt_name']);
     id = feature['id'];
     var uknGeometry = feature['geometry'];
     var newCoords = uknGeometry['coordinates'];
     //print(newCoords);
-    switch (_stringToGeometryType(uknGeometry['geometry_type'])) {
+    switch (stringToGeometryType(uknGeometry['geometry_type'])) {
       case GeoJSONGeometryType.Point:
         geometry = GeoJSONPoint(coordsJSON: newCoords);
         break;
