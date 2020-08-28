@@ -57,7 +57,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
     return AppBar(
       automaticallyImplyLeading: true,
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
       centerTitle: false,
       title: Text(
         "Scholarships",
@@ -248,7 +248,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                   builder: (context, lst, child){
                     return Scrollbar(
                       controller: _scroll,
-                      isAlwaysShown: true,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: _buildTempList(lst.scholarList),
