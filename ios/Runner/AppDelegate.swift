@@ -50,13 +50,14 @@ public class NativeContact: NSObject {
 
         var phoneNumbers : [CNLabeledValue<CNPhoneNumber>] = []
 
+        if #available(iOS 9.0, *){
         for phone in phones {
             var cnphone : CNLabeledValue<CNPhoneNumber> = CNLabeledValue(
                 label: phone.label,
                 value: CNPhoneNumber(stringValue: phone.number)
             )
             phoneNumbers.append(cnphone)            
-        }
+        }}
 
         contact.phoneNumbers = phoneNumbers 
 
