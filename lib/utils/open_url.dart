@@ -1,11 +1,11 @@
 import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 
 ///Opens the specified [url] (which could be a website, email, phone call or sms) if possible, in the appropriate application.
-/// 
-/// To open a web page the [url] must be in the format: 
-/// 
+///
+/// To open a web page the [url] must be in the format:
+///
 /// `http:<URL>` OR `https:<URL>`
-/// 
+///
 /// To send an email the [url] must be in the format: `mailto:<email address>`.
 ///
 /// To make a call the [url] must be in the format: `tel:<phone number>`.

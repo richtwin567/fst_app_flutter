@@ -20,9 +20,5 @@ class ContactCard extends Card {
       {Key key,
       @required this.child,
       this.margin = const EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 5.0)})
-      : super(
-            shape: Border(),
-            key: key,
-            child: child,
-            margin: margin);
+      : super(shape: Border(), key: key, child: child, margin: margin);
 } // ContactCard defintion

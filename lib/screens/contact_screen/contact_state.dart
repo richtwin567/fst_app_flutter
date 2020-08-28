@@ -15,7 +15,7 @@ import 'package:fst_app_flutter/widgets/contact_widgets/contact_tile.dart';
 abstract class ContactViewState extends State<ContactViewStateful>
     with TickerProviderStateMixin {
   /// This [String] will be modified to include the search value entered by the user.
-  /// Otherwise, it will be passed to the [getResultsJSON] like this.
+  /// Otherwise, it will be passed to the [getResults] like this.
   var baseParam = 'contact/?search=';
 
   /// Extra parameters to attach to the [baseParam] such as department or type.
@@ -117,7 +117,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
   void initState() {
     super.initState();
     request = HerokuRequest();
-    request.getResultsJSON('$baseParam$extraParam', (data) => Contact(data))
+    request
+        .getResults('$baseParam$extraParam', true, (data) => Contact(data))
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
@@ -394,7 +395,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   } // buildContactCard
 
   /// Displays a [CircularProgressIndicator] while the list of contacts is fectched
-  /// by [getResultsJSON] and built by [buildContactListView].
+  /// by [getResults] and built by [buildContactListView].
   /// Also displays message indicating that no matches were found if
   /// no matches were found and an error message if an error occured.
   Widget contactFutureBuilder(
@@ -417,8 +418,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
               Expanded(
                   child: FutureBuilder(
                 initialData: contacts,
-                future: request.getResultsJSON(
-                    '$baseParam$extraParam', (data) => Contact(data)),
+                future: request.getResults(
+                    '$baseParam$extraParam', true, (data) => Contact(data)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());

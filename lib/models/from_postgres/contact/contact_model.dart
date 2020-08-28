@@ -1,11 +1,9 @@
-
-import 'package:flutter/services.dart';
+import 'package:fst_app_flutter/global_const.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 
 class Contact {
-  static const platform = MethodChannel('com.example.fst_app_flutter/contacts');
   int _id;
   String _name;
   String _website;
@@ -94,11 +92,10 @@ class Contact {
       "displayName": name,
       'note': description,
       'email': email,
-      'phones': List<Map<String,String>>.generate(
+      'phones': List<Map<String, String>>.generate(
           phones.length, (i) => {'label': 'work', 'value': phones[i].phone})
-        ..addAll(List<Map<String,String>>.generate(
+        ..addAll(List<Map<String, String>>.generate(
             fax != '' ? 1 : 0, (i) => {'label': 'fax work', 'value': fax})),
-      
       'website': website,
       "date": DateTime.now().toIso8601String(),
       "lastModified": DateTime.now().toIso8601String(),
@@ -107,7 +104,7 @@ class Contact {
 
   saveNatively() async {
     try {
-      await platform.invokeMethod('saveNatively', toNativeMap());
+      await CHANNEL.invokeMethod('saveNatively', toNativeMap());
     } catch (e) {
       print(e);
     }

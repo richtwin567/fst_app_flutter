@@ -3,7 +3,6 @@ import 'package:fst_app_flutter/widgets/app_drawer/app_drawer.dart';
 import 'package:fst_app_flutter/widgets/card_container/card_container.dart';
 
 class HomeMobilePortrait extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);

@@ -5,9 +5,11 @@ import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart'
 import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 import 'package:fst_app_flutter/models/sharing/vcard.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
+import 'package:fst_app_flutter/utils/permissions.dart';
 import 'package:fst_app_flutter/utils/social_media_contact_share.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_card.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_detail_image.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// A page that shows all the details for the selected contact.
 /// It allows the user to open websites, call the contact and send an email to
@@ -29,46 +31,48 @@ class ContactDetailPage extends StatelessWidget {
 
     return Scaffold(
         body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-                floating: false,
-                pinned: true,
-                snap: false,
-                actions: [
-                  IconButton(
-                      icon: Icon(Icons.save),
-                      onPressed: () {
-                        contactDetails.saveNatively();
-                      }),
-                  IconButton(
-                      icon: Icon(Icons.share),
-                      onPressed: () {
-                        shareContactToWhatsApp(VCard.fromContact(contactDetails));
-                      })
-                ],
-                expandedHeight: mq.size.height / 2.5,
-                flexibleSpace: FlexibleSpaceBar(
-                    background: CustomPaint(
-                        painter: ContactDetailSvg(
-                            start: Point(
-                                mq.size.width / 2, (mq.size.height / 2.5) / 2),
-                            scale:
-                                (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
-                            color: Theme.of(context).accentColor)),
-                    title: Padding(
-                      padding: EdgeInsets.only(right: mq.size.width / 4),
-                      child: Text(
-                        contactDetails.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))),
-            SliverList(
-              delegate:
-                  SliverChildListDelegate.fixed([contactMethods, contactInfo]),
-            )
-          ],
-        ));
+      slivers: <Widget>[
+        SliverAppBar(
+            floating: false,
+            pinned: true,
+            snap: false,
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.save),
+                  onPressed: () {
+                    if (requestPermission(Permission.contacts) ?? false) {
+                      contactDetails.saveNatively();
+                    }
+                  }),
+              IconButton(
+                  icon: Icon(Icons.share),
+                  onPressed: () {
+                    shareContactToWhatsApp(VCard.fromContact(contactDetails));
+                  })
+            ],
+            expandedHeight: mq.size.height / 2.5,
+            flexibleSpace: FlexibleSpaceBar(
+                background: CustomPaint(
+                    painter: ContactDetailSvg(
+                        start: Point(
+                            mq.size.width / 2, (mq.size.height / 2.5) / 2),
+                        scale:
+                            (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
+                        color: Theme.of(context).accentColor)),
+                title: Padding(
+                  padding: EdgeInsets.only(right: mq.size.width / 4),
+                  child: Text(
+                    contactDetails.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ))),
+        SliverList(
+          delegate:
+              SliverChildListDelegate.fixed([contactMethods, contactInfo]),
+        )
+      ],
+    ));
   } // build
 
   /// Creates a [ContactCard] for the phone numbers, email address and
@@ -101,7 +105,7 @@ class ContactDetailPage extends StatelessWidget {
             title: Text(data.phones[i].phone)));
       }
     }
-    
+
     //ensure all WhatsApp numbers are listed first
     phoneNums.insertAll(0, phoneNumsWhatsApp);
 

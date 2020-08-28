@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/screens/scholarship_screen/local_widget/scholarcard.dart';
+import 'package:fst_app_flutter/screens/scholarship_screen/local_widget/scholar_card.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
 import 'package:fst_app_flutter/models/scholarshiplist.dart';
-import 'package:fst_app_flutter/services/scholarshipservice.dart';
+import 'package:fst_app_flutter/services/scholarship_service.dart';
 import 'package:provider/provider.dart';
 
 class ScholarshipMobile extends StatefulWidget {
