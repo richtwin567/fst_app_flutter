@@ -56,13 +56,11 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   Widget _buildAppBar(){
 
     return AppBar(
-      automaticallyImplyLeading: true,
       backgroundColor: isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
       centerTitle: false,
       title: Text(
         "Scholarships",
         style: TextStyle(
-          fontFamily: "Monsterrat",
           color: Colors.white,
         ),
       ),
