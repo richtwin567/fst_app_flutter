@@ -86,7 +86,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       focusNode: textfocus,
       controller: _controller,
       style: TextStyle(
-        color: Colors.grey.shade600,
+        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
       ),
       decoration: InputDecoration(
         border: OutlineInputBorder(
@@ -104,9 +104,9 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
         hintStyle: TextStyle(color: Colors.grey.shade600,),
         suffixIcon: Icon(
           Icons.search,
-          color: Colors.grey.shade600,
+          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
         ),
-        fillColor: Colors.grey.shade200,
+        fillColor: isDark ? Colors.grey.shade900 : Colors.grey.shade200,
         filled: true,
       ),
       onChanged: (query){
@@ -150,7 +150,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
         child: Center(
           child: Visibility(
             visible: symbol.processRequests,
-            child: CircularProgressIndicator(backgroundColor: Colors.amber,),
+            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),),
           ),
         ),
       );
@@ -211,16 +211,25 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     );
   }
 
+  
   FutureBuilder _buildBuilder(){
+    Widget _buildProgressIndicator(){
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(isDark ? Colors.blue.shade700 : Theme.of(context).primaryColor),
+        ),
+      );
+    }
+
     return FutureBuilder(
       future: ScholarshipService.getAllScholarships(),
       builder: (context, snapshot){
         switch(snapshot.connectionState){
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator(backgroundColor: Colors.amber,),);
+            return _buildProgressIndicator();
           break;
           case ConnectionState.active:
-            return Center(child: CircularProgressIndicator(backgroundColor: Colors.amber,),);
+            return _buildProgressIndicator();
           break;
           case ConnectionState.none:
             return Container(child: Center(child: Text("Nothing happened"),),);
@@ -283,12 +292,16 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                 physics: AlwaysScrollableScrollPhysics(),
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(20,20,20,0),
                 child: Column(
                   children: <Widget>[
-                    _buildTextField(),
-                    SizedBox(
-                      height: 10,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10,),
+                      child: _buildTextField(),
+                    ),
+                    Divider(
+                      height: 1,
+                      color: isDark ? Colors.white70 : Theme.of(context).primaryColor,
+                      thickness: 1,
                     ),
                     Expanded(
                       child: _buildBuilder(),
