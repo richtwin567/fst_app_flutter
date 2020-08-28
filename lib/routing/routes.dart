@@ -9,6 +9,9 @@ const contactRoute = '/contact';
 /// [ContactDetailPage] route
 const contactDetailRoute = '/contactDetail';
 
+/// [ScholarshipView] route
+const scholarshipRoute = '/scholarship';
+
 /// [AppPreferencesView] route
 const appPreferencesRoute = '/appConfig';
 
