@@ -3,7 +3,7 @@ import 'package:fst_app_flutter/routing/slide_up_route.dart';
 import 'package:fst_app_flutter/screens/app_preferences_screen/app_preferences_view.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart';
 import 'package:fst_app_flutter/screens/contact_screen/contact_view.dart';
-import 'package:fst_app_flutter/screens/homescreen/home_view.dart';
+import 'package:fst_app_flutter/screens/home_screen/home_view.dart';
 import 'package:fst_app_flutter/screens/map_screen/map_view.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/scholarship_view.dart';
 import 'routes.dart';

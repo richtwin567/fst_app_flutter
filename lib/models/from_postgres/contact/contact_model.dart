@@ -3,6 +3,8 @@ import 'package:fst_app_flutter/models/enums/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 import 'package:fst_app_flutter/utils/string_to_enum.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:fst_app_flutter/utils/permissions.dart';
 
 class Contact {
   int _id;
@@ -66,7 +68,9 @@ class Contact {
 
   saveNatively() async {
     try {
-      await CHANNEL.invokeMethod('saveNatively', toNativeMap());
+      if (await requestPermission(Permission.contacts)) {
+        await CHANNEL.invokeMethod('saveNatively', toNativeMap());
+      }
     } catch (e) {
       print(e);
     }
@@ -100,4 +104,3 @@ class _PhoneNumber {
     _platforms = platform;
   }
 }
-

@@ -15,11 +15,14 @@ package com.example.fst_app_flutter;/*
 									*/
 
 import androidx.annotation.NonNull;
+
 import com.example.fst_app_flutter.contact.NativeContact;
+
+import java.util.HashMap;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
-import java.util.HashMap;
 
 @SuppressWarnings("unchecked")
 public class MainActivity extends FlutterActivity {
@@ -33,7 +36,7 @@ public class MainActivity extends FlutterActivity {
 					if ("saveNatively".equals(call.method)) {
 						try {
 							NativeContact contact = new NativeContact((HashMap<String, Object>) call.arguments);
-							contact.saveNatively(getApplicationContext());
+							contact.saveNatively(this);
 						} catch (Exception e) {
 							//System.out.println(e.getMessage());
 						}
