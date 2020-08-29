@@ -5,11 +5,9 @@ import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart'
 import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 import 'package:fst_app_flutter/models/sharing/vcard.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
-import 'package:fst_app_flutter/utils/permissions.dart';
 import 'package:fst_app_flutter/utils/social_media_contact_share.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_card.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_detail_image.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 /// A page that shows all the details for the selected contact.
 /// It allows the user to open websites, call the contact and send an email to
@@ -23,7 +21,6 @@ class ContactDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('yes');
     final mq = MediaQuery.of(context);
     final ContactCard contactMethods =
         _contactDetailList(contactDetails, mq, context);
@@ -41,20 +38,12 @@ class ContactDetailPage extends StatelessWidget {
               IconButton(
                   icon: Icon(Icons.save),
                   onPressed: () {
-                    print('yes2');
-                    if (requestPermission(Permission.contacts) ?? false) {
-                      contactDetails.saveNatively();
-                    }
+                    contactDetails.saveNatively();
                   }),
               IconButton(
                   icon: Icon(Icons.share),
                   onPressed: () {
-                    print('yes1');
-                    if (requestPermission(Permission.storage)) {
-                      print('yes3');
                       shareContactToWhatsApp(VCard.fromContact(contactDetails));
-                    }
-                    print('yes4');
                   })
             ],
             expandedHeight: mq.size.height / 2.5,

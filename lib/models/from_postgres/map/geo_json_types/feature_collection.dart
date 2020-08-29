@@ -50,10 +50,31 @@ class FeatureCollection extends GeoJSONObject {
             (feature) => feature.geometry.type == GeoJSONGeometryType.Polygon)
         .map((e) => Polygon(
             polygonId: PolygonId('${e.id}'),
-            fillColor: e.properties.associatedWith.departmentColour.withAlpha(70),
+            fillColor:
+                e.properties.associatedWith.departmentColour.withAlpha(70),
             strokeWidth: 1,
-            strokeColor: e.properties.associatedWith.departmentColour.withAlpha(70),
+            strokeColor:
+                e.properties.associatedWith.departmentColour.withAlpha(70),
             points: e.geometry.extractLatLng()))
         .toSet();
   }
+
+  Set<Polyline> exportLineStringsToGoogleMaps() {
+    return features
+        .where((feature) =>
+            feature.geometry.type == GeoJSONGeometryType.LineString)
+        .map((e) => Polyline(
+              polylineId: PolylineId('${e.id}'),
+              color: e.properties.associatedWith.departmentColour.withAlpha(90),
+              jointType: JointType.round,
+              endCap: Cap.roundCap,
+              startCap: Cap.roundCap,
+              width: 30,
+              points: e.geometry.extractLatLng(),
+            ))
+        .toSet();
+  }
+
 }
+
+

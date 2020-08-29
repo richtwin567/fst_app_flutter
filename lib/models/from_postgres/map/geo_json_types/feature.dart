@@ -1,4 +1,3 @@
-import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geo_json_types/geo_json_object.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geo_json_types/geo_json_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_object.dart';

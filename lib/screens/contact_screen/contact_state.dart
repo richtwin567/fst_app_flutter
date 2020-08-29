@@ -107,8 +107,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
 
   ThemeModel themeModel;
 
-  bool isDark;
-
   ContactViewState({@required this.themeModel});
   HerokuRequest<Contact> request;
 
@@ -122,22 +120,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-
-    ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
-        SchedulerBinding.instance.window.platformBrightness);
-    var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
-    var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
-
-    isDark = themeModel.selectedTheme == ThemeMode.dark ||
-        (themeModel.selectedTheme == ThemeMode.system &&
-            SchedulerBinding.instance.window.platformBrightness ==
-                Brightness.dark);
-
-    appBarBgColor = ColorTween(
-        begin: isDark
-            ? Color.alphaBlend(overlayColor, theme.primaryColor)
-            : theme.primaryColor,
-        end: theme.scaffoldBackgroundColor);
     dropdownController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     searchController = TextEditingController();
@@ -221,6 +203,21 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double animationIntervalEnd,
       @required List<Widget> actions,
       @required double elevation}) {
+        ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
+        SchedulerBinding.instance.window.platformBrightness);
+    var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
+    var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
+
+    var isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system &&
+            SchedulerBinding.instance.window.platformBrightness ==
+                Brightness.dark);
+
+    appBarBgColor = ColorTween(
+        begin: isDark
+            ? Color.alphaBlend(overlayColor, theme.primaryColor)
+            : theme.primaryColor,
+        end: theme.scaffoldBackgroundColor);
     return AnimatedBuilder(
       animation: appBarColorController,
       builder: (BuildContext context, Widget child) {
@@ -264,6 +261,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double width,
       @required bool isExpanded,
       @required double elevation}) {
+         var isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system &&
+            SchedulerBinding.instance.window.platformBrightness ==
+                Brightness.dark);
     return SlideTransition(
         position: Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.0, -1.0))
             .animate(CurvedAnimation(
