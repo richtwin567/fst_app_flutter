@@ -3,6 +3,7 @@ import Flutter
 import Contacts
 import Foundation
 import ContactsUI
+import GoogleMaps
 
 public class NativeContact: NSObject {
 
