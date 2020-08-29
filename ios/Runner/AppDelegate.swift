@@ -5,7 +5,7 @@ import Foundation
 import ContactsUI
 import GoogleMaps
 
-public class NativeContact: NSObject {
+public class NativeContact: NSObject, CNContactViewControllerDelegate, UIViewController {
 
     private(set) var displayName: String
     private(set) var note: String
