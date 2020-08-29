@@ -135,7 +135,7 @@ public class NativeContact: NSObject {
     result(FlutterMethodNotImplemented)
     return
   }
-  var contact = NativeContact(call.arguments)
+  var contact = NativeContact(map:call.arguments)
   contact.saveNatively()
   })
     GMSServices.provideAPIKey("AIzaSyC8crEFAO6MSNJMRK1lmo-WnSL7RLFu87w")
