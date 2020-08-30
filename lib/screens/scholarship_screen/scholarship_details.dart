@@ -29,7 +29,6 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     return AppBar(
         title: Text(widget.current.scholarshipName),
         backgroundColor: isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
-        elevation: 0,
       );
   }
 
