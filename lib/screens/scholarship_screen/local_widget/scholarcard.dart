@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
-import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/scholarship_details.dart';
-import 'package:provider/provider.dart';
 
 ///Widget used by [ScholarshipMobile] to display the elements of the lists from [ScholarshipList]
 
@@ -13,27 +11,20 @@ class ScholarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Provider.of<ThemeModel>(context).selectedTheme == ThemeMode.dark;
-
     return Card(
-      margin: EdgeInsets.zero,
-      elevation: 0,
-      shape: Border(
-        bottom: BorderSide(
-          color: isDark ? Colors.grey[800] : Theme.of(context).primaryColor,
-          width: 1,
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: ListTile(
+          title: Text(scholarship.scholarshipName),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+          ),
+          onTap: () {
+            Navigator.of(context).push(_buildTransition());
+          },
         ),
-      ),
-      child: ListTile(
-        contentPadding: EdgeInsets.fromLTRB(10.0,8.0,0,8.0),
-        title: Text(scholarship.scholarshipName),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 18,
-        ),
-        onTap: () {
-          Navigator.of(context).push(_buildTransition());
-        },
       ),
     );
   }
