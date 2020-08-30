@@ -79,7 +79,7 @@ class ContactDetailPage extends StatelessWidget {
     List<dynamic> phoneNums = [];
     for (var i = 0; i < data.phones.length; i++) {
       var icon;
-      if (data.phones[i].platforms == Platform.WHATSAPP) {
+      if (data.phones[i].platforms == Platform.whatsapp) {
         icon = Image.asset(
           'assets/WhatsApp_flat.png',
           width: IconTheme.of(context).size,

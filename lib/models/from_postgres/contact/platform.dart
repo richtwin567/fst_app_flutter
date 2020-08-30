@@ -1,4 +1,4 @@
-enum Platform { TEXT_CALL, WHATSAPP }
+enum Platform { textCall, whatsapp }
 
 extension PlatformShortString on Platform {
   String toShortString() {

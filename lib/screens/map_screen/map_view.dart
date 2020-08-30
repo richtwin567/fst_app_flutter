@@ -22,11 +22,13 @@ class _CampusMapViewState extends State<CampusMapView> {
   double zoom = 13.0;
 
   var future;
+  var padding;
 
   @override
   void initState() {
     super.initState();
     future = insertMapFeatures();
+    padding = EdgeInsets.zero;
   }
 
   @override
@@ -39,34 +41,33 @@ class _CampusMapViewState extends State<CampusMapView> {
             centerTitle: false,
             title: Text('Map'),
             backgroundColor: Theme.of(context).primaryColor.withAlpha(70)),
-        body: Stack(
-          children: [
-            FutureBuilder(
-              future: future,
-              builder: (context, snapshot) => GoogleMap(
-                padding: EdgeInsets.only(
-                    top: kToolbarHeight + MediaQuery.of(context).padding.top),
-                buildingsEnabled: true,
-                markers: markers,
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(18.005208, -76.750198), zoom: 17.5),
-                mapType: MapType.satellite,
-                compassEnabled: true,
-                myLocationEnabled: true,
-                onMapCreated: (controller) {
-                  _controller.complete(controller);
-                  setState(() {});
-                },
-                rotateGesturesEnabled: true,
-                scrollGesturesEnabled: true,
-                trafficEnabled: false,
-                zoomGesturesEnabled: true,
-                mapToolbarEnabled: true,
-                polygons: polygons,
-                polylines: polylines,
-              ),
-            ),
-          ],
+        body: FutureBuilder(
+          future: future,
+          builder: (context, snapshot) => GoogleMap(
+            padding: padding,
+            buildingsEnabled: true,
+            markers: markers,
+            initialCameraPosition: CameraPosition(
+                target: LatLng(18.005208, -76.750198), zoom: 17.5),
+            mapType: MapType.satellite,
+            compassEnabled: true,
+            myLocationEnabled: true,
+            onMapCreated: (controller) {
+              _controller.complete(controller);
+              setState(() {
+                padding = EdgeInsets.only(
+                    top: 
+                        MediaQuery.of(context).padding.top);
+              });
+            },
+            rotateGesturesEnabled: true,
+            scrollGesturesEnabled: true,
+            trafficEnabled: false,
+            zoomGesturesEnabled: true,
+            mapToolbarEnabled: true,
+            polygons: polygons,
+            polylines: polylines,
+          ),
         ));
   }
 
@@ -88,7 +89,6 @@ class DataWindow extends StatefulWidget {
 class DataWindowState extends State<DataWindow> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-    );
+    return Container();
   }
 }

@@ -69,7 +69,7 @@ class Contact {
   saveNatively() async {
     try {
       if (await requestPermission(Permission.contacts)) {
-        await CHANNEL.invokeMethod('saveNatively', toNativeMap());
+        await channel.invokeMethod('saveNatively', toNativeMap());
       }
     } catch (e) {
       print(e);
@@ -92,10 +92,10 @@ class _PhoneNumber {
     Platform platform;
     switch (phoneSet['platforms']) {
       case 'WHATSAPP':
-        platform = Platform.WHATSAPP;
+        platform = Platform.whatsapp;
         break;
       default:
-        platform = Platform.TEXT_CALL;
+        platform = Platform.textCall;
         break;
     }
     _id = phoneSet['id'];

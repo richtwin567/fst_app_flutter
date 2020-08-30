@@ -8,7 +8,7 @@ class Properties {
 
   Properties({this.title, this.description, this.associatedWith, this.altName});
 
-  toGeoJSONFile() {
+  toGeoJsonFile() {
     return {
       '\"title\"': '\"$title\"',
       '\"associatedWith\"': '\"${associatedWith.toShortString()}\"',
@@ -17,7 +17,7 @@ class Properties {
     };
   }
 
-  toGeoJSON() {
+  toGeoJson() {
     return {
       'title': title,
       'associatedWith': associatedWith.toShortString(),

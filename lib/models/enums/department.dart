@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/global_const.dart';
 
-enum Department { CHEM, COMP, GEO, LIFE, MATH, PHYS, OTHER }
+enum Department { biochem, chem, comp, geo, life, math, phys, other }
 
 extension DepartmentExt on Department {
   String toShortString() {
@@ -10,25 +10,28 @@ extension DepartmentExt on Department {
 
   Color get departmentColour {
     switch (this) {
-      case Department.CHEM:
-        return CHEM_COLOUR;
+      case Department.biochem:
+        return biochemColour;
         break;
-      case Department.COMP:
-        return COMP_COLOUR;
+      case Department.chem:
+        return chemColour;
         break;
-      case Department.GEO:
-        return GEO_COLOUR;
+      case Department.comp:
+        return compColour;
         break;
-      case Department.LIFE:
-        return LIFE_SCI_COLOUR;
+      case Department.geo:
+        return geoColour;
         break;
-      case Department.MATH:
-        return MATH_COLOUR;
+      case Department.life:
+        return lifeSciColour;
         break;
-      case Department.PHYS:
-        return PHYS_COLOUR;
+      case Department.math:
+        return mathColour;
         break;
-      case Department.OTHER:
+      case Department.phys:
+        return physColour;
+        break;
+      case Department.other:
         return Colors.grey;
         break;
       default:

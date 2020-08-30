@@ -20,6 +20,6 @@ class CampusMap {
     File file =
         await File('${Directory.systemTemp.parent.path}/cache/campus.geojson')
             .create();
-    await file.writeAsString((await locations).toGeoJSONFile());
+    await file.writeAsString((await locations).toGeoJsonFile());
   }
 }

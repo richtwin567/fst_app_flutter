@@ -6,31 +6,31 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fst_app_flutter/models/enums/department.dart';
 
-class FeatureCollection extends GeoJSONObject {
+class FeatureCollection extends GeoJsonObject {
   List<Feature> features;
   FeatureCollection({@required this.features})
       : assert(features != null),
-        super(GeoJSONType.FeatureCollection);
+        super(GeoJsonType.featureCollection);
 
   @override
-  String toGeoJSONFile() {
+  String toGeoJsonFile() {
     return {
       '\"type\"': '\"${type.toShortString()}\"',
-      '\"features\"': features.map((e) => e.toGeoJSONFile()).toList()
+      '\"features\"': features.map((e) => e.toGeoJsonFile()).toList()
     }.toString();
   }
 
   @override
-  Map<String, Object> toGeoJSON() {
+  Map<String, Object> toGeoJson() {
     return {
       'type': type.toShortString(),
-      'features': features.map((e) => e.toGeoJSON()).toList()
+      'features': features.map((e) => e.toGeoJson()).toList()
     };
   }
 
   Set<Marker> exportPointsToGoogleMaps() {
     return features
-        .where((feature) => feature.geometry.type == GeoJSONGeometryType.Point)
+        .where((feature) => feature.geometry.type == GeoJsonGeometryType.point)
         .map((e) => Marker(
             onDragEnd: (value) {},
             markerId: MarkerId('${e.id}'),
@@ -47,7 +47,7 @@ class FeatureCollection extends GeoJSONObject {
   Set<Polygon> exportPolygonsToGoogleMaps() {
     return features
         .where(
-            (feature) => feature.geometry.type == GeoJSONGeometryType.Polygon)
+            (feature) => feature.geometry.type == GeoJsonGeometryType.polygon)
         .map((e) => Polygon(
             polygonId: PolygonId('${e.id}'),
             fillColor:
@@ -62,7 +62,7 @@ class FeatureCollection extends GeoJSONObject {
   Set<Polyline> exportLineStringsToGoogleMaps() {
     return features
         .where((feature) =>
-            feature.geometry.type == GeoJSONGeometryType.LineString)
+            feature.geometry.type == GeoJsonGeometryType.lineString)
         .map((e) => Polyline(
               polylineId: PolylineId('${e.id}'),
               color: e.properties.associatedWith.departmentColour.withAlpha(90),
