@@ -91,7 +91,6 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
           ),
         ],
       ),
-      showCursor: true,
       cursorColor: Theme.of(context).primaryColorDark,
       toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
     );
