@@ -10,7 +10,6 @@ import 'package:fst_app_flutter/services/scholarship_service.dart';
 import 'package:provider/provider.dart';
 
 class ScholarshipMobile extends StatefulWidget {
-
   ScholarshipMobile({Key key}) : super(key: key);
 
   @override
@@ -18,7 +17,6 @@ class ScholarshipMobile extends StatefulWidget {
 }
 
 class _ScholarshipMobileState extends State<ScholarshipMobile> {
-  
   FocusNode textfocus;
   ScholarshipList symbol;
   String currentText;
@@ -29,7 +27,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   final _scroll = ScrollController();
   final _debouncer = Debouncer(milliseconds: 500);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   void initState() {
     super.initState();
 
@@ -37,7 +35,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     textfocus = FocusNode();
     currentText = "";
     isSearching = false;
-    
   }
 
   void dispose() {
@@ -47,49 +44,49 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     super.dispose();
   }
 
-  Widget _buildAppBar(){
-
-    Widget buildSearchBar(){
+  Widget _buildAppBar() {
+    Widget buildSearchBar() {
       return AppBar(
-        backgroundColor: isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: (){
-            setState(() {
-              _controller.clear();
-              isSearching = false;
-            });
-          },
-        ),
-        title: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              primaryColor: Colors.white,
-            ),
-            child: _buildTextField(),
-          ),
-        ),
-        actions: [
-          IconButton(
-            padding: const EdgeInsets.all(5.0),
-            icon: Icon(Icons.clear),
-            color: Colors.white,
-            onPressed: (){
-              _controller.clear();
-              _debouncer.run((){
-                currentText = _controller.text;
-                symbol.search(_controller.text);
+          backgroundColor:
+              isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              setState(() {
+                _controller.clear();
+                isSearching = false;
               });
             },
           ),
-        ]
-      );
+          title: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                primaryColor: Colors.white,
+              ),
+              child: _buildTextField(),
+            ),
+          ),
+          actions: [
+            IconButton(
+              padding: const EdgeInsets.all(5.0),
+              icon: Icon(Icons.clear),
+              color: Colors.white,
+              onPressed: () {
+                _controller.clear();
+                _debouncer.run(() {
+                  currentText = _controller.text;
+                  symbol.search(_controller.text);
+                });
+              },
+            ),
+          ]);
     }
 
-    Widget buildRegularAppBar(){
+    Widget buildRegularAppBar() {
       return AppBar(
-        backgroundColor: isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
+        backgroundColor:
+            isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
         centerTitle: false,
         title: Text(
           "Scholarships",
@@ -102,7 +99,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             padding: const EdgeInsets.all(5.0),
             icon: Icon(Icons.search),
             color: Colors.white,
-            onPressed: (){
+            onPressed: () {
               setState(() {
                 isSearching = true;
               });
@@ -113,11 +110,10 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
               Icons.public,
               color: Colors.white,
             ),
-            onPressed: (){
-              try{
+            onPressed: () {
+              try {
                 openUrl(ScholarshipService.url);
-              }catch(e){
-              }
+              } catch (e) {}
             },
           ),
         ],
@@ -127,7 +123,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     return isSearching ? buildSearchBar() : buildRegularAppBar();
   }
 
-  Widget _buildTextField(){
+  Widget _buildTextField() {
     return TextField(
       autofocus: true,
       focusNode: textfocus,
@@ -143,20 +139,21 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           ),
         ),
         hintText: "Search",
-        hintStyle: TextStyle(color: Colors.white24,),
+        hintStyle: TextStyle(
+          color: Colors.white24,
+        ),
         prefixIcon: Icon(
           Icons.search,
         ),
       ),
-      onChanged: (query){
-        _debouncer.run((){
+      onChanged: (query) {
+        _debouncer.run(() {
           currentText = query;
           symbol.search(query);
         });
       },
-
-      onSubmitted: (query){
-        _debouncer.run((){
+      onSubmitted: (query) {
+        _debouncer.run(() {
           currentText = query;
           symbol.search(query);
         });
@@ -164,18 +161,17 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     );
   }
 
-  Widget _buildTempList(List<Scholarship> lst){
-    
-    Widget _buildCard(int index){
+  Widget _buildTempList(List<Scholarship> lst) {
+    Widget _buildCard(int index) {
       return ScholarCard(scholarship: lst[index]);
     }
 
-    Widget _buildNoResults(){
+    Widget _buildNoResults() {
       return Center(
         child: Text(
-          "No Search Results", 
+          "No Search Results",
           style: TextStyle(
-            color: Colors.grey.shade400, 
+            color: Colors.grey.shade400,
             fontSize: 18,
             fontFamily: "Monsterrat",
           ),
@@ -183,18 +179,18 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       );
     }
 
-    Widget _buildEnd(){
+    Widget _buildEnd() {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[ 
+          children: <Widget>[
             Text(
-              "End of the List", 
+              "End of the List",
               style: TextStyle(
-                color: isDark ? Colors.white : Colors.grey.shade400, 
+                color: isDark ? Colors.white : Colors.grey.shade400,
                 fontSize: 18,
                 fontFamily: "Monsterrat",
               ),
@@ -203,7 +199,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
             Center(
               child: FlatButton.icon(
                 icon: Icon(
-                  Icons.arrow_drop_up, 
+                  Icons.arrow_drop_up,
                   color: Colors.white,
                 ),
                 label: Text(
@@ -213,99 +209,117 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                     fontFamily: "Monsterrat",
                   ),
                 ),
-                color: isDark ? Colors.grey.shade800 : Theme.of(context).primaryColor,
-                onPressed: (){
-                  _scroll.animateTo(0, duration: Duration(seconds: 2), curve: Curves.easeOut);
-                },  
+                color: isDark
+                    ? Colors.grey.shade800
+                    : Theme.of(context).primaryColor,
+                onPressed: () {
+                  _scroll.animateTo(0,
+                      duration: Duration(seconds: 2), curve: Curves.easeOut);
+                },
               ),
-            ), 
+            ),
           ],
         ),
       );
     }
 
-    return symbol.doesHaveResults ? ListView.builder(
-      physics: AlwaysScrollableScrollPhysics(),
-      controller: _scroll,
-      itemCount: symbol.isSearching ? lst.length : lst.length+1,
-      itemBuilder: (BuildContext context, int index) {
-        if(index == lst.length){
-          return  _buildEnd();
-        }
-        return _buildCard(index);
-      },
-    ) : _buildNoResults();
+    return symbol.doesHaveResults
+        ? ListView.builder(
+            physics: AlwaysScrollableScrollPhysics(),
+            controller: _scroll,
+            itemCount: symbol.isSearching ? lst.length : lst.length + 1,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == lst.length) {
+                return _buildEnd();
+              }
+              return _buildCard(index);
+            },
+          )
+        : _buildNoResults();
   }
 
-  FutureBuilder _buildBuilder(){
-    Widget buildProgress(){
+  FutureBuilder _buildBuilder() {
+    Widget buildProgress() {
       return Center(
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
         ),
       );
     }
+
     return FutureBuilder(
-      future: ScholarshipService.getAllScholarships(),
-      builder: (context, snapshot){
-        switch(snapshot.connectionState){
-          case ConnectionState.waiting:
-            return buildProgress();
-          break;
-          case ConnectionState.active:
-            return buildProgress();
-          break;
-          case ConnectionState.none:
-            return Container(child: Center(child: Text("Nothing happened"),),);
-          break;
-          case ConnectionState.done:
-            if(!snapshot.hasData || snapshot.hasError){
-              return Center(
-                child: Text(
-                  "An Error Occurred",
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 18,
+        future: ScholarshipService.getAllScholarships(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return buildProgress();
+              break;
+            case ConnectionState.active:
+              return buildProgress();
+              break;
+            case ConnectionState.none:
+              return Container(
+                child: Center(
+                  child: Text("Nothing happened"),
+                ),
+              );
+              break;
+            case ConnectionState.done:
+              if (!snapshot.hasData || snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    "An Error Occurred",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-              );
-            }else{
-              return ChangeNotifierProvider(
-                create: (context){
-                  symbol = snapshot.data as ScholarshipList;
-                  return symbol;
-                },
-                child: Consumer<ScholarshipList>(
-                  builder: (context, lst, child){
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 5),
-                      child: Scrollbar(
-                        controller: _scroll,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: _buildTempList(lst.scholarList),
-                        ),
-                      ),
-                    );
+                );
+              } else {
+                return ChangeNotifierProvider(
+                  create: (context) {
+                    symbol = snapshot.data as ScholarshipList;
+                    return symbol;
                   },
-                ),
+                  child: Consumer<ScholarshipList>(
+                    builder: (context, lst, child) {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child: Scrollbar(
+                          controller: _scroll,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: _buildTempList(lst.scholarList),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+              break;
+            default:
+              return Container(
+                color: Colors.blue,
               );
-            }
-          break;
-          default:
-            return Container(color: Colors.blue,);
-        }
-      }
-    );
+          }
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    ThemeModel themeModel = Provider.of<ThemeModel>(context, listen: false,);
+    ThemeModel themeModel = Provider.of<ThemeModel>(
+      context,
+      listen: false,
+    );
     isDark = themeModel.selectedTheme == ThemeMode.dark ||
-        (themeModel.selectedTheme == ThemeMode.system && SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
+        (themeModel.selectedTheme == ThemeMode.system &&
+            SchedulerBinding.instance.window.platformBrightness ==
+                Brightness.dark);
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         textfocus.unfocus();
       },
       child: Scaffold(
@@ -315,7 +329,9 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           onRefresh: refresh,
           child: Stack(
             children: [
-              ListView(physics: AlwaysScrollableScrollPhysics(),),
+              ListView(
+                physics: AlwaysScrollableScrollPhysics(),
+              ),
               _buildBuilder(),
             ],
           ),
@@ -324,7 +340,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
     );
   }
 
-  Future<void> refresh(){
-    return Future(() => setState((){}));
+  Future<void> refresh() {
+    return Future(() => setState(() {}));
   }
 }
