@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fst_app_flutter/models/sharing/vcard.dart';
+import 'package:fst_app_flutter/utils/permissions.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 
@@ -14,23 +16,25 @@ openWhatsAppChat({@required String phone, String message = ''}) async {
   }
 
   if (await canLaunch(formatUrl())) {
-    await launch((formatUrl()));
-  } else {
-    throw 'Could not launch ${formatUrl()}';
+    try {
+      await launch((formatUrl()));
+    } catch (e) {}
   }
 }
 
 shareContactToWhatsApp(VCard vCard) async {
   try {
-    String filepath = '${Directory.systemTemp.parent.path}/cache/temp.vcf';
-    File vcf = File(filepath)..createSync();
-    vcf.writeAsStringSync(vCard.vcf);
-    await FlutterShare.shareFile(
-      title: 'Share contact',
-      text: 'Share contact',
-      chooserTitle: 'Share contact with',
-      filePath: filepath,
-    );
+    if (await requestPermission(Permission.storage)) {
+      String filepath = '${Directory.systemTemp.parent.path}/cache/temp.vcf';
+      File vcf = File(filepath)..createSync();
+      vcf.writeAsStringSync(vCard.vcf);
+      await FlutterShare.shareFile(
+        title: 'Share contact',
+        text: 'Share contact',
+        chooserTitle: 'Share contact with',
+        filePath: filepath,
+      );
+    }
   } catch (e) {
     //print(e);
   }

@@ -59,6 +59,7 @@ class CardContainer extends StatelessWidget {
           width: queryData.size.shortestSide * 0.40,
           icon: Icons.location_on,
           title: "Map",
+          route: mapRoute,
         ),
         NavigationCard(
           height: queryData.size.longestSide * 0.20,

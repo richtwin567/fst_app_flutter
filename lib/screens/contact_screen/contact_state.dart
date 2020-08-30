@@ -15,7 +15,7 @@ import 'package:fst_app_flutter/widgets/contact_widgets/contact_tile.dart';
 abstract class ContactViewState extends State<ContactViewStateful>
     with TickerProviderStateMixin {
   /// This [String] will be modified to include the search value entered by the user.
-  /// Otherwise, it will be passed to the [getResultsJSON] like this.
+  /// Otherwise, it will be passed to the [getResults] like this.
   var baseParam = 'contact/?search=';
 
   /// Extra parameters to attach to the [baseParam] such as department or type.
@@ -107,8 +107,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
 
   ThemeModel themeModel;
 
-  bool isDark;
-
   ContactViewState({@required this.themeModel});
   HerokuRequest<Contact> request;
 
@@ -117,26 +115,11 @@ abstract class ContactViewState extends State<ContactViewStateful>
   void initState() {
     super.initState();
     request = HerokuRequest();
-    request.getResultsJSON('$baseParam$extraParam', (data) => Contact(data))
+    request
+        .getResults('$baseParam$extraParam', true, (data) => Contact(data))
         .then((data) => contacts = data.toSet().toList());
     appBarColorController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-
-    ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
-        SchedulerBinding.instance.window.platformBrightness);
-    var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
-    var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
-
-    isDark = themeModel.selectedTheme == ThemeMode.dark ||
-        (themeModel.selectedTheme == ThemeMode.system &&
-            SchedulerBinding.instance.window.platformBrightness ==
-                Brightness.dark);
-
-    appBarBgColor = ColorTween(
-        begin: isDark
-            ? Color.alphaBlend(overlayColor, theme.primaryColor)
-            : theme.primaryColor,
-        end: theme.scaffoldBackgroundColor);
     dropdownController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     searchController = TextEditingController();
@@ -220,6 +203,21 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double animationIntervalEnd,
       @required List<Widget> actions,
       @required double elevation}) {
+        ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
+        SchedulerBinding.instance.window.platformBrightness);
+    var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
+    var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
+
+    var isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system &&
+            SchedulerBinding.instance.window.platformBrightness ==
+                Brightness.dark);
+
+    appBarBgColor = ColorTween(
+        begin: isDark
+            ? Color.alphaBlend(overlayColor, theme.primaryColor)
+            : theme.primaryColor,
+        end: theme.scaffoldBackgroundColor);
     return AnimatedBuilder(
       animation: appBarColorController,
       builder: (BuildContext context, Widget child) {
@@ -263,6 +261,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double width,
       @required bool isExpanded,
       @required double elevation}) {
+         var isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system &&
+            SchedulerBinding.instance.window.platformBrightness ==
+                Brightness.dark);
     return SlideTransition(
         position: Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.0, -1.0))
             .animate(CurvedAnimation(
@@ -394,7 +396,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
   } // buildContactCard
 
   /// Displays a [CircularProgressIndicator] while the list of contacts is fectched
-  /// by [getResultsJSON] and built by [buildContactListView].
+  /// by [getResults] and built by [buildContactListView].
   /// Also displays message indicating that no matches were found if
   /// no matches were found and an error message if an error occured.
   Widget contactFutureBuilder(
@@ -417,32 +419,89 @@ abstract class ContactViewState extends State<ContactViewStateful>
               Expanded(
                   child: FutureBuilder(
                 initialData: contacts,
-                future: request.getResultsJSON(
-                    '$baseParam$extraParam', (data) => Contact(data)),
+                future: request.getResults(
+                    '$baseParam$extraParam', true, (data) => Contact(data)),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.connectionState == ConnectionState.none) {
-                    return Center(
-                        child: Text(
-                            'Cannot load contacts. Check your internet connection.'));
-                  } else if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      contacts = snapshot.data.toSet().toList();
-                      if (contacts.length > 0) {
-                        return buildContactListView(
-                          titleStyle: titleStyle,
-                          subtitleStyle: subtitleStyle,
-                          contacts: contacts,
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return RefreshIndicator(
+                        onRefresh: () {
+                          return request
+                              .getResults('$baseParam$extraParam', true,
+                                  (data) => Contact(data))
+                              .then((value) {
+                            setState(() {
+                              contacts = value;
+                            });
+                          });
+                        },
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  child: Center(
+                                      child: Text(
+                                    'No connection specified.',
+                                    textAlign: TextAlign.center,
+                                  )),
+                                ),
+                              ),
+                            ]),
+                      );
+                      break;
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                      break;
+                    case ConnectionState.active:
+                      return Center(child: CircularProgressIndicator());
+                      break;
+                    case ConnectionState.done:
+                      if (snapshot.hasData) {
+                        contacts = snapshot.data.toSet().toList();
+                        if (contacts.length > 0) {
+                          return buildContactListView(
+                            titleStyle: titleStyle,
+                            subtitleStyle: subtitleStyle,
+                            contacts: contacts,
+                          );
+                        } else {
+                          return Center(child: Text('No matches found'));
+                        }
+                      } else if (!snapshot.hasData || snapshot.hasError) {
+                        return RefreshIndicator(
+                          onRefresh: () {
+                            return request
+                                .getResults('$baseParam$extraParam', true,
+                                    (data) => Contact(data))
+                                .then((value) {
+                              setState(() {
+                                contacts = value;
+                              });
+                            });
+                          },
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                    child: Center(
+                                        child: Text(
+                                      'Cannot load contacts. Check your internet connection.',
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  ),
+                                ),
+                              ]),
                         );
                       } else {
                         return Center(child: Text('No matches found'));
                       }
-                    } else if (!snapshot.hasData || snapshot.hasError) {
-                      return Center(child: Text('An error occured'));
-                    } else {
-                      return Center(child: Text('No matches found'));
-                    }
+                      break;
                   }
                   return Container();
                 },

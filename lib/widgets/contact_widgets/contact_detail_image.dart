@@ -65,15 +65,16 @@ class ContactDetailSvg extends CustomPainter {
   /// The first starting point.
   final Point start;
 
-  /// Accepts the [color] of the icon, how much to [scale] the icon by and where 
-  /// the drawing should [start]. 
+  /// Accepts the [color] of the icon, how much to [scale] the icon by and where
+  /// the drawing should [start].
   ContactDetailSvg(
       {@required this.color, this.scale = 1.0, @required this.start})
       : super();
 
-  /// Draws a path onto the [canvas] at the [start] based on the type of [points] supplied 
+  /// Draws a path onto the [canvas] at the [start] based on the type of [points] supplied
   /// and the [paint] that should be used.
-  drawPathFromPoints(Canvas canvas, Paint paint, List<Point> points, Point start) {
+  drawPathFromPoints(
+      Canvas canvas, Paint paint, List<Point> points, Point start) {
     Path path = Path();
     points.forEach((p) {
       if (p is MovePoint) {
@@ -98,7 +99,6 @@ class ContactDetailSvg extends CustomPainter {
   /// Uses [drawPathFromPoints] to paint the icon onto the [canvas].
   @override
   void paint(Canvas canvas, Size size) {
-    
     Paint path1Paint = Paint();
     path1Paint..color = Color.fromRGBO(0, 0, 0, 0);
 

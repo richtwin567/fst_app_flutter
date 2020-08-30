@@ -8,7 +8,6 @@ class VCard {
   VCard(this.vcf);
 
   factory VCard.fromContact(Contact contact) {
-    
     String rawPhoneNumber(String phone) {
       String rawPhone = '';
       for (var i = 0; i < phone.length; i++) {

@@ -29,7 +29,7 @@ class ContactTile extends StatelessWidget {
 
   /// Creates a contact tile.
   ///
-  /// A contact tile has a [title] that has a [titleStyle] and [subtitle] that 
+  /// A contact tile has a [title] that has a [titleStyle] and [subtitle] that
   /// has a [subtitleStyle]. If the tile [hasDecoration] it is painted with [thickness]
   /// width.
   /// If a [namedRoute] is provided, when tapped, this tile will navigate to
@@ -71,10 +71,13 @@ class ContactTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: tStyle,
       ),
-      subtitle:
-          Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis,style: sStyle,),
-      trailing:
-          Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
+      subtitle: Text(
+        subtitle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: sStyle,
+      ),
+      trailing: Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
     );
   }
 } // ContactTile definition

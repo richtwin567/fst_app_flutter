@@ -9,7 +9,9 @@ class ContactViewTabletPortrait extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consumer<ThemeModel>(builder: (context, theme, child) => ContactViewStateful(state: ContactViewTabletPortraitState(themeModel: theme))));
+        body: Consumer<ThemeModel>(
+            builder: (context, theme, child) => ContactViewStateful(
+                state: ContactViewTabletPortraitState(themeModel: theme))));
   }
 }
 
@@ -18,6 +20,8 @@ class ContactViewTabletLandscape extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consumer<ThemeModel>(builder: (context, theme, child) => ContactViewStateful(state: ContactViewTabletLandscapeState(themeModel: theme))));
+        body: Consumer<ThemeModel>(
+            builder: (context, theme, child) => ContactViewStateful(
+                state: ContactViewTabletLandscapeState(themeModel: theme))));
   }
 }

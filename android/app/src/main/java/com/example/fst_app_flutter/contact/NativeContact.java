@@ -1,11 +1,10 @@
-package com.example.fst_app_flutter;
+package com.example.fst_app_flutter.contact;
 
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +28,7 @@ public class NativeContact {
 	 * @param map a Map object passed in from dart saveNatively method in
 	 *            *                  contact_model.dart
 	 */
-	NativeContact(HashMap<String, Object> map) {
+	public NativeContact(HashMap<String, Object> map) {
 		this.displayName = (String) map.get("displayName");
 		this.email = (String) map.get("email");
 		this.note = (String) map.get("note");
@@ -46,7 +45,7 @@ public class NativeContact {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 		}
 
 
@@ -59,10 +58,10 @@ public class NativeContact {
 	public void saveNatively(Context context) {
 		Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
 
-		Log.d("flutter-plugin", displayName);
+		//Log.d("flutter-plugin", displayName);
 		ArrayList<ContentValues> dataList = new ArrayList<>();
 
-		Log.d("email", getEmail());
+		//Log.d("email", getEmail());
 		ContentValues row = new ContentValues();
 		row.put(ContactsContract.Data.MIMETYPE,
 		        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
@@ -73,7 +72,7 @@ public class NativeContact {
 
 
 		for (NativeContactPhone phone : getPhones()) {
-			Log.d("phone", phone.getNumber());
+			//Log.d("phone", phone.getNumber());
 			row = new ContentValues();
 			row.put(ContactsContract.Data.MIMETYPE,
 			        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
@@ -82,7 +81,7 @@ public class NativeContact {
 			dataList.add(row);
 		}
 
-		Log.d("website", getWebsite());
+		//Log.d("website", getWebsite());
 		row = new ContentValues();
 		row.put(ContactsContract.Data.MIMETYPE,
 		        ContactsContract.CommonDataKinds.Website.CONTENT_ITEM_TYPE);
@@ -153,7 +152,7 @@ public class NativeContact {
 	/**
 	 * The class to manage phone numbers for NativeContact.
 	 */
-	private class NativeContactPhone {
+	private static class NativeContactPhone {
 
 		private int label;
 		private String number;

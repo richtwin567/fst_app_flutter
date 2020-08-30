@@ -1,11 +1,12 @@
-
-import 'package:flutter/services.dart';
+import 'package:fst_app_flutter/global_const.dart';
+import 'package:fst_app_flutter/models/enums/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
-import 'package:fst_app_flutter/models/from_postgres/contact/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
+import 'package:fst_app_flutter/utils/string_to_enum.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:fst_app_flutter/utils/permissions.dart';
 
 class Contact {
-  static const platform = MethodChannel('com.example.fst_app_flutter/contacts');
   int _id;
   String _name;
   String _website;
@@ -39,53 +40,14 @@ class Contact {
         List.generate(contact['phone_contact_set'].length, (i) {
       return _PhoneNumber(contact['phone_contact_set'][i]);
     });
-    Department department;
-    switch (contact['department']) {
-      case 'CHEM':
-        department = Department.CHEM;
-        break;
-      case 'COMP':
-        department = Department.COMP;
-        break;
-      case 'GEO':
-        department = Department.GEO;
-        break;
-      case 'LIFE':
-        department = Department.LIFE;
-        break;
-      case 'MATH':
-        department = Department.MATH;
-        break;
-      case 'PHYS':
-        department = Department.PHYS;
-        break;
-      default:
-        department = Department.OTHER;
-        break;
-    }
-    ContactType contactType;
-    switch (contact['contact_type']) {
-      case 'EMERGENCY':
-        contactType = ContactType.EMERGENCY;
-        break;
-      case 'OFFICE':
-        contactType = ContactType.OFFICE;
-        break;
-      case 'FACULTY_STAFF':
-        contactType = ContactType.FACULTY_STAFF;
-        break;
-      default:
-        contactType = ContactType.OTHER;
-        break;
-    }
+    _department = stringToDepartment(contact['department']);
+    _contactType = stringToContactType(contact['contact_type']);
     _id = contact['id'];
     _name = contact['name'];
     _website = contact['website'];
     _email = contact['email'];
     _fax = contact['fax'];
     _description = contact['description'];
-    _department = department;
-    _contactType = contactType;
     _phones = phones;
   }
 
@@ -94,11 +56,10 @@ class Contact {
       "displayName": name,
       'note': description,
       'email': email,
-      'phones': List<Map<String,String>>.generate(
+      'phones': List<Map<String, String>>.generate(
           phones.length, (i) => {'label': 'work', 'value': phones[i].phone})
-        ..addAll(List<Map<String,String>>.generate(
+        ..addAll(List<Map<String, String>>.generate(
             fax != '' ? 1 : 0, (i) => {'label': 'fax work', 'value': fax})),
-      
       'website': website,
       "date": DateTime.now().toIso8601String(),
       "lastModified": DateTime.now().toIso8601String(),
@@ -107,7 +68,9 @@ class Contact {
 
   saveNatively() async {
     try {
-      await platform.invokeMethod('saveNatively', toNativeMap());
+      if (await requestPermission(Permission.contacts)) {
+        await CHANNEL.invokeMethod('saveNatively', toNativeMap());
+      }
     } catch (e) {
       print(e);
     }

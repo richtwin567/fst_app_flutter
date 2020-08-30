@@ -9,7 +9,7 @@ class AppPreferencesViewMobileLandscape extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return AppPreferencesViewMobilePortrait();
   }
 }
 
@@ -26,7 +26,16 @@ class AppPreferencesViewMobilePortrait extends StatelessWidget {
         body: Consumer<ThemeModel>(builder: (context, themeModel, child) {
           return ListView(children: [
             ListTile(
-                leading: Icon(Icons.brush),
+              title: Text(
+                'Appearance',
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    .apply(color: Theme.of(context).accentColor,fontWeightDelta: 2),
+              ),
+            ),
+            ListTile(
+                leading: Icon(Icons.palette),
                 title: Text('Theme'),
                 subtitle:
                     Text(themeModel.selectedTheme.toString().substring(10)),
