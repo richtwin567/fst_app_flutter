@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/local_widget/scholarcard.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
@@ -265,7 +266,9 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
   @override
   Widget build(BuildContext context) {
-    isDark = Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark;
+    ThemeModel themeModel = Provider.of<ThemeModel>(context, listen: false,);
+    isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system && SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
     return GestureDetector(
       onTap: (){
         textfocus.unfocus();

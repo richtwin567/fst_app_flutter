@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
@@ -125,7 +126,9 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
 
   @override
   Widget build(BuildContext context) {
-    isDark = Provider.of<ThemeModel>(context).selectedTheme == ThemeMode.dark;
+    ThemeModel themeModel = Provider.of<ThemeModel>(context, listen: false,);
+    isDark = themeModel.selectedTheme == ThemeMode.dark ||
+        (themeModel.selectedTheme == ThemeMode.system && SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
     final mq = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: _buildAppBar(),
