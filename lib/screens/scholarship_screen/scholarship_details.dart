@@ -28,7 +28,6 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   Widget _buildAppBar(){
     return AppBar(
         title: Text(widget.current.scholarshipName),
-        backgroundColor: isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
       );
   }
 
@@ -36,7 +35,6 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
   //returns a Card Widget which used to dispaly the header and content
   Widget _buildCard(String text, String content){
     return Card(
-      color: isDark ? ElevationOverlay.applyOverlay(context, Colors.grey[900], 0) : Colors.grey[50],
       elevation: 3,
       shape: isDark ? null: RoundedRectangleBorder(
         side: BorderSide(
@@ -90,7 +88,6 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
           ),
         ],
       ),
-      cursorColor: Theme.of(context).primaryColorDark,
       toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
     );
   }

@@ -21,7 +21,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   ScholarshipList symbol;
   String currentText;
   bool isDark;
-  bool isSearching;
+  bool isSearching; // signifies if the screen is in searching mode and controls which appbar is shown.
 
   final _controller = TextEditingController();
   final _scroll = ScrollController();
@@ -47,8 +47,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   Widget _buildAppBar() {
     Widget buildSearchBar() {
       return AppBar(
-          backgroundColor:
-              isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
+        centerTitle: false,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -58,14 +57,11 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
               });
             },
           ),
-          title: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                primaryColor: Colors.white,
-              ),
-              child: _buildTextField(),
+          title: Theme(
+            data: Theme.of(context).copyWith(
+              primaryColor: Colors.white,
             ),
+            child: _buildTextField(),
           ),
           actions: [
             IconButton(
@@ -85,8 +81,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
     Widget buildRegularAppBar() {
       return AppBar(
-        backgroundColor:
-            isDark ? Colors.grey[900] : Theme.of(context).primaryColor,
         centerTitle: false,
         title: Text(
           "Scholarships",
@@ -173,7 +167,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           style: TextStyle(
             color: Colors.grey.shade400,
             fontSize: 18,
-            fontFamily: "Monsterrat",
           ),
         ),
       );
@@ -192,7 +185,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
               style: TextStyle(
                 color: isDark ? Colors.white : Colors.grey.shade400,
                 fontSize: 18,
-                fontFamily: "Monsterrat",
               ),
             ),
             SizedBox(height: 10),
@@ -206,7 +198,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                   "Go to Top",
                   style: TextStyle(
                     color: Colors.white,
-                    fontFamily: "Monsterrat",
                   ),
                 ),
                 color: isDark
