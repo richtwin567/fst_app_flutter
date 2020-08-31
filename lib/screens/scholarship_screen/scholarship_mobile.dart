@@ -26,7 +26,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
   final _controller = TextEditingController();
   final _scroll = ScrollController();
   final _debouncer = Debouncer(milliseconds: 500);
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void initState() {
     super.initState();
@@ -257,14 +256,19 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
               break;
             case ConnectionState.done:
               if (!snapshot.hasData || snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    "An Error Occurred",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 18,
-                    ),
-                  ),
+                // return Center(
+                //   child: Text(
+                //     "An Error Occurred",
+                //     style: TextStyle(
+                //       color: Colors.grey.shade400,
+                //       fontSize: 18,
+                //     ),
+                //   ),
+                // );
+                return ListView(
+                  children: [
+                    ScholarCard(scholarship: Scholarship(name: "Jimmy Neutron Welfare Scholarship"),),
+                  ],
                 );
               } else {
                 return ChangeNotifierProvider(
@@ -314,7 +318,6 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
         textfocus.unfocus();
       },
       child: Scaffold(
-        key: _scaffoldKey,
         appBar: _buildAppBar(),
         body: RefreshIndicator(
           onRefresh: refresh,

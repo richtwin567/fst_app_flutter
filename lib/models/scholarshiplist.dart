@@ -12,10 +12,8 @@ class ScholarshipList with ChangeNotifier{
   ScholarshipList({scholarships}){
     this.scholarships = scholarships;
     hasResults = true;
-
-    //If the original list of scholarships has a length less than size then it will assigned the list as the viewList
-    //otherwise it will get a list with length of size from the original list and assign it to viewlist
-    current = this.scholarships;
+    current = this.scholarships.where((p) => p.scholarshipName.toLowerCase().contains("young".toLowerCase())).toList();
+    //current = this.scholarships;
   }
 
   //Getter Methods
