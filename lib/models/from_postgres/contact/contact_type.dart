@@ -1,4 +1,4 @@
-enum ContactType { EMERGENCY, OFFICE, FACULTY_STAFF, OTHER }
+enum ContactType { emergency, office, facultyStaff, other }
 
 extension ContactTypeShortString on ContactType {
   String toShortString() {

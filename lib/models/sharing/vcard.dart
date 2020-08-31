@@ -19,13 +19,13 @@ class VCard {
     }
 
     String vCard = 'BEGIN:VCARD\nVERSION:3.0\n';
-    if (contact.contactType == ContactType.FACULTY_STAFF) {
+    if (contact.contactType == ContactType.facultyStaff) {
       vCard += 'KIND:individual\n';
     } else {
       vCard += 'KIND:org\n';
     }
     vCard += 'FN:${contact.name}\n';
-    if (contact.contactType == ContactType.FACULTY_STAFF) {
+    if (contact.contactType == ContactType.facultyStaff) {
       List<String> nameParts = contact.name.split(' ');
       int numParts = nameParts.length;
       if (numParts == 4) {
@@ -42,7 +42,7 @@ class VCard {
     }
     if (contact.phones.length > 0) {
       contact.phones.forEach((phone) {
-        if (phone.platforms == Platform.WHATSAPP) {
+        if (phone.platforms == Platform.whatsapp) {
           vCard +=
               'TEL;TYPE=cell;TYPE=voice;TYPE=video;TYPE=text;waid=${rawPhoneNumber(phone.phone)}:${phone.phone}\n';
         } else {

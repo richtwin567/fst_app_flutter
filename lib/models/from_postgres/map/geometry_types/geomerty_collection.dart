@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_object.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 
-class GeoJSONGeometryCollection extends GeoJSONGeometryObject {
-  List<GeoJSONGeometryObject> geometries;
-  GeoJSONGeometryCollection({@required geometries})
-      : super(GeoJSONGeometryType.GeometryCollection);
+class GeoJsonGeometryCollection extends GeoJsonGeometryObject {
+  List<GeoJsonGeometryObject> geometries;
+  GeoJsonGeometryCollection({@required geometries})
+      : super(GeoJsonGeometryType.geometryCollection);
 
   @override
-  toGeoJSONFile() {
+  toGeoJsonFile() {
     throw UnimplementedError();
   }
 
   @override
-  toGeoJSON() {
+  toGeoJson() {
     throw UnimplementedError();
   }
 

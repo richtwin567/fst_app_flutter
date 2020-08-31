@@ -3,35 +3,35 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/position.dart';
 
-class GeoJSONLineString extends GeoJSONGeometryObject {
-  List<GeoJSONPosition> _coordinates;
+class GeoJsonLineString extends GeoJsonGeometryObject {
+  List<GeoJsonPosition> _coordinates;
 
-  List<GeoJSONPosition> get coordinates => _coordinates;
+  List<GeoJsonPosition> get coordinates => _coordinates;
 
-  GeoJSONLineString({@required coordsJSON})
-      : assert(coordsJSON != null),
-        assert(coordsJSON.length >= 2),
-        super(GeoJSONGeometryType.LineString) {
+  GeoJsonLineString({@required coordsJson})
+      : assert(coordsJson != null),
+        assert(coordsJson.length >= 2),
+        super(GeoJsonGeometryType.lineString) {
     _coordinates = List.generate(
-        coordsJSON.length,
-        (i) => GeoJSONPosition(
-            newLongitude: coordsJSON[i]['longitude'],
-            newLatitude: coordsJSON[i]['latitude']));
+        coordsJson.length,
+        (i) => GeoJsonPosition(
+            newLongitude: coordsJson[i]['longitude'],
+            newLatitude: coordsJson[i]['latitude']));
   }
 
   @override
-  toGeoJSONFile() {
+  toGeoJsonFile() {
     return {
       '\"type\"': '\"${type.toShortString()}\"',
-      '\"coordinates\"': coordinates.map((e) => e.toGeoJSON()).toList()
+      '\"coordinates\"': coordinates.map((e) => e.toGeoJson()).toList()
     };
   }
 
   @override
-  toGeoJSON() {
+  toGeoJson() {
     return {
       'type': type.toShortString(),
-      'coordinates': coordinates.map((e) => e.toGeoJSON()).toList()
+      'coordinates': coordinates.map((e) => e.toGeoJson()).toList()
     };
   }
 

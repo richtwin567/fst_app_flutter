@@ -3,29 +3,29 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/polygon.dart';
 
-class GeoJSONMultiPolygon extends GeoJSONGeometryObject {
-  List<GeoJSONPolygon> coordinates;
-  GeoJSONMultiPolygon({@required coordsJSON}) : super(GeoJSONGeometryType.MultiPolygon) {
+class GeoJsonMultiPolygon extends GeoJsonGeometryObject {
+  List<GeoJsonPolygon> coordinates;
+  GeoJsonMultiPolygon({@required coordsJson}) : super(GeoJsonGeometryType.multiPolygon) {
     coordinates = [];
     var polygonCoords = [];
-    for (var i = 0; i < coordsJSON.length; i++) {
-      if (coordsJSON[i]['marker'] == 'END') {
-        polygonCoords.add(coordsJSON[i]);
-        coordinates.add(GeoJSONPolygon(coordsJSON: polygonCoords));
+    for (var i = 0; i < coordsJson.length; i++) {
+      if (coordsJson[i]['marker'] == 'END') {
+        polygonCoords.add(coordsJson[i]);
+        coordinates.add(GeoJsonPolygon(coordsJson: polygonCoords));
         polygonCoords = [];
       } else {
-        polygonCoords.add(coordsJSON[i]);
+        polygonCoords.add(coordsJson[i]);
       }
     }
   }
 
   @override
-  toGeoJSONFile() {
+  toGeoJsonFile() {
     throw UnimplementedError();
   }
 
   @override
-  toGeoJSON() {
+  toGeoJson() {
     throw UnimplementedError();
   }
 

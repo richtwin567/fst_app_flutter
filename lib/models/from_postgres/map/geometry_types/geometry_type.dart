@@ -1,14 +1,14 @@
-enum GeoJSONGeometryType {
-  Point,
-  MultiPoint,
-  LineString,
-  MultiLineString,
-  Polygon,
-  MultiPolygon,
-  GeometryCollection
+enum GeoJsonGeometryType {
+  point,
+  multiPoint,
+  lineString,
+  multiLineString,
+  polygon,
+  multiPolygon,
+  geometryCollection
 }
 
-extension GeometryTypeShortString on GeoJSONGeometryType {
+extension GeometryTypeShortString on GeoJsonGeometryType {
   String toShortString() {
     return this.toString().split('.').last;
   }

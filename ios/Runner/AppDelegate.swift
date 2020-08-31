@@ -5,7 +5,7 @@ import Foundation
 import ContactsUI
 import GoogleMaps
 
-public class NativeContact: NSObject, CNContactViewControllerDelegate, UIViewController {
+public class NativeContact: NSObject, CNContactViewControllerDelegate{
 
     private(set) var displayName: String
     private(set) var note: String
@@ -16,13 +16,15 @@ public class NativeContact: NSObject, CNContactViewControllerDelegate, UIViewCon
     init( map:
     [String : Any]
     ) {
-        self.displayName = map["displayName"] as! String
-        self.note = map["note"] as! String
-        self.email = map["email"] as! String
-        self.website = map["website"] as! String
+        self.displayName = map["displayName"] as? String ?? ""
+        self.note = map["note"] as? String ?? ""
+        self.email = map["email"] as? String ?? ""
+        self.website = map["website"] as? String ?? ""
         self.phones = [NativeContactPhone]()
-        for phone in map["phones"] as! [[String:String]]{
-            self.phones.append(NativeContactPhone(map:phone))
+        if let phones = map["phones"] as? [[String:String]]{
+            for phone in phones{
+                self.phones.append(NativeContactPhone(map:phone))
+            }
         }
     }
 
@@ -88,7 +90,7 @@ public class NativeContact: NSObject, CNContactViewControllerDelegate, UIViewCon
             while let nextView = rvc?.presentedViewController {
                 rvc = nextView
             } */
-            self.present(navigation, animated:true, completion: nil)
+            vc.present(navigation, animated:true, completion: nil)
         
         
     }
@@ -135,8 +137,10 @@ public class NativeContact: NSObject, CNContactViewControllerDelegate, UIViewCon
     result(FlutterMethodNotImplemented)
     return
   }
-  var contact = NativeContact(map:call.arguments)
-  contact.saveNatively()
+    if let args = call.arguments as? [String:Any] {
+        var contact = NativeContact(map:args)
+        contact.saveNatively()
+    }
   })
     GMSServices.provideAPIKey("AIzaSyC8crEFAO6MSNJMRK1lmo-WnSL7RLFu87w")
     GeneratedPluginRegistrant.register(with: self)

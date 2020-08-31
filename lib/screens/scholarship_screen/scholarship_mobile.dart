@@ -4,7 +4,7 @@ import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/utils/debouncer.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
-import 'package:fst_app_flutter/models/scholarshiplist.dart';
+import 'package:fst_app_flutter/models/scholarship_list.dart';
 import 'package:fst_app_flutter/services/scholarship_service.dart';
 import 'package:provider/provider.dart';
 
