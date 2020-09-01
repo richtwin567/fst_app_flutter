@@ -43,8 +43,6 @@ class GeoJsonPolygon extends GeoJsonGeometryObject {
   @override
   extractLatLng() {
     var list = coordinates.expand((e) => e.extractLatLng()).toList();
-    print(list.runtimeType);
-    print(list);
     return list;
   }
   /*
