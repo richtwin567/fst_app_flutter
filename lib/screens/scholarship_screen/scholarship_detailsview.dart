@@ -65,7 +65,7 @@ class ScholarshipDetailsView extends StatelessWidget {
           List<Widget> listing_widget = List.empty(growable: true);
           for(String b in listing){
             listing_widget.add(ListTile(
-              leading: Icon(Icons.stop),
+              leading: Icon(Icons.lens),
               title: Text(
                 b,
                 style: TextStyle(
