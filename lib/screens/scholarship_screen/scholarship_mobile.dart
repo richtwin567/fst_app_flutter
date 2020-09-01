@@ -268,7 +268,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
 
   @override
   Widget build(BuildContext context) {
-    isDark = Provider.of<ThemeModel>(context,listen: false,).selectedTheme == ThemeMode.dark;
+    isDark = Provider.of<ThemeModel>(context,listen: false,).isDark;
     return GestureDetector(
       onTap: (){
         textfocus.unfocus();

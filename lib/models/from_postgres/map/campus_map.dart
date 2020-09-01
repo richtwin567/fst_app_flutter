@@ -12,7 +12,6 @@ class CampusMap {
     var locations = FeatureCollection(
         features: await request.getResults(
             _herokuFeatures, true, (data) => Feature(data)));
-    //print(locations);
     return locations;
   }
 

@@ -6,7 +6,11 @@ class Properties {
   final String description;
   final String altName;
 
-  Properties({this.title, this.description, this.associatedWith, this.altName});
+  Properties(
+      {this.title = '',
+      this.description = '',
+      this.associatedWith = Department.other,
+      this.altName = ''});
 
   toGeoJsonFile() {
     return {

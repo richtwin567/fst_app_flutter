@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:fst_app_flutter/models/preferences/theme_preference.dart';
 
 class ThemeModel with ChangeNotifier {
@@ -18,4 +18,16 @@ class ThemeModel with ChangeNotifier {
     _themePreference.setThemeMode(themeMode);
     notifyListeners();
   }
+
+  bool get isDark =>
+      (selectedTheme == ThemeMode.dark) ||
+      (selectedTheme == ThemeMode.system &&
+          SchedulerBinding.instance.window.platformBrightness ==
+              Brightness.dark);
+
+  bool get isLight =>
+      (selectedTheme == ThemeMode.light) ||
+      (selectedTheme == ThemeMode.system &&
+          SchedulerBinding.instance.window.platformBrightness ==
+              Brightness.light);
 }

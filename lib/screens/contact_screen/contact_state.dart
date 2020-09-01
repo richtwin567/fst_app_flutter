@@ -208,13 +208,8 @@ abstract class ContactViewState extends State<ContactViewStateful>
     var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
     var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
 
-    var isDark = themeModel.selectedTheme == ThemeMode.dark ||
-        (themeModel.selectedTheme == ThemeMode.system &&
-            SchedulerBinding.instance.window.platformBrightness ==
-                Brightness.dark);
-
     appBarBgColor = ColorTween(
-        begin: isDark
+        begin: themeModel.isDark
             ? Color.alphaBlend(overlayColor, theme.primaryColor)
             : theme.primaryColor,
         end: theme.scaffoldBackgroundColor);
@@ -234,7 +229,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
                   if (extraActions) ...actions else Container(),
                   RiveIconButton(
                     name: 'search_clear',
-                    animationName: isDark ? 'white_to_white' : 'white_to_black',
+                    animationName: themeModel.isDark ? 'white_to_white' : 'white_to_black',
                     setStateFunction: () {
                       this.revealSearchField(
                           searchFieldWidth: MediaQuery.of(context).size.width);
@@ -261,10 +256,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double width,
       @required bool isExpanded,
       @required double elevation}) {
-         var isDark = themeModel.selectedTheme == ThemeMode.dark ||
-        (themeModel.selectedTheme == ThemeMode.system &&
-            SchedulerBinding.instance.window.platformBrightness ==
-                Brightness.dark);
     return SlideTransition(
         position: Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.0, -1.0))
             .animate(CurvedAnimation(
@@ -274,7 +265,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
             elevation: elevation,
             child: PreferredSize(
                 child: Container(
-                    color: isDark
+                    color: themeModel.isDark
                         ? ElevationOverlay.applyOverlay(
                             context, Theme.of(context).primaryColor, 4.0)
                         : Theme.of(context).accentColor,

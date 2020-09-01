@@ -98,7 +98,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
 
   @override
   Widget build(BuildContext context) {
-    isDark = Provider.of<ThemeModel>(context).selectedTheme == ThemeMode.dark;
+    isDark = Provider.of<ThemeModel>(context).isDark;
     final mq = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: _buildAppBar(),
