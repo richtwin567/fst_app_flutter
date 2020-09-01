@@ -5,12 +5,12 @@ DeviceScreenType getDeviceType(MediaQueryData mediaQuery) {
   double deviceWidth = mediaQuery.size.shortestSide;
 
   if (deviceWidth > 950) {
-    return DeviceScreenType.Desktop;
+    return DeviceScreenType.desktop;
   }
 
   if (deviceWidth > 600) {
-    return DeviceScreenType.Tablet;
+    return DeviceScreenType.tablet;
   }
 
-  return DeviceScreenType.Mobile;
+  return DeviceScreenType.mobile;
 }
