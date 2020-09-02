@@ -256,19 +256,14 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
               break;
             case ConnectionState.done:
               if (!snapshot.hasData || snapshot.hasError) {
-                // return Center(
-                //   child: Text(
-                //     "An Error Occurred",
-                //     style: TextStyle(
-                //       color: Colors.grey.shade400,
-                //       fontSize: 18,
-                //     ),
-                //   ),
-                // );
-                return ListView(
-                  children: [
-                    ScholarCard(scholarship: Scholarship(name: "Jimmy Neutron Welfare Scholarship"),),
-                  ],
+                return Center(
+                  child: Text(
+                    "An Error Occurred",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 18,
+                    ),
+                  ),
                 );
               } else {
                 return ChangeNotifierProvider(

@@ -12,8 +12,7 @@ class ScholarshipList with ChangeNotifier{
   ScholarshipList({scholarships}){
     this.scholarships = scholarships;
     hasResults = true;
-    current = this.scholarships.where((p) => p.scholarshipName.toLowerCase().contains("young".toLowerCase())).toList();
-    //current = this.scholarships;
+    current = this.scholarships;
   }
 
   //Getter Methods

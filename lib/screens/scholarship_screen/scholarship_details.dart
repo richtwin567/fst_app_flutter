@@ -133,7 +133,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
           controller: _scroll,
           children: <Widget>[
             _buildSizedBox(mq*.025),
-            _buildCard("Description", widget.current.scholarshipDescription),
+           // _buildCard("Description", widget.current.scholarshipDescription),
             _buildSizedBox(mq*.025),
             _buildCard("Details", widget.current.scholarshipDetails),
             _buildSizedBox(mq*.025),

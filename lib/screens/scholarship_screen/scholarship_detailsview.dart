@@ -40,67 +40,194 @@ class ScholarshipDetailsView extends StatelessWidget {
   }
 
   Widget _buildPage(String zone){
-    return ListView(
-      children: zone == "Description" ? parse(current.description) : parse(current.details),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: ListView(
+        physics: AlwaysScrollableScrollPhysics(),
+        children: zone == "Description" ? buildDescriptionContent() : buildDetailContent(),
+      ),
     );
   }
 
-  List<Widget> parse(String content){
+  Widget buildListTile(String title, content, bool inList){
+    
+    if(content == "" && inList){
+      return ListTile(
+        // leading: Container(
+        //   height: 5.0,
+        //   width: 5.0,
+        //   decoration: new BoxDecoration(
+        //     color: Colors.grey.shade900,
+        //     shape: BoxShape.circle,
+        //   ),
+        // ),
+        title: Text(
+          "\u2022  " + title,
+        ),
+      );
+    }else if(content is! String){
+      return ListTile(
+      title: Text(title),
+      subtitle: content,
+      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+    );
+    }
 
-    List<String> catergory_split = content.split('@');
-    String titleContent;
-    String title;
-    String singleLine;
-    List<String> list;
-    List<Widget> result = List.empty(growable: true);
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(content),
+      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+    );
+  }
+
+  Widget buildListingTile(title, content){
+    List<Widget> primaryWidget = List.empty(growable: true);
+    List<Widget> secondaryWidgets = List.empty(growable: true);
+    List<String> secondary;
+
     try {
-      for (String a in catergory_split){
-        List<String> titleSplit = a.split(":");
-        title = titleSplit[0];
-        titleContent = titleSplit[1];
-        if(titleContent.contains("=")){
-          list = titleContent.split("=");
-          singleLine = list[0];
-          List<String> listing = list[1].split(";");
-          List<Widget> listing_widget = List.empty(growable: true);
-          for(String b in listing){
-            listing_widget.add(ListTile(
-              leading: Icon(Icons.lens),
-              title: Text(
-                b,
-                style: TextStyle(
-                  fontSize: 13,
-                ),
-              ),
-            ));
+      if(content.contains(":")){
+        List<String> list = content.split(":");
+        if(list[1].contains(";") && list.length == 2){
+          secondary = list[1].split(";");
+          for(String b in secondary){
+            if(b != ""){
+              secondaryWidgets.add(buildListTile(b, "", true));
+            }
           }
-          result.add(ListBody(
+          return ListBody(
             children: [
-              ListTile(
-                title: Text(title), 
-                subtitle: Text(singleLine),
-              ), 
+              buildListTile(title, list[0], false), 
               Padding(
-                padding: const EdgeInsets.only(left: 18.0),
-                child: ListBody(
-                  children: listing_widget,
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: secondaryWidgets,
                 ),
               ),
               SizedBox(
                 height: 20,
               ),
             ],
-          ));
+          );
+        }else if(list[1].contains(";") && list.length == 3){
+          secondary = list[1].split(";");
+          for(String b in secondary){
+            if(b != ""){
+              secondaryWidgets.add(buildListTile(b, "", true));
+            }
+          }
+          primaryWidget.add(buildListTile(title, "", false));
+          primaryWidget.add(
+            buildListTile(
+              list[0], 
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: ListBody(
+                  children: secondaryWidgets,
+                ),
+              ),
+              false));
+          primaryWidget.add(buildListTile(list[2], "", false));
+          return ListBody(
+            children: primaryWidget,
+          );
         }else{
-          result.add(ListTile(title: Text(title), subtitle: Text(titleContent),));
+          return buildListTile(title, list[1], false);
         }
+      }else if(content.contains(";")){
+        List<String> list = content.split(";");
+        for(String b in list){
+          if(b != ""){
+            secondaryWidgets.add(buildListTile(b, "", true));
+          }
+        }
+        return ListBody(
+          children: [
+            buildListTile(title, "", false), 
+            Padding(
+              padding: const EdgeInsets.only(left: 18.0),
+              child: ListBody(
+                children: secondaryWidgets,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        );
+      }else{
+        return buildListTile(title, content, false);
       }
     } on Exception catch (e) {
       print(e);
-      result = <Widget>[Text('Something went wrong'),];
+      return Center(child: Text(title));
+    }
+
+  }
+
+  List<Widget> buildDescriptionContent(){
+    List<Widget> result = List.empty(growable: true);
+    try{
+      
+      if(current.scholarshipAwards != null){
+        result.add(buildListTile('Number of Awards', current.scholarshipAwards, false));
+      }
+
+      if(current.scholarshipValue != null){
+        result.add(buildListTile('Value', current.scholarshipValue, false));
+      }
+
+      if(current.scholarshipTenure != null){
+        result.add(buildListTile('Maximum Tenure', current.scholarshipTenure , false));
+      }
+
+      if(current.scholarshipEligibility != null){
+        result.add(buildListingTile("Eligibility", current.scholarshipEligibility));
+      }
+
+    }on Exception catch(e){
+      print(e);
+      result = <Widget>[Center(child: Text("Something went wrong")),];
     }
     return result;
   }
+
+  List<Widget> buildDetailContent(){
+    List<Widget> result = List.empty(growable: true);
+    //details, criteria, method, special, condition,
+    try{
+
+      if(current.scholarshipCriteria != null){
+        result.add(buildListingTile("Criteria", current.scholarshipCriteria));
+      }
+
+      if(current.scholarshipMethod != null){
+        result.add(buildListingTile("Method Of Selection", current.scholarshipMethod));
+      }
+
+      if(current.scholarshipSpecial != null){
+        result.add(buildListingTile("Special Requirements", current.scholarshipSpecial));
+      }
+
+      if(current.scholarshipCondition != null){
+        result.add(buildListingTile("Condition", current.scholarshipCondition));
+      }
+      
+      if(current.scholarshipDetails != null){
+        result.add(buildListingTile("Additional Details", current.scholarshipDetails));
+      }
+      
+    }on Exception catch(e){
+      print(e);
+      result = <Widget>[Center(child: Text("Something went wrong")),];
+    }
+    return result;
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     ThemeModel themeModel = Provider.of<ThemeModel>(context, listen: false,);

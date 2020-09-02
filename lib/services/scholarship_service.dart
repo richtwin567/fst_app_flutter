@@ -10,7 +10,7 @@ class ScholarshipService{
   static Future<ScholarshipList> getAllScholarships() async {
     try {
       HerokuRequest<Scholarship> handler = HerokuRequest();
-      var result = await handler.getResults("scholarship/",true, (data) => Scholarship.fromJson(data));
+      var result = await handler.getResults("http://192.168.0.11:8000/scholarship/", false, (data) => Scholarship.fromJson(data));
       return Future(() => ScholarshipList(scholarships: result));
     } catch (e) {
       throw Exception('Cannot load from server');
