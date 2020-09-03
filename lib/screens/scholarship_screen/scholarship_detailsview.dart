@@ -7,8 +7,7 @@ import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dar
 class ScholarshipDetailsView extends StatelessWidget {
 
   final Scholarship current;
-  final Map<String, bool> theme = {'isDark': null};
-  final Map<String, ThemeData> t = {'theme': null};
+  final Map<String, dynamic> theme = {'isDark': null, 'theme': null};
 
   ScholarshipDetailsView({this.current});
 
@@ -33,7 +32,7 @@ class ScholarshipDetailsView extends StatelessWidget {
         text,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 16,
         ),
       ),
     );
@@ -52,36 +51,28 @@ class ScholarshipDetailsView extends StatelessWidget {
   Widget buildListTile(String title, content, bool inList){
     
     if(content == "" && inList){
-      return ListTile(
-        // leading: Container(
-        //   height: 5.0,
-        //   width: 5.0,
-        //   decoration: new BoxDecoration(
-        //     color: Colors.grey.shade900,
-        //     shape: BoxShape.circle,
-        //   ),
-        // ),
-        title: Text(
-          "\u2022  " + title,
-        ),
-      );
+      return UnorderedListItem(title, theme['isDark']);
     }else if(content is! String){
       return ListTile(
-      title: Text(title),
-      subtitle: content,
-      contentPadding: const EdgeInsets.symmetric(vertical: 10),
-    );
+        title: Text(title),
+        subtitle: content,
+      );
     }
 
     return ListTile(
+      visualDensity: VisualDensity(vertical: -2.0, horizontal: 1.0),
       title: Text(title),
       subtitle: Text(content),
-      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+    );
+  }
+
+  Widget buildDivider(){
+    return Divider(
+      color: theme['isDark'] ? Colors.white30 : Colors.black12,
     );
   }
 
   Widget buildListingTile(title, content){
-    List<Widget> primaryWidget = List.empty(growable: true);
     List<Widget> secondaryWidgets = List.empty(growable: true);
     List<String> secondary;
 
@@ -93,22 +84,18 @@ class ScholarshipDetailsView extends StatelessWidget {
           for(String b in secondary){
             if(b != ""){
               secondaryWidgets.add(buildListTile(b, "", true));
+              secondaryWidgets.add(SizedBox(height: 5));
             }
           }
+          secondaryWidgets.add(SizedBox(height:10));
           return ListBody(
             children: [
-              buildListTile(title, list[0], false), 
+              buildListTile(title, list[0]+":", false), 
               Padding(
-                padding: const EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 30.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   children: secondaryWidgets,
                 ),
-              ),
-              SizedBox(
-                height: 20,
               ),
             ],
           );
@@ -119,22 +106,38 @@ class ScholarshipDetailsView extends StatelessWidget {
               secondaryWidgets.add(buildListTile(b, "", true));
             }
           }
-          primaryWidget.add(buildListTile(title, "", false));
-          primaryWidget.add(
-            buildListTile(
-              list[0], 
+          return buildListTile(
+            title,
+            Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: ListBody(
+              children: [
+                buildListTile(list[0], "", true),
+                SizedBox(height: 10.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 18.0),
+                  child: ListBody(
+                    children: secondaryWidgets,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                buildListTile(list[2], "", true),
+              ],
+            ),
+          ),false);
+        }else if(list.length == 2 && !list[1].contains(";")){
+          return ListBody(
+            children: [
+              buildListTile(title, list[0]+":", false),
               Padding(
-                padding: const EdgeInsets.only(left: 18.0),
-                child: ListBody(
-                  children: secondaryWidgets,
+                padding: const EdgeInsets.only(left: 30.0),
+                child: Column(
+                  children: [buildListTile(list[1], "", true), SizedBox(height: 10)],
                 ),
               ),
-              false));
-          primaryWidget.add(buildListTile(list[2], "", false));
-          return ListBody(
-            children: primaryWidget,
+            ],
           );
-        }else{
+        }else {
           return buildListTile(title, list[1], false);
         }
       }else if(content.contains(";")){
@@ -144,20 +147,14 @@ class ScholarshipDetailsView extends StatelessWidget {
             secondaryWidgets.add(buildListTile(b, "", true));
           }
         }
-        return ListBody(
-          children: [
-            buildListTile(title, "", false), 
-            Padding(
-              padding: const EdgeInsets.only(left: 18.0),
-              child: ListBody(
-                children: secondaryWidgets,
-              ),
+        return buildListTile(
+          title, 
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: ListBody(
+              children: secondaryWidgets,
             ),
-            SizedBox(
-              height: 20,
-            ),
-          ],
-        );
+          ), false);
       }else{
         return buildListTile(title, content, false);
       }
@@ -171,17 +168,17 @@ class ScholarshipDetailsView extends StatelessWidget {
   List<Widget> buildDescriptionContent(){
     List<Widget> result = List.empty(growable: true);
     try{
-      
+     
       if(current.scholarshipAwards != null){
-        result.add(buildListTile('Number of Awards', current.scholarshipAwards, false));
+        result.addAll([buildListTile('Number of Awards', current.scholarshipAwards, false), buildDivider()]);
       }
 
       if(current.scholarshipValue != null){
-        result.add(buildListTile('Value', current.scholarshipValue, false));
+        result.addAll([buildListTile('Value', current.scholarshipValue, false), buildDivider()]);
       }
 
       if(current.scholarshipTenure != null){
-        result.add(buildListTile('Maximum Tenure', current.scholarshipTenure , false));
+        result.addAll([buildListTile('Maximum Tenure', current.scholarshipTenure , false), buildDivider()]);
       }
 
       if(current.scholarshipEligibility != null){
@@ -197,23 +194,23 @@ class ScholarshipDetailsView extends StatelessWidget {
 
   List<Widget> buildDetailContent(){
     List<Widget> result = List.empty(growable: true);
-    //details, criteria, method, special, condition,
+
     try{
 
       if(current.scholarshipCriteria != null){
-        result.add(buildListingTile("Criteria", current.scholarshipCriteria));
+        result.addAll([buildListingTile("Criteria", current.scholarshipCriteria), buildDivider()]);
       }
 
       if(current.scholarshipMethod != null){
-        result.add(buildListingTile("Method Of Selection", current.scholarshipMethod));
+        result.addAll([buildListingTile("Method Of Selection", current.scholarshipMethod), buildDivider()]);
       }
 
       if(current.scholarshipSpecial != null){
-        result.add(buildListingTile("Special Requirements", current.scholarshipSpecial));
+        result.addAll([buildListingTile("Special Requirements", current.scholarshipSpecial), buildDivider()]);
       }
 
       if(current.scholarshipCondition != null){
-        result.add(buildListingTile("Condition", current.scholarshipCondition));
+        result.addAll([buildListingTile("Condition", current.scholarshipCondition), buildDivider()]);
       }
       
       if(current.scholarshipDetails != null){
@@ -231,7 +228,7 @@ class ScholarshipDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeModel themeModel = Provider.of<ThemeModel>(context, listen: false,);
-    t['theme'] = Theme.of(context);
+    theme['theme'] = Theme.of(context);
     theme['isDark'] = themeModel.selectedTheme == ThemeMode.dark ||
         (themeModel.selectedTheme == ThemeMode.system && SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
     return DefaultTabController(
@@ -246,5 +243,37 @@ class ScholarshipDetailsView extends StatelessWidget {
           ),
         ),
       );
+  }
+}
+
+class UnorderedListItem extends StatelessWidget {
+  UnorderedListItem(this.text, this.isDark);
+  final String text;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: const EdgeInsets.only(top: 7, right: 8),
+          height: 5.0,
+          width: 5.0,
+          decoration: new BoxDecoration(
+            color: isDark ? Colors.white60 : Colors.black45,
+            shape: BoxShape.circle,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isDark ? Colors.white54 : Colors.black45,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

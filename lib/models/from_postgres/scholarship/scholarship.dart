@@ -33,7 +33,7 @@ class Scholarship {
     String name, details, numAwards, value, tenure, eligible, criteria ,method , special, condition;
 
     parsedJSON['name'] == "" ?  name = null :  name = parsedJSON['name'];
-    parsedJSON['details'] == "" ?  details = null :  details = parsedJSON['details'];
+    parsedJSON['additional_details'] == "" ?  details = null :  details = parsedJSON['additional_details'];
     parsedJSON['number_of_awards'] == "" ?  numAwards = null :  numAwards = parsedJSON['number_of_awards'];
     parsedJSON['value'] == "" ?  value = null :  value = parsedJSON['value'];
     parsedJSON['max_tenure'] == "" ?  tenure = null :  tenure = parsedJSON['max_tenure'];
