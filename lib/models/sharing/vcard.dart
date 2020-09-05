@@ -1,6 +1,6 @@
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart';
+import 'package:fst_app_flutter/models/from_postgres/contact/contact_platform.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
-import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 
 class VCard {
   final String vcf;
@@ -42,7 +42,7 @@ class VCard {
     }
     if (contact.phones.length > 0) {
       contact.phones.forEach((phone) {
-        if (phone.platforms == Platform.whatsapp) {
+        if (phone.platforms == ContactPlatform.whatsapp) {
           vCard +=
               'TEL;TYPE=cell;TYPE=voice;TYPE=video;TYPE=text;waid=${rawPhoneNumber(phone.phone)}:${phone.phone}\n';
         } else {

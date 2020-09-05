@@ -9,10 +9,15 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ThemeModel themeModel = ThemeModel();
-  await themeModel.init();
-  await precacheRive();
-  runApp(FSTApp(
+  try {
+    await themeModel.init();
+    await precacheRive();
+  } catch (e) {
+  }
+  runApp(DevicePreview(
+      child: FSTApp(
     themeModel: themeModel,
+      ),
   ));
 }
 

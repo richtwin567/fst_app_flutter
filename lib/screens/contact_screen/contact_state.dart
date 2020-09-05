@@ -134,11 +134,11 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Dispose all disposable controllers.
   @override
   void dispose() {
-    super.dispose();
     scrollController.dispose();
     appBarColorController.dispose();
     dropdownController.dispose();
     searchController.dispose();
+    super.dispose();
   }
 
   /// Subclasses should implement
@@ -158,9 +158,13 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Toggles the [AppBar] between the page title and the search [TextField] and
   /// hiding the [filterDropdown].
   void revealSearchField({@required double searchFieldWidth}) {
+    print('p');
     if (dropdownController.isDismissed) {
+      print('k');
       toggleAppBarAnimation();
+      print('j');
       toggleFilterDropdownAnimation().then((value) {
+        print('m');
         appBarLeading = null;
         extraActions = false;
         appBarTitle = Container(
@@ -203,7 +207,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
       @required double animationIntervalEnd,
       @required List<Widget> actions,
       @required double elevation}) {
-        ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
+    ThemeData theme = AppTheme.getTheme(themeModel.selectedTheme,
         SchedulerBinding.instance.window.platformBrightness);
     var opacity = (4.5 * math.log(4.0 + 1) + 2) / 100.0;
     var overlayColor = theme.colorScheme.onSurface.withOpacity(opacity);
@@ -229,8 +233,10 @@ abstract class ContactViewState extends State<ContactViewStateful>
                   if (extraActions) ...actions else Container(),
                   RiveIconButton(
                     name: 'search_clear',
-                    animationName: themeModel.isDark ? 'white_to_white' : 'white_to_black',
+                    animationName:
+                        themeModel.isDark ? 'white_to_white' : 'white_to_black',
                     setStateFunction: () {
+                      print('o');
                       this.revealSearchField(
                           searchFieldWidth: MediaQuery.of(context).size.width);
                     },
