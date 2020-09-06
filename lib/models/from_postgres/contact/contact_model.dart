@@ -1,7 +1,7 @@
 import 'package:fst_app_flutter/global_const.dart';
 import 'package:fst_app_flutter/models/enums/department.dart';
+import 'package:fst_app_flutter/models/from_postgres/contact/contact_platform.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
-import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
 import 'package:fst_app_flutter/utils/string_to_enum.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fst_app_flutter/utils/permissions.dart';
@@ -72,7 +72,6 @@ class Contact {
         await channel.invokeMethod('saveNatively', toNativeMap());
       }
     } catch (e) {
-      print(e);
     }
   }
 }
@@ -81,21 +80,21 @@ class _PhoneNumber {
   int _id;
   int _contactID;
   String _phone;
-  Platform _platforms;
+  ContactPlatform _platforms;
 
   int get id => _id;
   int get contactID => _contactID;
   String get phone => _phone;
-  Platform get platforms => _platforms;
+  ContactPlatform get platforms => _platforms;
 
   _PhoneNumber(dynamic phoneSet) {
-    Platform platform;
+    ContactPlatform platform;
     switch (phoneSet['platforms']) {
       case 'WHATSAPP':
-        platform = Platform.whatsapp;
+        platform = ContactPlatform.whatsapp;
         break;
       default:
-        platform = Platform.textCall;
+        platform = ContactPlatform.textCall;
         break;
     }
     _id = phoneSet['id'];

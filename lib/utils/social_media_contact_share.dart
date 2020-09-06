@@ -36,6 +36,5 @@ shareContactToWhatsApp(VCard vCard) async {
       );
     }
   } catch (e) {
-    //print(e);
   }
 }

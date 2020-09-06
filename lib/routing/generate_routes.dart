@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/routing/slide_up_route.dart';
 import 'package:fst_app_flutter/screens/app_preferences_screen/app_preferences_view.dart';
 import 'package:fst_app_flutter/screens/campus_map_screen/campus_map_view.dart';
@@ -7,7 +6,6 @@ import 'package:fst_app_flutter/screens/contact_screen/contact_detail_page.dart'
 import 'package:fst_app_flutter/screens/contact_screen/contact_view.dart';
 import 'package:fst_app_flutter/screens/home_screen/home_view.dart';
 import 'package:fst_app_flutter/screens/scholarship_screen/scholarship_view.dart';
-import 'package:provider/provider.dart';
 import 'routes.dart';
 
 /// Handles routing in the app

@@ -54,10 +54,10 @@ class _RiveIconButtonState extends State<RiveIconButton> {
           try {
             parentStateFunction();
           } catch (e) {}
-        });
-      },
+          }); 
+        },
       icon: FlareActor(
-        'assets/rive_animated_icons/$name.flr',
+        'assets/rive/animated_icons/$name.flr',
         alignment: Alignment.center,
         animation: whichAnimation(),
       ),
