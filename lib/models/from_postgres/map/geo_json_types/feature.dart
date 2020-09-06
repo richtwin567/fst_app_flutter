@@ -25,7 +25,6 @@ class Feature extends GeoJsonObject {
     id = feature['id'];
     var uknGeometry = feature['geometry'];
     var newCoords = uknGeometry['coordinates'];
-    //print(newCoords);
     switch (stringToGeometryType(uknGeometry['geometry_type'])) {
       case GeoJsonGeometryType.point:
         geometry = GeoJsonPoint(coordsJson: newCoords);

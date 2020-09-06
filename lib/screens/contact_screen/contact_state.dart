@@ -158,13 +158,9 @@ abstract class ContactViewState extends State<ContactViewStateful>
   /// Toggles the [AppBar] between the page title and the search [TextField] and
   /// hiding the [filterDropdown].
   void revealSearchField({@required double searchFieldWidth}) {
-    print('p');
     if (dropdownController.isDismissed) {
-      print('k');
       toggleAppBarAnimation();
-      print('j');
       toggleFilterDropdownAnimation().then((value) {
-        print('m');
         appBarLeading = null;
         extraActions = false;
         appBarTitle = Container(
@@ -216,7 +212,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
         begin: themeModel.isDark
             ? Color.alphaBlend(overlayColor, theme.primaryColor)
             : theme.primaryColor,
-        end: theme.scaffoldBackgroundColor);
+        end: themeModel.isDark? Color.alphaBlend(overlayColor, theme.scaffoldBackgroundColor): theme.scaffoldBackgroundColor);
     return AnimatedBuilder(
       animation: appBarColorController,
       builder: (BuildContext context, Widget child) {
@@ -236,7 +232,6 @@ abstract class ContactViewState extends State<ContactViewStateful>
                     animationName:
                         themeModel.isDark ? 'white_to_white' : 'white_to_black',
                     setStateFunction: () {
-                      print('o');
                       this.revealSearchField(
                           searchFieldWidth: MediaQuery.of(context).size.width);
                     },
@@ -386,7 +381,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
                 namedRoute: contactDetailRoute,
                 arguments: contacts[index],
               ),
-              Divider()
+              Divider( thickness: 1.0,color: Theme.of(context).accentColor)
             ]);
           }),
     );
@@ -411,7 +406,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
             mainAxisSize: MainAxisSize.max,
             verticalDirection: VerticalDirection.down,
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
                   child: FutureBuilder(

@@ -11,7 +11,6 @@ class GeoJsonPoint extends GeoJsonGeometryObject {
   GeoJsonPoint({@required coordsJson})
       : assert(coordsJson != null),
         super(GeoJsonGeometryType.point) {
-    //print(coordsJSON[0]['longitude'] is double);
     _coordinates = GeoJsonPosition(
         newLongitude: coordsJson[0]['longitude'],
         newLatitude: coordsJson[0]['latitude']);

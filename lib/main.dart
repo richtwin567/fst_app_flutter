@@ -32,11 +32,6 @@ class FSTApp extends StatelessWidget {
         create: (context) => themeModel,
         builder: (context, child) => Consumer<ThemeModel>(
               builder: (context, themeModel, child) {
-                /* SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                  statusBarColor: AppTheme.getTheme(themeModel.selectedTheme,
-                          MediaQuery.platformBrightnessOf(context))
-                      .primaryColor,
-                )); */
                 return MaterialApp(
                   debugShowCheckedModeBanner: false,
                   theme: AppTheme.getTheme(ThemeMode.light,

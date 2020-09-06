@@ -72,7 +72,6 @@ class Contact {
         await channel.invokeMethod('saveNatively', toNativeMap());
       }
     } catch (e) {
-      print(e);
     }
   }
 }
