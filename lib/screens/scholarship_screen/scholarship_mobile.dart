@@ -55,6 +55,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                 isSearching = false;
               });
             },
+            tooltip: "Stop Searching",
           ),
           title: Theme(
             data: Theme.of(context).copyWith(
@@ -74,6 +75,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
                   symbol.search(_controller.text);
                 });
               },
+              tooltip: "Clear Text",
             ),
           ]);
     }

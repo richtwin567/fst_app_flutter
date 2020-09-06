@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
+import 'package:clipboard/clipboard.dart';
 
 class ScholarshipDetailsView extends StatelessWidget {
 
@@ -16,6 +17,15 @@ class ScholarshipDetailsView extends StatelessWidget {
         title: Text(
           current.scholarshipName,
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.content_copy), 
+            onPressed: (){
+              FlutterClipboard.copy(current.toString()).then(( value ) => print('copied'));
+            },
+            tooltip: "Copy to Clipboard",
+          )
+        ],
         bottom: TabBar(
           indicatorColor: Colors.white,
           tabs: [
@@ -54,15 +64,24 @@ class ScholarshipDetailsView extends StatelessWidget {
       return UnorderedListItem(title, theme['isDark']);
     }else if(content is! String){
       return ListTile(
-        title: Text(title),
+        title: SelectableText(
+          title,
+          toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
+        ),
         subtitle: content,
       );
     }
 
     return ListTile(
       visualDensity: VisualDensity(vertical: -2.0, horizontal: 1.0),
-      title: Text(title),
-      subtitle: Text(content),
+      title: SelectableText(
+          title,
+          toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
+        ),
+      subtitle: SelectableText(
+          content,
+          toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
+        ),
     );
   }
 
@@ -266,11 +285,12 @@ class UnorderedListItem extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Text(
+          child: SelectableText(
             text,
             style: TextStyle(
               color: isDark ? Colors.white54 : Colors.black45,
             ),
+            toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
           ),
         ),
       ],
