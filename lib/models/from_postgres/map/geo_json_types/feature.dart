@@ -9,12 +9,11 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/polygon.
 import 'package:fst_app_flutter/models/from_postgres/map/properties.dart';
 import 'package:fst_app_flutter/utils/string_to_enum.dart';
 
+// TODO: document Feature @richtwin567
 class Feature extends GeoJsonObject {
   GeoJsonGeometryObject geometry;
   Properties properties;
-  int id;
-
-  
+  int id;  
 
   Feature(dynamic feature) : super(GeoJsonType.feature) {
     properties = Properties(

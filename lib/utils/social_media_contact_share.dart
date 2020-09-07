@@ -6,6 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 
+// TODO: document @richtwin567
+
 openWhatsAppChat({@required String phone, String message = ''}) async {
   String formatUrl() {
     if (Platform.isIOS) {

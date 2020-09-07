@@ -3,6 +3,7 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/linear_ring.dart';
 
+// TODO: document GeoJsonPolygon @richtwin567
 class GeoJsonPolygon extends GeoJsonGeometryObject {
   List<GeoJsonLinearRing> _coordinates;
 

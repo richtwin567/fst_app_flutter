@@ -1,3 +1,4 @@
+// TODO: document @richtwin567
 enum GeoJsonGeometryType {
   point,
   multiPoint,

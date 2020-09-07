@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 
+// TODO: document @richtwin567
 class AppTheme {
   static ColorScheme _lightColorScheme = ColorScheme(
       primary: Color(0xFF003D8A),

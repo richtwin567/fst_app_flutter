@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/properties.dart';
 import 'package:fst_app_flutter/widgets/shape_borders/arrowed_tooltip.dart';
 
+
+// TODO: document @richtwin567
 class DataWindow extends StatefulWidget {
   final Properties properties;
   final ArrowedTooltip shape;

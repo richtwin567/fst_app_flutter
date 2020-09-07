@@ -2,6 +2,7 @@ import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart'
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_platform.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
 
+// TODO: document @richtwin567
 class VCard {
   final String vcf;
 

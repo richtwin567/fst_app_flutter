@@ -3,6 +3,7 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/position.dart';
 
+// TODO: document @richtwin567
 class GeoJsonMultiPoint extends GeoJsonGeometryObject {
   List<GeoJsonPosition> _coordinates;
 

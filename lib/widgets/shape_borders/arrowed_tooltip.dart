@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: document @richtwin567
 abstract class ArrowedTooltip extends ShapeBorder {
   final double arrowWidth;
   final double arrowLength;

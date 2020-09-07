@@ -1,6 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
+// TODO: document @richtwin567
 class RiveIconButton extends StatefulWidget {
   final String name;
   final String animationName;

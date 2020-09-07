@@ -381,7 +381,7 @@ abstract class ContactViewState extends State<ContactViewStateful>
                 namedRoute: contactDetailRoute,
                 arguments: contacts[index],
               ),
-              Divider( thickness: 1.0,color: Theme.of(context).accentColor)
+              //Divider( thickness: 1.0,color: Theme.of(context).accentColor)
             ]);
           }),
     );
