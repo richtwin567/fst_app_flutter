@@ -3,48 +3,46 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/linear_ring.dart';
 
-class GeoJSONPolygon extends GeoJSONGeometryObject {
-  List<GeoJSONLinearRing> _coordinates;
+class GeoJsonPolygon extends GeoJsonGeometryObject {
+  List<GeoJsonLinearRing> _coordinates;
 
-  List<GeoJSONLinearRing> get coordinates => _coordinates;
+  List<GeoJsonLinearRing> get coordinates => _coordinates;
 
-  GeoJSONPolygon({@required coordsJSON})
-      : assert(coordsJSON != null),
-        super(GeoJSONGeometryType.Polygon) {
+  GeoJsonPolygon({@required coordsJson})
+      : assert(coordsJson != null),
+        super(GeoJsonGeometryType.polygon) {
     _coordinates = [];
     var linearRingCoords = [];
-    for (var i = 0; i < coordsJSON.length; i++) {
-      if (coordsJSON[i]['marker'] == 'END') {
-        linearRingCoords.add(coordsJSON[i]);
-        _coordinates.add(GeoJSONLinearRing(coordsJSON: linearRingCoords));
+    for (var i = 0; i < coordsJson.length; i++) {
+      if (coordsJson[i]['marker'] == 'END') {
+        linearRingCoords.add(coordsJson[i]);
+        _coordinates.add(GeoJsonLinearRing(coordsJson: linearRingCoords));
         linearRingCoords = [];
       } else {
-        linearRingCoords.add(coordsJSON[i]);
+        linearRingCoords.add(coordsJson[i]);
       }
     }
   }
 
   @override
-  toGeoJSONFile() {
+  toGeoJsonFile() {
     return {
       '\"type\"': '\"${type.toShortString()}\"',
-      '\"coordinates\"': coordinates.map((e) => e.toGeoJSONFile()).toList()
+      '\"coordinates\"': coordinates.map((e) => e.toGeoJsonFile()).toList()
     };
   }
 
   @override
-  toGeoJSON() {
+  toGeoJson() {
     return {
       'type': type.toShortString(),
-      'coordinates': coordinates.map((e) => e.toGeoJSON()).toList()
+      'coordinates': coordinates.map((e) => e.toGeoJson()).toList()
     };
   }
 
   @override
   extractLatLng() {
     var list = coordinates.expand((e) => e.extractLatLng()).toList();
-    print(list.runtimeType);
-    print(list);
     return list;
   }
   /*

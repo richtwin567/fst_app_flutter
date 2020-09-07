@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 
 class AppTheme {
   static ColorScheme _lightColorScheme = ColorScheme(
@@ -57,4 +58,7 @@ class AppTheme {
       return platformBrightness == Brightness.light ? _lightTheme : _darkTheme;
     }
   }
+
+  static ThemeData getFromModel(ThemeModel model) =>
+      model.isDark ? _darkTheme : _lightTheme;
 }

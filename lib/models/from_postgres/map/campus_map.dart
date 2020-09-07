@@ -12,7 +12,6 @@ class CampusMap {
     var locations = FeatureCollection(
         features: await request.getResults(
             _herokuFeatures, true, (data) => Feature(data)));
-    //print(locations);
     return locations;
   }
 
@@ -20,6 +19,6 @@ class CampusMap {
     File file =
         await File('${Directory.systemTemp.parent.path}/cache/campus.geojson')
             .create();
-    await file.writeAsString((await locations).toGeoJSONFile());
+    await file.writeAsString((await locations).toGeoJsonFile());
   }
 }

@@ -279,10 +279,8 @@ class ScholarshipDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     theme['context'] = context;
-    ThemeModel themeModel = Provider.of<ThemeModel>(context, listen: false,);
     theme['theme'] = Theme.of(context);
-    theme['isDark'] = themeModel.selectedTheme == ThemeMode.dark ||
-        (themeModel.selectedTheme == ThemeMode.system && SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
+    theme['isDark'] = Provider.of<ThemeModel>(context,listen: false,).isDark;
     return DefaultTabController(
         length: 2,
         child: Scaffold(

@@ -9,14 +9,14 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/polygon.
 import 'package:fst_app_flutter/models/from_postgres/map/properties.dart';
 import 'package:fst_app_flutter/utils/string_to_enum.dart';
 
-class Feature extends GeoJSONObject {
-  GeoJSONGeometryObject geometry;
+class Feature extends GeoJsonObject {
+  GeoJsonGeometryObject geometry;
   Properties properties;
   int id;
 
   
 
-  Feature(dynamic feature) : super(GeoJSONType.Feature) {
+  Feature(dynamic feature) : super(GeoJsonType.feature) {
     properties = Properties(
         title: feature['code'],
         description: feature['title'],
@@ -25,51 +25,50 @@ class Feature extends GeoJSONObject {
     id = feature['id'];
     var uknGeometry = feature['geometry'];
     var newCoords = uknGeometry['coordinates'];
-    //print(newCoords);
     switch (stringToGeometryType(uknGeometry['geometry_type'])) {
-      case GeoJSONGeometryType.Point:
-        geometry = GeoJSONPoint(coordsJSON: newCoords);
+      case GeoJsonGeometryType.point:
+        geometry = GeoJsonPoint(coordsJson: newCoords);
         break;
-      case GeoJSONGeometryType.MultiPoint:
-        geometry = GeoJSONMultiPoint(coordsJSON: newCoords);
+      case GeoJsonGeometryType.multiPoint:
+        geometry = GeoJsonMultiPoint(coordsJson: newCoords);
         break;
-      case GeoJSONGeometryType.LineString:
-        geometry = GeoJSONLineString(coordsJSON: newCoords);
+      case GeoJsonGeometryType.lineString:
+        geometry = GeoJsonLineString(coordsJson: newCoords);
         break;
-      case GeoJSONGeometryType.MultiLineString:
+      case GeoJsonGeometryType.multiLineString:
         throw UnimplementedError();
         //geometry = MultiLineString(coordsJSON: newCoords);
         break;
-      case GeoJSONGeometryType.Polygon:
-        geometry = GeoJSONPolygon(coordsJSON: newCoords);
+      case GeoJsonGeometryType.polygon:
+        geometry = GeoJsonPolygon(coordsJson: newCoords);
         break;
-      case GeoJSONGeometryType.MultiPolygon:
+      case GeoJsonGeometryType.multiPolygon:
         throw UnimplementedError();
         //geometry = MultiPolygon(coordsJSON: newCoords);
         break;
-      case GeoJSONGeometryType.GeometryCollection:
+      case GeoJsonGeometryType.geometryCollection:
         throw UnimplementedError();
         break;
     }
   }
 
   @override
-  toGeoJSONFile() {
+  toGeoJsonFile() {
     return {
       '\"id\"': id,
       '\"type\"': '\"${type.toShortString()}\"',
-      '\"geometry\"': geometry.toGeoJSONFile(),
-      '\"properties\"': properties.toGeoJSONFile()
+      '\"geometry\"': geometry.toGeoJsonFile(),
+      '\"properties\"': properties.toGeoJsonFile()
     };
   }
 
   @override
-  Map<String, Object> toGeoJSON() {
+  Map<String, Object> toGeoJson() {
     return {
       'id': id,
       'type': type.toShortString(),
-      'geometry': geometry.toGeoJSON(),
-      'properties': properties.toGeoJSON()
+      'geometry': geometry.toGeoJson(),
+      'properties': properties.toGeoJson()
     };
   }
 }

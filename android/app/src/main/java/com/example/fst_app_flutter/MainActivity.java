@@ -38,7 +38,6 @@ public class MainActivity extends FlutterActivity {
 							NativeContact contact = new NativeContact((HashMap<String, Object>) call.arguments);
 							contact.saveNatively(this);
 						} catch (Exception e) {
-							//System.out.println(e.getMessage());
 						}
 					} else {
 						result.notImplemented();

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+/// The 
 class HerokuRequest<T> {
   /// The [query] should be the end of the url for sending a request to the server.
   ///

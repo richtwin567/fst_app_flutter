@@ -1,8 +1,9 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_model.dart';
-import 'package:fst_app_flutter/models/from_postgres/contact/platform.dart';
+import 'package:fst_app_flutter/models/from_postgres/contact/contact_platform.dart';
 import 'package:fst_app_flutter/models/sharing/vcard.dart';
 import 'package:fst_app_flutter/utils/open_url.dart';
 import 'package:fst_app_flutter/utils/social_media_contact_share.dart';
@@ -35,15 +36,17 @@ class ContactDetailPage extends StatelessWidget {
             pinned: true,
             snap: false,
             actions: [
-              IconButton(
-                  icon: Icon(Icons.save),
-                  onPressed: () {
-                    contactDetails.saveNatively();
-                  }),
+              Platform.isIOS
+                  ? IconButton(icon: Icon(Icons.save), onPressed: null)
+                  : IconButton(
+                      icon: Icon(Icons.save),
+                      onPressed: () {
+                        contactDetails.saveNatively();
+                      }),
               IconButton(
                   icon: Icon(Icons.share),
                   onPressed: () {
-                      shareContactToWhatsApp(VCard.fromContact(contactDetails));
+                    shareContactToWhatsApp(VCard.fromContact(contactDetails));
                   })
             ],
             expandedHeight: mq.size.height / 2.5,
@@ -79,7 +82,7 @@ class ContactDetailPage extends StatelessWidget {
     List<dynamic> phoneNums = [];
     for (var i = 0; i < data.phones.length; i++) {
       var icon;
-      if (data.phones[i].platforms == Platform.WHATSAPP) {
+      if (data.phones[i].platforms == ContactPlatform.whatsapp) {
         icon = Image.asset(
           'assets/WhatsApp_flat.png',
           width: IconTheme.of(context).size,

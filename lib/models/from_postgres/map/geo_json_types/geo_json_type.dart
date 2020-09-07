@@ -1,16 +1,16 @@
-enum GeoJSONType {
-  Feature,
-  FeatureCollection,
-  Point,
-  MultiPoint,
-  LineString,
-  MultiLineString,
-  Polygon,
-  MultiPolygon,
-  GeometryCollection
+enum GeoJsonType {
+  feature,
+  featureCollection,
+  point,
+  multiPoint,
+  lineString,
+  multiLineString,
+  polygon,
+  multiPolygon,
+  geometryCollection
 }
 
-extension GeoJSONTypeShortString on GeoJSONType {
+extension GeoJSONTypeShortString on GeoJsonType {
   String toShortString() {
     return this.toString().split('.').last;
   }
