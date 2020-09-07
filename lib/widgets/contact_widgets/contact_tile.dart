@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A [ListTile] that
+/// A [ListTile] on a [Card] that
 /// allows navigation to the [ContactDetailPage] for this [ContactTile] when tapped.
 class ContactTile extends StatelessWidget {
   /// The title of this ContactTile.

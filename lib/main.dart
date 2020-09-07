@@ -14,10 +14,8 @@ void main() async {
     await precacheRive();
   } catch (e) {
   }
-  runApp(DevicePreview(
-      child: FSTApp(
+  runApp(FSTApp(
     themeModel: themeModel,
-      ),
   ));
 }
 

@@ -6,6 +6,7 @@ import 'package:fst_app_flutter/utils/string_to_enum.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fst_app_flutter/utils/permissions.dart';
 
+// TODO: document Contact @richtwin567
 class Contact {
   int _id;
   String _name;
@@ -76,6 +77,7 @@ class Contact {
   }
 }
 
+// TODO: document _PhoneNumber @richtwin567
 class _PhoneNumber {
   int _id;
   int _contactID;

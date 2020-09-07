@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:fst_app_flutter/models/preferences/theme_model.dart';
 import 'package:fst_app_flutter/utils/app_theme.dart';
 
+// TODO: document @richtwin567
 class ThemeChooserDialog extends StatefulWidget {
   const ThemeChooserDialog({Key key}) : super(key: key);
 
