@@ -1,3 +1,4 @@
+// TODO: document GeoJsonType @richtwin567
 enum GeoJsonType {
   feature,
   featureCollection,

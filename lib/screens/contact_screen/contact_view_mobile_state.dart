@@ -53,7 +53,7 @@ class ContactViewMobilePortraitState extends ContactViewState {
     // width and height calculations made using the [MediaQueryData]
     var mq = MediaQuery.of(context);
     // horizontal and vertical padding for the list of contacts
-    var padH = mq.size.width * 0.1;
+    var padH = mq.size.width * 0.07;
     var padV = (mq.size.height - (kToolbarHeight * 2)) * 0.07;
     var topViewInsets = mq.padding.top;
 

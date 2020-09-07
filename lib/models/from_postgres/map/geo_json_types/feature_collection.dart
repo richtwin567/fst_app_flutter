@@ -6,6 +6,7 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fst_app_flutter/models/enums/department.dart';
 
+// TODO: document FeatureCollection @richtwin567
 class FeatureCollection extends GeoJsonObject {
   List<Feature> features;
   FeatureCollection({@required this.features})

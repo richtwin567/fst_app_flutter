@@ -3,6 +3,7 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/line_string.dart';
 
+// TODO: document @richtwin567
 class GeoJsonMultiLineString extends GeoJsonGeometryObject {
   List<GeoJsonLineString> coordinates;
   GeoJsonMultiLineString({@required coordsJson})

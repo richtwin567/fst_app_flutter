@@ -1,5 +1,6 @@
 import 'package:fst_app_flutter/models/enums/department.dart';
 
+// TODO: document @richtwin567
 class Properties {
   final String title;
   final Department associatedWith;

@@ -3,6 +3,7 @@ import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/polygon.dart';
 
+// TODO: document GeoJsonMultiPolygon @richtwin567
 class GeoJsonMultiPolygon extends GeoJsonGeometryObject {
   List<GeoJsonPolygon> coordinates;
   GeoJsonMultiPolygon({@required coordsJson}) : super(GeoJsonGeometryType.multiPolygon) {

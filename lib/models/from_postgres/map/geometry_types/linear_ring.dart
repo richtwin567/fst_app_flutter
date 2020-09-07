@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/line_string.dart';
 
+// TODO: document @richtwin567
 class GeoJsonLinearRing extends GeoJsonLineString {
   GeoJsonLinearRing({@required coordsJson})
       : assert(coordsJson.first['longitude'] == coordsJson.last['longitude'] &&

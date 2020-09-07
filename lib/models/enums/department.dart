@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/global_const.dart';
 
+// TODO: document Department @richtwin567
 enum Department { biochem, chem, comp, geo, life, math, phys, other }
 
 extension DepartmentExt on Department {

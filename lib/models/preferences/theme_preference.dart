@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
+// TODO: document ThemePreference @richtwin567
 class ThemePreference {
   var lightThemeStatus = ThemeMode.light.toString();
   var systemThemeStatus = ThemeMode.system.toString();

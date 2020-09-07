@@ -10,6 +10,7 @@ import 'package:fst_app_flutter/utils/social_media_contact_share.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_card.dart';
 import 'package:fst_app_flutter/widgets/contact_widgets/contact_detail_image.dart';
 
+// TODO: document(update) @richtwin567
 /// A page that shows all the details for the selected contact.
 /// It allows the user to open websites, call the contact and send an email to
 /// the contact directly from the app.
@@ -54,12 +55,12 @@ class ContactDetailPage extends StatelessWidget {
                 background: CustomPaint(
                     painter: ContactDetailSvg(
                         start: Point(
-                            mq.size.width / 2, (mq.size.height / 2.5) / 2),
+                            mq.size.width / 2.0, (mq.size.height / 2.5) / 2.0),
                         scale:
                             (mq.devicePixelRatio / mq.size.aspectRatio) * 1.5,
                         color: Theme.of(context).accentColor)),
                 title: Padding(
-                  padding: EdgeInsets.only(right: mq.size.width / 4),
+                  padding: EdgeInsets.only(right: mq.size.width / 4.0),
                   child: Text(
                     contactDetails.name,
                     maxLines: 1,

@@ -2,6 +2,8 @@ import 'package:fst_app_flutter/models/enums/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 
+// TODO: document @richtwin567
+
 Department stringToDepartment(str) {
   switch (str) {
     case 'BIOCHEM':

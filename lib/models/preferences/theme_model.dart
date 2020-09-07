@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fst_app_flutter/models/preferences/theme_preference.dart';
 
+// TODO: document ThemeModel @richtwin567
 class ThemeModel with ChangeNotifier {
   static ThemePreference _themePreference = ThemePreference();
   //set to system theme by default

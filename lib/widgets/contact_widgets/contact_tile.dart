@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A [ListTile] that
+/// A [ListTile] on a [Card] that
 /// allows navigation to the [ContactDetailPage] for this [ContactTile] when tapped.
 class ContactTile extends StatelessWidget {
   /// The title of this ContactTile.
@@ -56,28 +56,31 @@ class ContactTile extends StatelessWidget {
     var tStyle = titleStyle ?? Theme.of(context).textTheme.subtitle1;
     var sStyle = subtitleStyle ?? Theme.of(context).textTheme.caption;
 
-    return ListTile(
-      onTap: namedRoute != null
-          ? () {
-              arguments != null
-                  ? Navigator.pushNamed(context, namedRoute,
-                      arguments: arguments)
-                  : Navigator.pushNamed(context, namedRoute);
-            }
-          : tapFunc,
-      title: Text(
-        title,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: tStyle,
+    return Card(
+      elevation: 2.0,
+          child: ListTile(
+        onTap: namedRoute != null
+            ? () {
+                arguments != null
+                    ? Navigator.pushNamed(context, namedRoute,
+                        arguments: arguments)
+                    : Navigator.pushNamed(context, namedRoute);
+              }
+            : tapFunc,
+        title: Text(
+          title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: tStyle,
+        ),
+        subtitle: Text(
+          subtitle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: sStyle,
+        ),
+        trailing: Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
       ),
-      subtitle: Text(
-        subtitle,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: sStyle,
-      ),
-      trailing: Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
     );
   }
 } // ContactTile definition
