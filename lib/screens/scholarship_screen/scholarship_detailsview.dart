@@ -8,7 +8,7 @@ import 'package:clipboard/clipboard.dart';
 class ScholarshipDetailsView extends StatelessWidget {
 
   final Scholarship current;
-  final Map<String, dynamic> theme = {'isDark': null, 'theme': null};
+  final Map<String, dynamic> theme = {'isDark': null, 'theme': null, 'context': null};
 
   ScholarshipDetailsView({this.current});
 
@@ -21,7 +21,10 @@ class ScholarshipDetailsView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.content_copy), 
             onPressed: (){
-              FlutterClipboard.copy(current.toString()).then(( value ) => print('copied'));
+              FlutterClipboard.copy(current.toString()).then(
+                ( value ) => _showDialog(false),
+                onError: (error) => _showDialog(true),
+              );
             },
             tooltip: "Copy to Clipboard",
           )
@@ -243,9 +246,39 @@ class ScholarshipDetailsView extends StatelessWidget {
     return result;
   }
 
+   void _showDialog(bool error) {
+      showDialog(
+        context: theme['context'],
+        builder: (BuildContext context) {
+          return !error ? AlertDialog(
+            titlePadding: const EdgeInsets.all(5),
+            contentPadding: const EdgeInsets.all(0),
+            title: ListTile(
+              title: Text("Copied to Clipboard"),
+              trailing: Icon(
+                Icons.check, 
+                color: Colors.green,
+              ),
+            ),
+          ): AlertDialog(
+            titlePadding: const EdgeInsets.all(5),
+            contentPadding: const EdgeInsets.all(0),
+            title: ListTile(
+              title: Text("Not Copied to Clipboard"),
+              trailing: Icon(
+                Icons.clear, 
+                color: Colors.red,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
   
   @override
   Widget build(BuildContext context) {
+    theme['context'] = context;
     ThemeModel themeModel = Provider.of<ThemeModel>(context, listen: false,);
     theme['theme'] = Theme.of(context);
     theme['isDark'] = themeModel.selectedTheme == ThemeMode.dark ||
