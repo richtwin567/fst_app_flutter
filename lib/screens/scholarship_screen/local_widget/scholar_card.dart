@@ -3,6 +3,7 @@ import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dar
 import 'package:fst_app_flutter/screens/scholarship_screen/scholarship_detailsview.dart';
 
 ///Widget used by [ScholarshipMobile] to display the elements of the lists from [ScholarshipList]
+//TODO: documentation @palmer-matthew
 
 class ScholarCard extends StatelessWidget {
   final Scholarship scholarship;

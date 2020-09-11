@@ -58,6 +58,7 @@ class Scholarship {
     );
   }
 
+  //TODO: documentation @palmer-matthew
   String buildListItem(String title, content, bool inList){
     
     if(content == "" && inList){

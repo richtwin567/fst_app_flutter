@@ -10,7 +10,7 @@ class ScholarshipDetailsView extends StatelessWidget {
   final Map<String, dynamic> theme = {'isDark': null, 'theme': null, 'context': null};
 
   ScholarshipDetailsView({this.current});
-
+  //TODO documentation  @palmer-matthew
   Widget _buildAppBar(){
     return AppBar(
         title: Text(
