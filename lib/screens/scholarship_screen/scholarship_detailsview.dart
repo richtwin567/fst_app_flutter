@@ -52,7 +52,7 @@ class ScholarshipDetailsView extends StatelessWidget {
 
   Widget _buildPage(String zone){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      padding: const EdgeInsets.only(left: 10.0, right: 20.0),
       child: ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: zone == "Description" ? buildDescriptionContent() : buildDetailContent(),
@@ -281,6 +281,10 @@ class ScholarshipDetailsView extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: _buildAppBar(),
+          ///Note: Apparently there's a weird bug within the framework, when you select the last index
+          ///or tab and switch the orientation of the viewport/change dimensions, it creates an offset of the view, 
+          ///which can be reversed by scrolling the view. Hopefully, the fix comes soon =)
+          ///[https://github.com/flutter/flutter/issues/60288]
           body: TabBarView(
             children: [
                 _buildPage('Description'),
