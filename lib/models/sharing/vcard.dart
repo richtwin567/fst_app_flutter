@@ -5,8 +5,9 @@ import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
 // TODO: document @richtwin567
 class VCard {
   final String vcf;
+  final String name;
 
-  VCard(this.vcf);
+  VCard(this.vcf, this.name);
 
   factory VCard.fromContact(Contact contact) {
     String rawPhoneNumber(String phone) {
@@ -60,6 +61,6 @@ class VCard {
     }
     vCard += 'END:VCARD';
 
-    return VCard(vCard);
+    return VCard(vCard, contact.name);
   }
 }
