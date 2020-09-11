@@ -66,9 +66,8 @@ class ScholarshipDetailsView extends StatelessWidget {
       return UnorderedListItem(title, theme['isDark']);
     }else if(content is! String){
       return ListTile(
-        title: SelectableText(
+        title: Text(
           title,
-          toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
         ),
         subtitle: content,
       );
@@ -76,13 +75,11 @@ class ScholarshipDetailsView extends StatelessWidget {
 
     return ListTile(
       visualDensity: VisualDensity(vertical: -2.0, horizontal: 1.0),
-      title: SelectableText(
+      title: Text(
           title,
-          toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
         ),
-      subtitle: SelectableText(
+      subtitle: Text(
           content,
-          toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
         ),
     );
   }
@@ -315,12 +312,11 @@ class UnorderedListItem extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: SelectableText(
+          child: Text(
             text,
             style: TextStyle(
               color: isDark ? Colors.white54 : Colors.black45,
             ),
-            toolbarOptions: ToolbarOptions(copy: true, selectAll: true,),
           ),
         ),
       ],
