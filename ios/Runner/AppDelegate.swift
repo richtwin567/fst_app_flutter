@@ -5,7 +5,7 @@ import Foundation
 import ContactsUI
 import GoogleMaps
 
-/* public class NativeContact: NSObject, CNContactViewControllerDelegate{
+public class NativeContact: NSObject, CNContactViewControllerDelegate{
 
     private(set) var displayName: String
     private(set) var note: String
@@ -102,7 +102,7 @@ import GoogleMaps
 		/**
 		 * Creates an instance of NativeContactPhone.
 		 *
-		 * @param map A map object passed from the NativeContact constructor from the invoke
+		 * map A map object passed from the NativeContact constructor from the invoke
 		 *            method call arguments passed in dart saveNatively method in
 		 *            contact_model.dart.
 		 */
@@ -119,7 +119,7 @@ import GoogleMaps
     }
 
 }
- */
+ 
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -130,7 +130,7 @@ import GoogleMaps
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let contactsChannel = FlutterMethodChannel(name: "com.example.fst_app_flutter/native",
                                               binaryMessenger: controller.binaryMessenger)
-    /* contactsChannel.setMethodCallHandler({
+    contactsChannel.setMethodCallHandler({
       (call: FlutterMethodCall, result: FlutterResult) -> Void in
   // Note: this method is invoked on the UI thread.
   guard call.method == "saveNatively" else {
@@ -141,7 +141,7 @@ import GoogleMaps
         var contact = NativeContact(map:args)
         contact.saveNatively()
     }
-  }) */
+  }) 
     GMSServices.provideAPIKey("AIzaSyC8crEFAO6MSNJMRK1lmo-WnSL7RLFu87w")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
