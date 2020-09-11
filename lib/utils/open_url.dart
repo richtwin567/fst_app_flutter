@@ -14,9 +14,8 @@ import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 ///
 openUrl(String url) async {
   if (await urlLauncher.canLaunch(url)) {
-    await urlLauncher.launch(url);
-  } else {
-    //TODO: not entirely sure what I want to happen here
-    throw 'Can\'t open $url';
+    try {
+      await urlLauncher.launch(url);
+    } catch (e) {}
   }
 }
