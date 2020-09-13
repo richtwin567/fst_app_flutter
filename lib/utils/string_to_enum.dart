@@ -2,8 +2,7 @@ import 'package:fst_app_flutter/models/enums/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
 import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
 
-// TODO: document @richtwin567
-
+/// Takes a string and returns the appropriate [Department].
 Department stringToDepartment(str) {
   switch (str) {
     case 'BIOCHEM':
@@ -33,6 +32,7 @@ Department stringToDepartment(str) {
   }
 }
 
+/// Takes a string and returns the appropriate [ContactType].
 ContactType stringToContactType(str) {
   switch (str) {
     case 'EMERGENCY':
@@ -50,6 +50,7 @@ ContactType stringToContactType(str) {
   }
 }
 
+/// Takes a string and returns the appropriate [GeoJsonGeometryType].
 GeoJsonGeometryType stringToGeometryType(str) {
   switch (str) {
     case "GeometryCollection":
