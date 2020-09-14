@@ -1,6 +1,7 @@
 import 'package:fst_app_flutter/models/enums/department.dart';
 import 'package:fst_app_flutter/models/from_postgres/contact/contact_type.dart';
-import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_type.dart';
+import 'package:fst_app_flutter/models/from_postgres/map/geo_json_objects/geo_json_type.dart';
+
 
 /// Takes a string and returns the appropriate [Department].
 Department stringToDepartment(str) {
@@ -51,28 +52,28 @@ ContactType stringToContactType(str) {
 }
 
 /// Takes a string and returns the appropriate [GeoJsonGeometryType].
-GeoJsonGeometryType stringToGeometryType(str) {
+GeoJsonType stringToGeometryType(str) {
   switch (str) {
     case "GeometryCollection":
-      return GeoJsonGeometryType.geometryCollection;
+      return GeoJsonType.geometryCollection;
       break;
     case "LineString":
-      return GeoJsonGeometryType.lineString;
+      return GeoJsonType.lineString;
       break;
     case 'MultiLineString':
-      return GeoJsonGeometryType.multiLineString;
+      return GeoJsonType.multiLineString;
       break;
     case 'MultiPoint':
-      return GeoJsonGeometryType.multiPoint;
+      return GeoJsonType.multiPoint;
       break;
     case 'MultiPolygon':
-      return GeoJsonGeometryType.multiPolygon;
+      return GeoJsonType.multiPolygon;
       break;
     case 'Polygon':
-      return GeoJsonGeometryType.polygon;
+      return GeoJsonType.polygon;
       break;
     default:
-      return GeoJsonGeometryType.point;
+      return GeoJsonType.point;
       break;
   }
 }
