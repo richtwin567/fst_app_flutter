@@ -15,49 +15,20 @@ class Scholarship {
     this.condition
   });
 
-  //Getter Methods for the attributes
-  String get scholarshipName => name;
-  String get scholarshipDetails => details;
-  String get scholarshipAwards => numAwards;
-  String get scholarshipValue => value;
-  String get scholarshipTenure => tenure;
-  String get scholarshipCriteria => criteria;
-  String get scholarshipEligibility => eligible;
-  String get scholarshipMethod => method;
-  String get scholarshipSpecial => special;
-  String get scholarshipCondition => condition;
-
-  //This method converts a json map into an Scholarship Object
-  factory Scholarship.fromJson(Map<String, dynamic> parsedJSON) {
-
-    String name, details, numAwards, value, tenure, eligible, criteria ,method , special, condition;
-
-    parsedJSON['name'] == "" ?  name = null :  name = parsedJSON['name'];
-    parsedJSON['additional_details'] == "" ?  details = null :  details = parsedJSON['additional_details'];
-    parsedJSON['number_of_awards'] == "" ?  numAwards = null :  numAwards = parsedJSON['number_of_awards'];
-    parsedJSON['value'] == "" ?  value = null :  value = parsedJSON['value'];
-    parsedJSON['max_tenure'] == "" ?  tenure = null :  tenure = parsedJSON['max_tenure'];
-    parsedJSON['eligibility'] == "" ?  eligible = null :  eligible = parsedJSON['eligibility'];
-    parsedJSON['criteria'] == "" ?  criteria = null :  criteria = parsedJSON['criteria'];
-    parsedJSON['method_of_selection'] == "" ?  method = null :  method = parsedJSON['method_of_selection'];
-    parsedJSON['special_requirements'] == "" ?  special = null :  special = parsedJSON['special_requirements'];
-    parsedJSON['condition'] == "" ?  condition = null :  condition = parsedJSON['condition'];
-    
-
-    return Scholarship(
-      name: name,
-      details: details,
-      numAwards: numAwards,
-      value: value,
-      tenure: tenure,
-      eligible: eligible,
-      criteria: criteria,
-      method: method,
-      special: special,
-      condition: condition,
-    );
+  //This constructor converts a json map into an Scholarship Object
+  Scholarship.fromJson( Map<String, dynamic> parsedJson){
+    parsedJson['name'] == "" ?  name = null :  name = parsedJson['name'];
+    parsedJson['additional_details'] == "" ?  details = null :  details = parsedJson['additional_details'];
+    parsedJson['number_of_awards'] == "" ?  numAwards = null :  numAwards = parsedJson['number_of_awards'];
+    parsedJson['value'] == "" ?  value = null :  value = parsedJson['value'];
+    parsedJson['max_tenure'] == "" ?  tenure = null :  tenure = parsedJson['max_tenure'];
+    parsedJson['eligibility'] == "" ?  eligible = null :  eligible = parsedJson['eligibility'];
+    parsedJson['criteria'] == "" ?  criteria = null :  criteria = parsedJson['criteria'];
+    parsedJson['method_of_selection'] == "" ?  method = null :  method = parsedJson['method_of_selection'];
+    parsedJson['special_requirements'] == "" ?  special = null :  special = parsedJson['special_requirements'];
+    parsedJson['condition'] == "" ?  condition = null :  condition = parsedJson['condition'];
   }
-
+ 
   //TODO: documentation @palmer-matthew
   String buildListItem(String title, content, bool inList){
     

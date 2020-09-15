@@ -14,7 +14,7 @@ class ScholarshipDetailsView extends StatelessWidget {
   Widget _buildAppBar(){
     return AppBar(
         title: Text(
-          current.scholarshipName,
+          current.name,
         ),
         actions: [
           IconButton(
@@ -187,20 +187,20 @@ class ScholarshipDetailsView extends StatelessWidget {
     List<Widget> result = List.empty(growable: true);
     try{
      
-      if(current.scholarshipAwards != null){
-        result.addAll([buildListTile('Number of Awards', current.scholarshipAwards, false), buildDivider()]);
+      if(current.numAwards != null){
+        result.addAll([buildListTile('Number of Awards', current.numAwards, false), buildDivider()]);
       }
 
-      if(current.scholarshipValue != null){
-        result.addAll([buildListTile('Value', current.scholarshipValue, false), buildDivider()]);
+      if(current.value != null){
+        result.addAll([buildListTile('Value', current.value, false), buildDivider()]);
       }
 
-      if(current.scholarshipTenure != null){
-        result.addAll([buildListTile('Maximum Tenure', current.scholarshipTenure , false), buildDivider()]);
+      if(current.tenure != null){
+        result.addAll([buildListTile('Maximum Tenure', current.tenure , false), buildDivider()]);
       }
 
-      if(current.scholarshipEligibility != null){
-        result.add(buildListingTile("Eligibility", current.scholarshipEligibility));
+      if(current.eligible != null){
+        result.add(buildListingTile("Eligibility", current.eligible));
       }
 
     }on Exception catch(e){
@@ -215,24 +215,24 @@ class ScholarshipDetailsView extends StatelessWidget {
 
     try{
 
-      if(current.scholarshipCriteria != null){
-        result.addAll([buildListingTile("Criteria", current.scholarshipCriteria), buildDivider()]);
+      if(current.criteria != null){
+        result.addAll([buildListingTile("Criteria", current.criteria), buildDivider()]);
       }
 
-      if(current.scholarshipMethod != null){
-        result.addAll([buildListingTile("Method Of Selection", current.scholarshipMethod), buildDivider()]);
+      if(current.method != null){
+        result.addAll([buildListingTile("Method Of Selection", current.method), buildDivider()]);
       }
 
-      if(current.scholarshipSpecial != null){
-        result.addAll([buildListingTile("Special Requirements", current.scholarshipSpecial), buildDivider()]);
+      if(current.special != null){
+        result.addAll([buildListingTile("Special Requirements", current.special), buildDivider()]);
       }
 
-      if(current.scholarshipCondition != null){
-        result.addAll([buildListingTile("Condition", current.scholarshipCondition), buildDivider()]);
+      if(current.condition != null){
+        result.addAll([buildListingTile("Condition", current.condition), buildDivider()]);
       }
       
-      if(current.scholarshipDetails != null){
-        result.add(buildListingTile("Additional Details", current.scholarshipDetails));
+      if(current.details != null){
+        result.add(buildListingTile("Additional Details", current.details));
       }
       
     }on Exception catch(e){

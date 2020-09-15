@@ -5,9 +5,14 @@ import 'package:flutter/foundation.dart';
 class ScholarshipList with ChangeNotifier{
 
   bool hasResults; // signifies if the search results has any data
-
   List<Scholarship> scholarships; // original list of scholarships from http requests
   List<Scholarship> current; // The current list which is used in the list view
+
+
+  //Getter Methods
+  List<Scholarship> get scholarList => current;
+  bool get doesHaveResults  => hasResults;
+  bool get isSearching => current != scholarships;
 
   ScholarshipList({scholarships}){
     this.scholarships = scholarships;
@@ -15,25 +20,18 @@ class ScholarshipList with ChangeNotifier{
     current = this.scholarships;
   }
 
-  //Getter Methods
-  List<Scholarship> get scholarList => current;
-  bool get doesHaveResults  => hasResults;
-  bool get isSearching => current != scholarships;
-
-  //Factory Method for converting json into the model used
-  factory ScholarshipList.fromJson(List<dynamic> parsedJson) {
+  //Named Constructor for converting json into the model used
+  ScholarshipList.fromJson(List<dynamic> parsedJson) {
     List<Scholarship> lst = new List<Scholarship>();
     lst = parsedJson.map((i) => Scholarship.fromJson(i)).toList();
-    return new ScholarshipList(
-      scholarships: lst,
-    );
+    this.scholarships = lst;
   }
 
   //Function which searches to see if the query is contained in the Scholarship Name
   //Possibly could be refined for better searching methods
   void search(String query){
     
-    current = scholarships.where((p) => p.scholarshipName.toLowerCase().contains(query.toLowerCase())).toList();
+    current = scholarships.where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
 
     if(current.isEmpty){
       current = [Scholarship(name:"No Search Results")];
