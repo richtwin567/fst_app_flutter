@@ -25,6 +25,8 @@ class ScholarshipList with ChangeNotifier{
     List<Scholarship> lst = new List<Scholarship>();
     lst = parsedJson.map((i) => Scholarship.fromJson(i)).toList();
     this.scholarships = lst;
+    hasResults = true;
+    current = this.scholarships;
   }
 
   //Function which searches to see if the query is contained in the Scholarship Name
