@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fst_app_flutter/models/from_postgres/scholarship/scholarship.dart';
-import 'package:fst_app_flutter/screens/scholarship_screen/scholarship_details.dart';
+import 'package:fst_app_flutter/screens/scholarship_screen/scholarship_details_view.dart';
+
+///Widget used by [ScholarshipMobile] to display the elements of the lists from [ScholarshipList]
+//TODO: documentation @palmer-matthew
 
 class ScholarCard extends StatelessWidget {
   final Scholarship scholarship;
@@ -14,7 +17,7 @@ class ScholarCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: ListTile(
-          title: Text(scholarship.scholarshipName),
+          title: Text(scholarship.name),
           trailing: Icon(
             Icons.arrow_forward_ios,
             size: 18,
@@ -27,9 +30,10 @@ class ScholarCard extends StatelessWidget {
     );
   }
 
+  /// Builds the transition for [ScholarshipDetails], Transition:  Slide In from the left
   PageRouteBuilder _buildTransition(){
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => ScholarshipDetails(current: scholarship),
+      pageBuilder: (context, animation, secondaryAnimation) => ScholarshipDetailsView(current: scholarship,),
       transitionDuration: Duration(milliseconds: 500,),
       transitionsBuilder: (context, animation, secondaryAnimation, child){
         animation = CurvedAnimation(
