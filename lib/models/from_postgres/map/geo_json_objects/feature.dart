@@ -8,8 +8,7 @@ import 'package:fst_app_flutter/models/from_postgres/map/geo_json_objects/geomet
 import 'package:fst_app_flutter/models/from_postgres/map/properties.dart';
 import 'package:fst_app_flutter/utils/string_to_enum.dart';
 
-// TODO: document Feature @richtwin567
-
+/// A class that represents a GeoJSON Feature as defined by https://tools.ietf.org/html/rfc7946#section-3.2
 class Feature extends GeoJsonObject {
   GeoJsonGeometryObject geometry;
   Properties properties;
