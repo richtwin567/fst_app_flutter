@@ -16,17 +16,17 @@ class Scholarship {
   });
 
   //This constructor converts a json map into an Scholarship Object
-  Scholarship.fromJson( Map<String, dynamic> parsedJson){
-    parsedJson['name'] == "" ?  name = null :  name = parsedJson['name'];
-    parsedJson['additional_details'] == "" ?  details = null :  details = parsedJson['additional_details'];
-    parsedJson['number_of_awards'] == "" ?  numAwards = null :  numAwards = parsedJson['number_of_awards'];
-    parsedJson['value'] == "" ?  value = null :  value = parsedJson['value'];
-    parsedJson['max_tenure'] == "" ?  tenure = null :  tenure = parsedJson['max_tenure'];
-    parsedJson['eligibility'] == "" ?  eligible = null :  eligible = parsedJson['eligibility'];
-    parsedJson['criteria'] == "" ?  criteria = null :  criteria = parsedJson['criteria'];
-    parsedJson['method_of_selection'] == "" ?  method = null :  method = parsedJson['method_of_selection'];
-    parsedJson['special_requirements'] == "" ?  special = null :  special = parsedJson['special_requirements'];
-    parsedJson['condition'] == "" ?  condition = null :  condition = parsedJson['condition'];
+  Scholarship.fromJson(Map<String, dynamic> parsedJson){
+    name = parsedJson['name'];
+    details = parsedJson['additional_details'];
+    numAwards = parsedJson['number_of_awards'];
+    value = parsedJson['value'];
+    tenure = parsedJson['max_tenure'];
+    eligible = parsedJson['eligibility'];
+    criteria = parsedJson['criteria'];
+    method = parsedJson['method_of_selection'];
+    special = parsedJson['special_requirements'];
+    condition = parsedJson['condition'];
   }
  
   //TODO: documentation @palmer-matthew
@@ -101,19 +101,19 @@ class Scholarship {
     String result = "";
     try{
      
-      if(numAwards != null){
+      if(numAwards != ""){
         result += buildHeading('Number of Awards', numAwards) + "_____________________\n\n";
       }
 
-      if(value != null){
+      if(value != ""){
         result += buildHeading('Value', value) + "_____________________\n\n";
       }
 
-      if(tenure != null){
+      if(tenure != ""){
         result += buildHeading('Maximum Tenure', tenure) + "_____________________\n\n";
       }
 
-      if(eligible != null){
+      if(eligible != ""){
         result += buildHeading("Eligibility", eligible) + "_____________________\n\n";
       }
 
@@ -128,23 +128,23 @@ class Scholarship {
     String result = "";
     try{
 
-      if(criteria != null){
+      if(criteria != ""){
         result += buildHeading("Criteria", criteria) + "_____________________\n\n";
       }
 
-      if(method != null){
+      if(method != ""){
         result += buildHeading("Method Of Selection", method) + "_____________________\n\n";
       }
 
-      if(special != null){
+      if(special != ""){
         result += buildHeading("Special Requirements", special) + "_____________________\n\n";
       }
 
-      if(condition != null){
+      if(condition != ""){
         result += buildHeading("Condition", condition) + "_____________________\n\n";
       }
       
-      if(details != null){
+      if(details != ""){
         result += buildHeading("Additional Details", details) + "_____________________\n\n";
       }
       

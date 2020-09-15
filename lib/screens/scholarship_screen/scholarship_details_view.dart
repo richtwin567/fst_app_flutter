@@ -86,7 +86,7 @@ class ScholarshipDetailsView extends StatelessWidget {
 
   Widget buildDivider(){
     return Divider(
-      color: theme['isDark'] ? Colors.white30 : Colors.black12,
+      //color: theme['isDark'] ? Colors.white30 : Colors.black12,
     );
   }
 
@@ -187,19 +187,19 @@ class ScholarshipDetailsView extends StatelessWidget {
     List<Widget> result = List.empty(growable: true);
     try{
      
-      if(current.numAwards != null){
+      if(current.numAwards != ""){
         result.addAll([buildListTile('Number of Awards', current.numAwards, false), buildDivider()]);
       }
 
-      if(current.value != null){
+      if(current.value != ""){
         result.addAll([buildListTile('Value', current.value, false), buildDivider()]);
       }
 
-      if(current.tenure != null){
+      if(current.tenure != ""){
         result.addAll([buildListTile('Maximum Tenure', current.tenure , false), buildDivider()]);
       }
 
-      if(current.eligible != null){
+      if(current.eligible != ""){
         result.add(buildListingTile("Eligibility", current.eligible));
       }
 
@@ -215,23 +215,23 @@ class ScholarshipDetailsView extends StatelessWidget {
 
     try{
 
-      if(current.criteria != null){
+      if(current.criteria != ""){
         result.addAll([buildListingTile("Criteria", current.criteria), buildDivider()]);
       }
 
-      if(current.method != null){
+      if(current.method != ""){
         result.addAll([buildListingTile("Method Of Selection", current.method), buildDivider()]);
       }
 
-      if(current.special != null){
+      if(current.special != ""){
         result.addAll([buildListingTile("Special Requirements", current.special), buildDivider()]);
       }
 
-      if(current.condition != null){
+      if(current.condition != ""){
         result.addAll([buildListingTile("Condition", current.condition), buildDivider()]);
       }
       
-      if(current.details != null){
+      if(current.details != ""){
         result.add(buildListingTile("Additional Details", current.details));
       }
       

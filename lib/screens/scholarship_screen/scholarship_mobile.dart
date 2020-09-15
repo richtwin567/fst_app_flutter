@@ -47,7 +47,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
       return AppBar(
         centerTitle: false,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.clear),
             onPressed: () {
               setState(() {
                 _controller.clear();
@@ -65,7 +65,7 @@ class _ScholarshipMobileState extends State<ScholarshipMobile> {
           actions: [
             IconButton(
               padding: const EdgeInsets.all(5.0),
-              icon: Icon(Icons.clear),
+              icon: Icon(Icons.cancel),
               color: Colors.white,
               onPressed: () {
                 _controller.clear();
