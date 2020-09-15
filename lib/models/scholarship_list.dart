@@ -20,15 +20,6 @@ class ScholarshipList with ChangeNotifier{
     current = this.scholarships;
   }
 
-  //Named Constructor for converting json into the model used
-  ScholarshipList.fromJson(List<dynamic> parsedJson) {
-    List<Scholarship> lst = new List<Scholarship>();
-    lst = parsedJson.map((i) => Scholarship.fromJson(i)).toList();
-    this.scholarships = lst;
-    hasResults = true;
-    current = this.scholarships;
-  }
-
   //Function which searches to see if the query is contained in the Scholarship Name
   //Possibly could be refined for better searching methods
   void search(String query){
