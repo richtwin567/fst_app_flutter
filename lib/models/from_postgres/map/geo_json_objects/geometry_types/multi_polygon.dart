@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fst_app_flutter/models/from_postgres/map/geo_json_types/geo_json_type.dart';
-import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/geometry_object.dart';
-import 'package:fst_app_flutter/models/from_postgres/map/geometry_types/polygon.dart';
+import 'package:fst_app_flutter/models/from_postgres/map/geo_json_objects/geo_json_type.dart';
+import 'package:fst_app_flutter/models/from_postgres/map/geo_json_objects/geometry_types/geometry_object.dart';
+import 'package:fst_app_flutter/models/from_postgres/map/geo_json_objects/geometry_types/polygon.dart'; 
 
 // TODO: document GeoJsonMultiPolygon @richtwin567
 class GeoJsonMultiPolygon extends GeoJsonGeometryObject {
